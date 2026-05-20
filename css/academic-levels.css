@@ -1,0 +1,322 @@
+/* =========================
+   FUENTE PERSONALIZADA
+========================= */
+
+
+/* =========================
+   RESET
+========================= */
+* {
+  margin:0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  width: 100%;
+  overflow-x: hidden;
+}
+
+body {
+  background: #f5f8fc;
+  color: #0b4a78;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+/* =========================
+   HERO
+========================= */
+.levels-hero {
+  position: relative;
+  width: 100%;
+  min-height: 470px;
+  background: url("../assets/img/academic-levels-bg.jpg") center/cover no-repeat;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 80px 20px;
+
+}
+
+.levels-hero-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    rgba(8, 54, 86, 0.58),
+    rgba(11, 74, 120, 0.60)
+  );
+}
+
+.levels-hero-content {
+  position: relative;
+  z-index: 2;
+  max-width: 900px;
+  color: #ffffff;
+}
+
+.levels-tag {
+  display: inline-block;
+  margin-bottom: 18px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: #ffb5af;
+}
+
+.levels-hero-content h1 {
+  font-family: "Supersonic", Arial, sans-serif;
+  font-size: clamp(2.4rem, 5vw, 4.8rem);
+  letter-spacing: 3px;
+  margin-bottom: 20px;
+  line-height: 1.08;
+}
+
+.levels-hero-content p {
+  font-size: 1.08rem;
+  line-height: 1.8;
+  color: rgba(255,255,255,0.92);
+}
+
+/* =========================
+   INTRO
+========================= */
+.levels-intro {
+  width: 100%;
+  padding: 80px 20px 30px;
+  background: #f5f8fc;
+  margin-top:130px;
+}
+
+.levels-intro-container {
+  max-width: 1000px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.levels-intro-container h2 {
+  font-family: "Supersonic", Arial, sans-serif;
+  font-size: clamp(1.8rem, 4vw, 3rem);
+  color: #0b4a78;
+  letter-spacing: 2px;
+  margin-bottom: 22px;
+}
+
+.levels-intro-container p {
+  color: #4a6478;
+  font-size: 1.05rem;
+  line-height: 1.9;
+}
+
+/* =========================
+   TARJETAS
+========================= */
+.levels-cards-section {
+  width: 100%;
+  padding: 40px 20px 90px;
+  background: #f5f8fc;
+  margin-top: 140px;
+}
+
+.levels-cards-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 28px;
+}
+
+.level-card {
+  background: #ffffff;
+
+  overflow: hidden;
+  box-shadow: 0 12px 30px rgba(11, 74, 120, 0.10);
+  border: 1px solid rgba(11, 74, 120, 0.08);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.level-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 18px 36px rgba(11, 74, 120, 0.14);
+}
+
+.level-card-image {
+  width: 100%;
+  height: 260px;
+  overflow: hidden;
+}
+
+.level-card-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.4s ease;
+}
+
+.level-card:hover .level-card-image img {
+  transform: scale(1.05);
+}
+
+.level-card-content {
+  padding: 28px 24px 30px;
+}
+
+.level-label {
+  font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+  display: inline-block;
+  margin-bottom: 14px;
+  color: #ff2b1c;
+  font-size: 0.82rem;
+  font-weight: 800;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+.level-card-content h3 {
+  font-family: "Apricot", 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+  font-size: 2rem;
+  color: #0b4a78;
+  letter-spacing: 1px;
+  margin-bottom: 18px;
+}
+
+.level-card-content p {
+  color: #4d677c;
+  font-size: 1rem;
+  line-height: 1.8;
+  margin-bottom: 24px;
+}
+
+.level-btn {
+  display: inline-block;
+  background: #0b4a78;
+  color: #ffffff;
+  text-decoration: none;
+  padding: 15px 24px;
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  transition: background 0.25s ease, transform 0.25s ease;
+}
+
+.level-btn:hover {
+  background: #083656;
+  transform: translateY(-2px);
+}
+
+/* =========================
+   CIERRE
+========================= */
+.levels-closing {
+  width: 100%;
+  padding: 0 20px 90px;
+  background: #f5f8fc;
+}
+
+.levels-closing-container {
+  max-width: 1100px;
+  margin: 0 auto;
+  background: linear-gradient(135deg, #0b4a78 0%, #083656 100%);
+  border-radius: 28px;
+  padding: 42px 34px;
+  text-align: center;
+  box-shadow: 0 14px 30px rgba(8, 54, 86, 0.18);
+}
+
+.levels-closing-container h2 {
+  font-family: "Supersonic", Arial, sans-serif;
+  font-size: clamp(1.7rem, 3vw, 2.7rem);
+  color: #ffffff;
+  letter-spacing: 2px;
+  margin-bottom: 18px;
+}
+
+.levels-closing-container p {
+  color: rgba(255,255,255,0.90);
+  font-size: 1rem;
+  line-height: 1.8;
+  max-width: 860px;
+  margin: 0 auto;
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+@media (max-width: 1100px) {
+  .levels-cards-container {
+    grid-template-columns: 1fr;
+    max-width: 750px;
+  }
+
+  .level-card-image {
+    height: 320px;
+  }
+}
+
+@media (max-width: 768px) {
+  .levels-hero {
+    min-height: 400px;
+    padding: 70px 16px;
+  }
+
+  .levels-hero-content h1 {
+    letter-spacing: 2px;
+  }
+
+  .levels-hero-content p,
+  .levels-intro-container p,
+  .level-card-content p,
+  .levels-closing-container p {
+    font-size: 1rem;
+    line-height: 1.8;
+  }
+
+  .levels-intro {
+    padding: 65px 16px 24px;
+  }
+
+  .levels-cards-section {
+    padding: 30px 16px 70px;
+  }
+
+  .level-card-image {
+    height: 240px;
+  }
+
+  .level-card-content {
+    padding: 24px 20px 26px;
+  }
+
+  .level-card-content h3 {
+    font-size: 1.7rem;
+  }
+
+  .levels-closing {
+    padding: 0 16px 70px;
+  }
+
+  .levels-closing-container {
+    padding: 32px 20px;
+    border-radius: 22px;
+  }
+}
+
+@media (max-width: 480px) {
+  .levels-tag,
+  .level-label {
+    font-size: 0.72rem;
+    letter-spacing: 2px;
+  }
+
+  .level-card-image {
+    height: 220px;
+  }
+
+  .level-btn {
+    width: 100%;
+    text-align: center;
+  }
+}

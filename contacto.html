@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contacto | Instituto San Vicente</title>
+
+  <link rel="stylesheet" href="css/contacto.css">
+  <link rel="stylesheet" href="css/index.css">
+  <link rel="stylesheet" href="css/loader.css">
+</head>
+
+<body>
+
+  <header class="top-header">
+    <div class="header-inner">
+      <div class="logo-superior">
+        <img src="assets/img/logo-texto-best-quality.png" alt="Instituto San Vicente">
+      </div>
+
+      <button class="hamburger" id="hamburger" aria-label="Abrir menú">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+
+      <ul class="mobile-menu" id="nav-menu">
+        <li><a href="index.html">OUR SCHOOL</a></li>
+        <li><a href="institution.html">INSTITUTION</a></li>
+        <li><a href="english.html">ENGLISH</a></li>
+        <li><a href="Academic-Levels.html">ACADEMIC LEVELS</a></li>
+        <li><a href="club-sanvi.html">CLUB SANVI</a></li>
+        <li><a href="contacto.html">CONTACT</a></li>
+        <li><a href="login.html">LOGIN</a></li>
+      </ul>
+    </div>
+  </header>
+
+  <nav class="navbar">
+    <ul class="nav-menu">
+      <li><a href="index.html">OUR SCHOOL</a></li>
+      <li><a href="institution.html">INSTITUTION</a></li>
+      <li><a href="english.html">ENGLISH</a></li>
+
+      <li class="dropdown">
+        <a href="Academic-Levels.html">ACADEMIC LEVELS</a>
+        <ul class="submenu">
+          <li><a href="kinder.html">KINDER</a></li>
+          <li><a href="Primary.html">PRIMARY</a></li>
+          <li><a href="highschool.html">HIGH SCHOOL</a></li>
+        </ul>
+      </li>
+
+      <li><a href="club-sanvi.html">CLUB SANVI</a></li>
+      <li><a href="contacto.html">CONTACT</a></li>
+      <li><a href="login.html">LOGIN</a></li>
+    </ul>
+  </nav>
+
+  <main class="contact-page">
+    <section class="contact-section">
+      <div class="contact-container">
+
+        <div class="contact-header-box">
+          <span class="contact-kicker">CONTACTO</span>
+          <h1>Vías de comunicación institucional</h1>
+          <p>
+            San Vicente es una escuela abierta al diálogo constante con la familia.
+            Estos son nuestros canales oficiales de comunicación institucional.
+          </p>
+
+          <div class="contact-top-info">
+            <div class="contact-top-item">
+              <h3>Dirección</h3>
+              <p>Juana Koslay, San Luis</p>
+            </div>
+
+            <div class="contact-top-item">
+              <h3>Teléfono</h3>
+              <p>266 4214497</p>
+            </div>
+
+            <div class="contact-top-item">
+              <h3>Email</h3>
+              <p>envíos@institutosanvicente.com</p>
+            </div>
+
+            <div class="contact-top-item">
+              <h3>Redes</h3>
+
+              <div class="contact-socials">
+                <a href="https://www.instagram.com/instituto_san_vicente/" target="_blank" aria-label="Instagram">
+                  <img src="assets/img/social-boton-instagram.png" alt="Instagram">
+                </a>
+
+                <a href="https://www.facebook.com/InstitutoSanVicente" target="_blank" aria-label="Facebook">
+                  <img src="assets/img/social-boton-facebook.png" alt="Facebook">
+                </a>
+
+                <a href="https://api.whatsapp.com/send?phone=542664214497" target="_blank" aria-label="WhatsApp">
+                  <img src="assets/img/social-boton-whatsapp.png" alt="WhatsApp">
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="contact-grid">
+          <div class="contact-form-box">
+            <h2>Consulta institucional</h2>
+
+            <form class="contact-form" id="contactForm">
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="nombre">Nombre</label>
+                  <input type="text" id="nombre" name="nombre" placeholder="Tu nombre" required>
+                </div>
+
+                <div class="form-group">
+                  <label for="apellido">Apellido</label>
+                  <input type="text" id="apellido" name="apellido" placeholder="Tu apellido" required>
+                </div>
+              </div>
+
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="correo">Correo</label>
+                  <input type="email" id="correo" name="correo" placeholder="tuemail@gmail.com" required>
+                </div>
+
+                <div class="form-group">
+                  <label for="telefono">Teléfono</label>
+                  <input type="text" id="telefono" name="telefono" placeholder="Tu número">
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="asunto">Asunto</label>
+                <input type="text" id="asunto" name="asunto" placeholder="Admisión, matrícula, horarios o información institucional">
+              </div>
+
+              <div class="form-group">
+                <label for="mensaje">Mensaje</label>
+                <textarea id="mensaje" name="mensaje" placeholder="Escribe aquí tu consulta..." required></textarea>
+              </div>
+
+              <p id="formStatus" class="form-status"></p>
+
+              <button type="submit" class="contact-btn" id="contactBtn">
+                ENVIAR MENSAJE
+              </button>
+            </form>
+          </div>
+
+          <div class="contact-map-box">
+            <h2>Nuestra ubicación</h2>
+
+            <div class="contact-map-frame">
+              <iframe
+                src="https://www.google.com/maps?q=-33.2843024,-66.2488605&output=embed"
+                title="Mapa Instituto San Vicente"
+                loading="lazy"
+                allowfullscreen
+                referrerpolicy="no-referrer-when-downgrade">
+              </iframe>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+  </main>
+
+  <script src="js/script.js"></script>
+  <script src="js/loader.js"></script>
+  <script src="js/contacto.js"></script>
+</body>
+</html>

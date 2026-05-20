@@ -1,0 +1,410 @@
+/* =========================
+   CONTACTO - ESTILO PREMIUM COMPACTO
+========================= */
+
+:root {
+  --contact-blue: #073f66;
+  --contact-blue-dark: #052f4d;
+  --contact-red: #c91f2f;
+  --contact-bg: #f4f7f9;
+  --contact-card: #ffffff;
+  --contact-soft: #eef4f7;
+  --contact-border: #dce6ec;
+  --contact-text: #263847;
+  --contact-muted: #667988;
+  --contact-shadow: 0 14px 34px rgba(5, 47, 77, 0.08);
+  --contact-shadow-soft: 0 8px 20px rgba(5, 47, 77, 0.06);
+}
+
+/* PÁGINA */
+.contact-page {
+  background:
+    radial-gradient(circle at top left, rgba(7, 63, 102, 0.08), transparent 32%),
+    linear-gradient(180deg, #f8fafc 0%, var(--contact-bg) 100%);
+  padding-top: 145px;
+  color: var(--contact-text);
+}
+
+.contact-section {
+  padding: 34px 18px 70px;
+}
+
+.contact-container {
+  max-width: 1240px;
+  margin: 0 auto;
+}
+
+/* CABECERA */
+.contact-header-box {
+  position: relative;
+  overflow: hidden;
+  background: var(--contact-card);
+  border: 1px solid var(--contact-border);
+  padding: 34px;
+  margin-bottom: 22px;
+  box-shadow: var(--contact-shadow);
+}
+
+.contact-header-box::before {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 6px;
+  background: linear-gradient(180deg, var(--contact-red), var(--contact-blue));
+}
+
+.contact-kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+  color: var(--contact-red);
+  font-family: Arial, sans-serif;
+  font-weight: 800;
+  font-size: 0.66rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+.contact-kicker::before {
+  content: "";
+  width: 24px;
+  height: 2px;
+  background: var(--contact-red);
+}
+
+.contact-header-box h1 {
+  font-family: "Apricot", "Franklin Gothic Medium", Arial, sans-serif;
+  color: var(--contact-blue);
+  font-size: clamp(1.9rem, 3.4vw, 3.3rem);
+  margin-bottom: 12px;
+  line-height: 1;
+  letter-spacing: 0.3px;
+}
+
+.contact-header-box > p {
+  max-width: 780px;
+  color: var(--contact-muted);
+  font-size: 0.94rem;
+  line-height: 1.7;
+  margin-bottom: 26px;
+}
+
+/* INFO SUPERIOR */
+.contact-top-info {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+}
+
+.contact-top-item {
+  background: linear-gradient(180deg, #ffffff 0%, #f8fbfd 100%);
+  border: 1px solid var(--contact-border);
+  padding: 16px;
+  min-height: 96px;
+  box-shadow: var(--contact-shadow-soft);
+  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+}
+
+.contact-top-item:hover {
+  transform: translateY(-3px);
+  border-color: rgba(7, 63, 102, 0.28);
+  box-shadow: 0 14px 28px rgba(5, 47, 77, 0.1);
+}
+
+.contact-top-item h3 {
+  color: var(--contact-red);
+  font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+  font-size: 0.64rem;
+  font-weight: 800;
+  letter-spacing: 1.7px;
+  margin-bottom: 9px;
+  text-transform: uppercase;
+}
+
+.contact-top-item p {
+  color: var(--contact-text);
+  line-height: 1.5;
+  font-size: 0.86rem;
+}
+
+/* REDES */
+.contact-socials {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.contact-socials a {
+  width: 34px;
+  height: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--contact-border);
+  background: #ffffff;
+  box-shadow: 0 6px 14px rgba(5, 47, 77, 0.06);
+  transition: transform 0.25s ease, border-color 0.25s ease, background 0.25s ease;
+}
+
+.contact-socials a:hover {
+  transform: translateY(-3px);
+  border-color: var(--contact-blue);
+  background: var(--contact-soft);
+}
+
+.contact-socials a img {
+  width: 16px;
+  height: 16px;
+  object-fit: contain;
+  display: block;
+}
+
+/* GRID PRINCIPAL */
+.contact-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.08fr) minmax(340px, 0.92fr);
+  gap: 22px;
+  align-items: stretch;
+}
+
+.contact-form-box,
+.contact-map-box {
+  background: var(--contact-card);
+  border: 1px solid var(--contact-border);
+  padding: 30px;
+  box-shadow: var(--contact-shadow);
+}
+
+.contact-form-box h2,
+.contact-map-box h2 {
+  font-family: "Apricot", "Franklin Gothic Medium", Arial, sans-serif;
+  color: var(--contact-blue);
+  font-size: 1.65rem;
+  margin-bottom: 20px;
+  line-height: 1.1;
+}
+
+/* FORMULARIO */
+.contact-form {
+  width: 100%;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 15px;
+}
+
+.form-group label {
+  color: var(--contact-red);
+  font-family: sans-serif;
+  font-size: 0.64rem;
+  font-weight: 800;
+  letter-spacing: 1.7px;
+  margin-bottom: 8px;
+  text-transform: uppercase;
+}
+
+.form-group input,
+.form-group textarea {
+  width: 100%;
+  background: #f8fbfd;
+  border: 1px solid var(--contact-border);
+  padding: 13px 14px;
+  color: var(--contact-blue-dark);
+  font-size: 0.9rem;
+  outline: none;
+  border-radius: 0;
+  transition:
+    border-color 0.25s ease,
+    background 0.25s ease,
+    box-shadow 0.25s ease;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+  border-color: var(--contact-blue);
+  background: #ffffff;
+  box-shadow: 0 0 0 4px rgba(7, 63, 102, 0.08);
+}
+
+.form-group textarea {
+  min-height: 165px;
+  resize: vertical;
+}
+
+.form-group input::placeholder,
+.form-group textarea::placeholder {
+  color: #91a2af;
+}
+
+/* BOTÓN */
+.contact-btn {
+  background: linear-gradient(135deg, var(--contact-blue), var(--contact-blue-dark));
+  color: #ffffff;
+  border: none;
+  padding: 13px 24px;
+  font-family: Arial, sans-serif;
+  font-size: 0.66rem;
+  font-weight: 800;
+  letter-spacing: 1.9px;
+  cursor: pointer;
+  transition: transform 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
+  border-radius: 0;
+  box-shadow: 0 12px 24px rgba(5, 47, 77, 0.22);
+}
+
+.contact-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 16px 30px rgba(5, 47, 77, 0.28);
+}
+
+.contact-btn:active {
+  transform: translateY(0);
+}
+
+/* MAPA */
+.contact-map-box {
+  display: flex;
+  flex-direction: column;
+}
+
+.contact-map-frame {
+  flex: 1;
+  min-height: 100px;
+  border: 1px solid var(--contact-border);
+  overflow: hidden;
+  background: var(--contact-soft);
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,0.65);
+}
+
+.contact-map-frame iframe {
+  width: 100%;
+  height: 100%;
+  min-height: 440px;
+  border: none;
+  display: block;
+  filter: saturate(0.92) contrast(1.02);
+}
+
+/* RESPONSIVE */
+@media (max-width: 1100px) {
+  .contact-top-info {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .contact-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .contact-map-frame iframe {
+    min-height: 360px;
+  }
+}
+
+@media (max-width: 768px) {
+  .contact-page {
+    padding-top: 92px;
+  }
+
+  .contact-section {
+    padding: 24px 14px 54px;
+  }
+
+  .contact-container {
+    margin-top: 14px;
+  }
+
+  .contact-header-box,
+  .contact-form-box,
+  .contact-map-box {
+    padding: 22px;
+  }
+
+  .contact-top-info {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .contact-top-item {
+    min-height: auto;
+  }
+
+  .form-row {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+
+  .contact-header-box h1 {
+    font-size: 2rem;
+  }
+
+  .contact-form-box h2,
+  .contact-map-box h2 {
+    font-size: 1.45rem;
+  }
+
+  .contact-map-frame iframe {
+    min-height: 300px;
+  }
+}
+
+@media (max-width: 480px) {
+  .contact-header-box,
+  .contact-form-box,
+  .contact-map-box {
+    padding: 18px;
+  }
+
+  .contact-header-box h1 {
+    font-size: 1.75rem;
+  }
+
+  .contact-header-box > p {
+    font-size: 0.88rem;
+    line-height: 1.6;
+  }
+
+  .contact-socials {
+    flex-direction: row;
+    justify-content: flex-start;
+  }
+
+  .contact-socials a {
+    width: 36px;
+    height: 36px;
+  }
+
+  .contact-btn {
+    width: 100%;
+    text-align: center;
+  }
+}
+
+.form-status {
+  margin: 6px 0 4px;
+  font-size: 0.86rem;
+  font-weight: 600;
+  min-height: 20px;
+}
+
+.form-status.success {
+  color: #1c7c3a;
+}
+
+.form-status.error {
+  color: #b42318;
+}
+
+.contact-btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}

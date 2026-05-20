@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Panel Docentes | Instituto San Vicente</title>
+
+  <link rel="stylesheet" href="css/index.css">
+  <link rel="stylesheet" href="css/panel.css">
+</head>
+
+<body>
+
+  <main class="panel-page">
+    <section class="panel-card">
+
+      <div class="panel-top">
+        <div>
+          <span class="panel-kicker">ENTORNO DOCENTE</span>
+          <h1>Biblioteca Institucional</h1>
+          <p id="userInfo" class="panel-user">Cargando información...</p>
+        </div>
+
+        <button id="logoutBtn" class="logout-btn">Cerrar sesión</button>
+      </div>
+
+      <div class="announcements-box">
+        <div class="announcements-head">
+          <span>COMUNICADOS</span>
+          <h2>Últimos avisos institucionales</h2>
+        </div>
+
+        <div id="announcementsContainer" class="announcements-list">
+          <p>Cargando comunicados...</p>
+        </div>
+      </div>
+
+      <div class="filters-grid">
+        <div class="filter-box">
+          <label>Nivel</label>
+          <select id="nivelFilter">
+            <option value="">Todos</option>
+            <option value="Inicial">Inicial</option>
+            <option value="Primario">Primario</option>
+            <option value="Secundario">Secundario</option>
+            <option value="General">General</option>
+          </select>
+        </div>
+
+        <div class="filter-box">
+          <label>Área</label>
+          <select id="areaFilter">
+            <option value="">Todas</option>
+            <option value="Institucional">Institucional</option>
+            <option value="Educación Física">Educación Física</option>
+            <option value="Inglés">Inglés</option>
+            <option value="Arte">Arte</option>
+            <option value="Matemática">Matemática</option>
+            <option value="Lengua">Lengua</option>
+            <option value="Ciencias">Ciencias</option>
+          </select>
+        </div>
+
+        <div class="filter-box">
+          <label>Categoría</label>
+          <select id="categoriaFilter">
+            <option value="">Todas</option>
+            <option value="Decreto">Decreto</option>
+            <option value="Planificación">Planificación</option>
+            <option value="Material docente">Material docente</option>
+            <option value="Reglamento">Reglamento</option>
+            <option value="Circular">Circular</option>
+            <option value="Documento institucional">Documento institucional</option>
+          </select>
+        </div>
+      </div>
+
+      <div id="documentsContainer" class="documents-grid">
+        <p>Cargando documentos...</p>
+      </div>
+
+    </section>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/supabase-config.js"></script>
+  <script src="js/panel-docentes.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Panel | Instituto San Vicente</title>
+
+  <link rel="stylesheet" href="css/index.css">
+  <link rel="stylesheet" href="css/loader.css">
+  <link rel="stylesheet" href="css/panel.css">
+</head>
+
+<body>
+
+  <main class="panel-page">
+    <section class="panel-card">
+      <span class="panel-kicker">PANEL INSTITUCIONAL</span>
+      <h1>Bienvenido</h1>
+
+      <p id="userEmail" class="panel-user">Cargando usuario...</p>
+
+      <div class="panel-actions">
+        <a href="index.html" class="panel-link">Volver al sitio</a>
+        <button id="logoutBtn">Cerrar sesión</button>
+      </div>
+    </section>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/supabase-config.js"></script>
+  <script src="js/panel.js"></script>
+</body>
+</html>

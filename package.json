@@ -1,0 +1,16 @@
+{
+  "name": "sanvi",
+  "version": "1.0.0",
+  "main": "server.js",
+  "type": "commonjs",
+  "scripts": {
+    "dev": "node server.js",
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.105.4",
+    "dotenv": "^17.2.3",
+    "express": "^5.1.0",
+    "resend": "^6.12.3"
+  }
+}

@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Panel Administradores | Instituto San Vicente</title>
+  <link rel="stylesheet" href="css/panel-admin.css" />
+</head>
+<body>
+
+<main class="admin-shell">
+  <aside class="admin-sidebar">
+    <div class="brand">
+      <span>ISV</span>
+      <div>
+        <h2>San Vicente</h2>
+        <p>Panel interno</p>
+      </div>
+    </div>
+
+    <nav class="side-nav">
+      <button class="nav-btn active" data-section="dashboard">Dashboard</button>
+      <button class="nav-btn" data-section="usuarios">Usuarios</button>
+      <button class="nav-btn" data-section="biblioteca">Biblioteca</button>
+      <button class="nav-btn" data-section="comunicados">Comunicados</button>
+    </nav>
+
+    <button id="logoutBtn" class="logout-btn">Cerrar sesión</button>
+  </aside>
+
+  <section class="admin-main">
+
+    <header class="admin-topbar">
+      <div>
+        <span>PANEL ADMINISTRATIVO</span>
+        <h1 id="sectionTitle">Dashboard</h1>
+      </div>
+      <a href="index.html">Volver al sitio</a>
+    </header>
+
+    <section id="dashboard" class="admin-section active">
+      <div class="stats-grid">
+        <article class="stat-card"><span>Usuarios</span><strong id="statUsuarios">0</strong></article>
+        <article class="stat-card"><span>Docentes</span><strong id="statDocentes">0</strong></article>
+        <article class="stat-card"><span>Directivos</span><strong id="statDirectivos">0</strong></article>
+        <article class="stat-card"><span>Documentos</span><strong id="statDocumentos">0</strong></article>
+        <article class="stat-card"><span>Comunicados</span><strong id="statComunicados">0</strong></article>
+      </div>
+
+      <div class="admin-card">
+        <h2>Estado del sistema</h2>
+        <p class="muted">Backend activo, autenticación segura por roles y biblioteca conectada a Google Drive.</p>
+      </div>
+    </section>
+
+    <section id="usuarios" class="admin-section">
+      <div class="two-columns">
+        <div class="admin-card">
+          <h2>Crear usuario</h2>
+
+          <form id="createUserForm" class="admin-form">
+            <input type="text" name="nombre" placeholder="Nombre" required />
+            <input type="text" name="apellido" placeholder="Apellido" />
+            <input type="email" name="email" placeholder="usuario@docentes.com" required />
+            <input type="text" name="password" placeholder="Contraseña temporal" required />
+
+            <select name="nivel">
+              <option value="General">General</option>
+              <option value="Inicial">Inicial</option>
+              <option value="Primario">Primario</option>
+              <option value="Secundario">Secundario</option>
+            </select>
+
+            <select name="area">
+              <option value="Institucional">Institucional</option>
+              <option value="Educación Física">Educación Física</option>
+              <option value="Inglés">Inglés</option>
+              <option value="Arte">Arte</option>
+              <option value="Matemática">Matemática</option>
+              <option value="Lengua">Lengua</option>
+              <option value="Ciencias">Ciencias</option>
+              <option value="Administración">Administración</option>
+            </select>
+
+            <input type="text" name="cargo" placeholder="Cargo / función" />
+            <textarea name="observaciones" placeholder="Observaciones"></textarea>
+
+            <p class="hint">Rol automático: @admin.com, @directivos.com o @docentes.com</p>
+            <p id="adminStatus" class="status"></p>
+            <button id="createUserBtn" type="submit">Crear usuario</button>
+          </form>
+        </div>
+
+        <div class="admin-card">
+          <div class="card-head">
+            <h2>Usuarios existentes</h2>
+            <button id="reloadUsersBtn">Actualizar</button>
+          </div>
+          <div id="usersContainer" class="list-container"></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="biblioteca" class="admin-section">
+      <div class="two-columns">
+        <div class="admin-card">
+          <h2 id="documentFormTitle">Cargar documento</h2>
+
+          <form id="createDocumentForm" class="admin-form">
+            <input type="hidden" name="id" id="documentId" />
+            <input type="text" name="titulo" placeholder="Título del documento" required />
+            <textarea name="descripcion" placeholder="Descripción"></textarea>
+
+            <select name="categoria" required>
+              <option value="Decreto">Decreto</option>
+              <option value="Reglamento">Reglamento</option>
+              <option value="Planificación">Planificación</option>
+              <option value="Material docente">Material docente</option>
+              <option value="Circular">Circular</option>
+              <option value="Documento institucional">Documento institucional</option>
+            </select>
+
+            <select name="nivel" required>
+              <option value="General">General</option>
+              <option value="Inicial">Inicial</option>
+              <option value="Primario">Primario</option>
+              <option value="Secundario">Secundario</option>
+            </select>
+
+            <select name="area" required>
+              <option value="Institucional">Institucional</option>
+              <option value="Educación Física">Educación Física</option>
+              <option value="Inglés">Inglés</option>
+              <option value="Arte">Arte</option>
+              <option value="Matemática">Matemática</option>
+              <option value="Lengua">Lengua</option>
+              <option value="Ciencias">Ciencias</option>
+              <option value="Administración">Administración</option>
+            </select>
+
+            <select name="rol_visible" required>
+              <option value="todos">Todos</option>
+              <option value="directivo">Directivos</option>
+              <option value="docente">Docentes</option>
+              <option value="admin">Solo administradores</option>
+            </select>
+
+            <input type="url" name="drive_url" placeholder="https://drive.google.com/..." required />
+
+            <p id="documentStatus" class="status"></p>
+
+            <div class="form-actions">
+              <button id="createDocumentBtn" type="submit">Guardar documento</button>
+              <button id="cancelEditDocumentBtn" type="button" class="secondary hidden">Cancelar edición</button>
+            </div>
+          </form>
+        </div>
+
+        <div class="admin-card">
+          <div class="card-head">
+            <h2>Biblioteca</h2>
+            <button id="reloadDocumentsBtn">Actualizar</button>
+          </div>
+
+          <input id="documentSearch" class="search-input" type="search" placeholder="Buscar documento..." />
+          <div id="adminDocumentsContainer" class="list-container"></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="comunicados" class="admin-section">
+      <div class="two-columns">
+        <div class="admin-card">
+          <h2>Crear comunicado</h2>
+
+          <form id="createAnnouncementForm" class="admin-form">
+            <input type="text" name="titulo" placeholder="Título del comunicado" required />
+            <textarea name="contenido" placeholder="Contenido del comunicado" required></textarea>
+
+            <select name="rol_visible" required>
+              <option value="todos">Todos</option>
+              <option value="directivo">Directivos</option>
+              <option value="docente">Docentes</option>
+              <option value="admin">Solo administradores</option>
+            </select>
+
+            <p id="announcementStatus" class="status"></p>
+            <button id="createAnnouncementBtn" type="submit">Publicar comunicado</button>
+          </form>
+        </div>
+
+        <div class="admin-card">
+          <div class="card-head">
+            <h2>Comunicados publicados</h2>
+            <button id="reloadAnnouncementsBtn">Actualizar</button>
+          </div>
+
+          <div id="announcementsContainer" class="list-container"></div>
+        </div>
+      </div>
+    </section>
+
+  </section>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/supabase-config.js"></script>
+<script src="js/panel-administradores.js"></script>
+</body>
+</html>

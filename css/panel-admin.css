@@ -1,0 +1,42 @@
+*{box-sizing:border-box}
+body{margin:0;font-family:Segoe UI,Arial,sans-serif;background:#eef3f7;color:#122033}
+.admin-shell{min-height:100vh;display:grid;grid-template-columns:280px 1fr}
+.admin-sidebar{background:#071f34;color:#fff;padding:26px;display:flex;flex-direction:column;gap:28px;position:sticky;top:0;height:100vh}
+.brand{display:flex;gap:14px;align-items:center}
+.brand span{width:48px;height:48px;border-radius:16px;background:#c1121f;display:grid;place-items:center;font-weight:900}
+.brand h2{margin:0;font-size:1.2rem}.brand p{margin:3px 0 0;color:#9fb5c8}
+.side-nav{display:grid;gap:10px}
+.nav-btn,.logout-btn,.admin-topbar a,.admin-form button,.card-head button{border:0;border-radius:14px;padding:13px 16px;font-weight:800;cursor:pointer}
+.nav-btn{background:transparent;color:#c8d7e4;text-align:left}.nav-btn.active,.nav-btn:hover{background:#123d61;color:#fff}
+.logout-btn{margin-top:auto;background:#c1121f;color:#fff}
+.admin-main{padding:30px;overflow:hidden}
+.admin-topbar{display:flex;justify-content:space-between;gap:20px;align-items:center;margin-bottom:24px}
+.admin-topbar span{color:#c1121f;font-weight:900;letter-spacing:.12em;font-size:.75rem}
+.admin-topbar h1{margin:6px 0 0;font-size:2.4rem;color:#0b3558}
+.admin-topbar a{text-decoration:none;background:#fff;color:#0b3558;box-shadow:0 10px 25px rgba(16,32,51,.08)}
+.admin-section{display:none}.admin-section.active{display:block}
+.stats-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:16px;margin-bottom:20px}
+.stat-card,.admin-card{background:#fff;border:1px solid rgba(11,53,88,.09);border-radius:24px;box-shadow:0 18px 45px rgba(16,32,51,.08)}
+.stat-card{padding:22px}.stat-card span{color:#66798b;font-weight:800}.stat-card strong{display:block;margin-top:12px;font-size:2.4rem;color:#0b3558}
+.admin-card{padding:24px}.admin-card h2{margin:0 0 18px;color:#0b3558}.muted,.hint{color:#66798b}
+.two-columns{display:grid;grid-template-columns:390px 1fr;gap:20px;align-items:start}
+.admin-form{display:grid;gap:12px}
+.admin-form input,.admin-form select,.admin-form textarea,.search-input{width:100%;border:1px solid rgba(11,53,88,.16);border-radius:14px;padding:13px 14px;font:inherit;outline:none;background:#f8fbfd}
+.admin-form textarea{min-height:96px;resize:vertical}
+.admin-form input:focus,.admin-form select:focus,.admin-form textarea:focus,.search-input:focus{border-color:#0b4a78;box-shadow:0 0 0 4px rgba(11,74,120,.12)}
+.admin-form button,.card-head button{background:#0b4a78;color:#fff}
+.secondary{background:#e8eef3!important;color:#0b3558!important}.hidden{display:none!important}
+.form-actions{display:flex;gap:10px}.form-actions button{flex:1}
+.status{margin:0;font-weight:800}.status.success{color:#16803d}.status.error{color:#c1121f}
+.card-head{display:flex;justify-content:space-between;gap:14px;align-items:center;margin-bottom:14px}
+.list-container{display:grid;gap:12px;max-height:620px;overflow:auto;padding-right:4px}
+.item-card{display:flex;justify-content:space-between;gap:16px;padding:16px;border:1px solid rgba(11,53,88,.1);border-radius:18px;background:#f8fbfd}
+.item-card h3{margin:0 0 6px;color:#0b3558}.item-card p{margin:0 0 10px;color:#607285;line-height:1.45}
+.meta{display:flex;flex-wrap:wrap;gap:7px}.meta span{padding:6px 9px;border-radius:999px;background:#eaf0f5;color:#30485f;font-size:.75rem;font-weight:800}
+.role{background:rgba(193,18,31,.1)!important;color:#c1121f!important}
+.item-actions{display:flex;flex-direction:column;gap:8px;min-width:90px}
+.item-actions button,.item-actions a{border:0;border-radius:12px;padding:10px;text-align:center;text-decoration:none;font-weight:900;cursor:pointer}
+.edit-btn{background:#0b4a78;color:#fff}.delete-btn{background:#c1121f;color:#fff}.open-link{background:#e8eef3;color:#0b3558}
+.search-input{margin-bottom:14px}
+@media(max-width:1050px){.admin-shell{grid-template-columns:1fr}.admin-sidebar{position:relative;height:auto}.side-nav{grid-template-columns:repeat(4,1fr)}.stats-grid{grid-template-columns:repeat(2,1fr)}.two-columns{grid-template-columns:1fr}}
+@media(max-width:640px){.admin-main{padding:18px}.side-nav{grid-template-columns:1fr}.admin-topbar{flex-direction:column;align-items:flex-start}.stats-grid{grid-template-columns:1fr}.item-card{flex-direction:column}.item-actions{flex-direction:row}.admin-topbar h1{font-size:2rem}}
