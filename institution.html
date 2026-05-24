@@ -6,155 +6,286 @@
   <title>Institución | Instituto San Vicente</title>
   <link rel="stylesheet" href="css/institution.css">
   <link rel="stylesheet" href="css/index.css">
+  <link rel="stylesheet" href="css/language.css">
   <link rel="stylesheet" href="css/loader.css">
 </head>
 <body>
 
-      <!-- ENCABEZADO SUPERIOR -->
-  <header class="top-header">
-    <div class="header-inner">
-      <div class="logo-superior">
-        <img src="assets/img/logo-texto-best-quality.png" alt="Instituto San Vicente">
-      </div>
+<div class="language-switcher">
+  <button class="language-toggle" id="languageToggle" type="button" aria-label="Cambiar idioma">
+    🌐 <span id="currentLanguageLabel">ES</span>
+  </button>
 
-      <button class="hamburger" id="hamburger" aria-label="Abrir menú">
-        <span></span>
-        <span></span>
-        <span></span>
-      </button>
+  <div class="language-menu" id="languageMenu">
+    <button type="button" data-lang="es">Spanish</button>
+    <button type="button" data-lang="en">English</button>
+  </div>
+</div>
 
-      <ul class="mobile-menu" id="nav-menu">
-        <li><a href="index.html">OUR SCHOOL</a></li>
-        <li><a href="institution.html">INSTITUTION</a></li>
-        <li><a href="english.html">ENGLISH</a></li>
-        <li><a href="Academic-Levels.html">ACADEMIC LEVELS</a></li>
-        <li><a href="club-sanvi.html">CLUB SANVI</a></li>
-        <li><a href="contacto.html">CONTACT</a></li>
-        <li><a href="login.html">LOGIN</a></li>
-      </ul>
+<!-- ENCABEZADO SUPERIOR -->
+<header class="top-header">
+  <div class="header-inner">
+    <div class="logo-superior">
+      <img 
+        src="assets/img/logo-texto-best-quality.png" 
+        alt="Instituto San Vicente"
+        data-i18n-alt="brand.logoAlt"
+      >
     </div>
-  </header>
 
-  <!-- BARRA DE NAVEGACIÓN DESKTOP -->
+    <button class="hamburger" id="hamburger" aria-label="Abrir menú">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+
+    <ul class="mobile-menu" id="nav-menu">
+      <li><a href="index.html" data-i18n="nav.ourSchool">OUR SCHOOL</a></li>
+      <li><a href="institution.html" data-i18n="nav.institution">INSTITUTION</a></li>
+      <li><a href="english.html" data-i18n="nav.english">ENGLISH</a></li>
+      <li><a href="Academic-Levels.html" data-i18n="nav.academicLevels">ACADEMIC LEVELS</a></li>
+      <li><a href="club-sanvi.html" data-i18n="nav.clubSanvi">CLUB SANVI</a></li>
+      <li><a href="contacto.html" data-i18n="nav.contact">CONTACT</a></li>
+      <li><a href="login.html" data-i18n="nav.login">LOGIN</a></li>
+    </ul>
+  </div>
+</header>
+
+<!-- BARRA DE NAVEGACIÓN DESKTOP -->
 <nav class="navbar">
   <ul class="nav-menu">
-    <li><a href="index.html">OUR SCHOOL</a></li>
-      <li><a href="institution.html">INSTITUTION</a></li>
-    <li><a href="english.html">ENGLISH</a></li>
+    <li><a href="index.html" data-i18n="nav.ourSchool">OUR SCHOOL</a></li>
+    <li><a href="institution.html" data-i18n="nav.institution">INSTITUTION</a></li>
+    <li><a href="english.html" data-i18n="nav.english">ENGLISH</a></li>
+
     <li class="dropdown">
-      <a href="Academic-Levels.html">ACADEMIC LEVELS</a>
+      <a href="Academic-Levels.html" data-i18n="nav.academicLevels">ACADEMIC LEVELS</a>
       <ul class="submenu">
-        <li><a href="kinder.html">KINDER</a></li>
-        <li><a href="Primary.html">PRIMARY</a></li>
-        <li><a href="highschool.html">HIGH SCHOOL</a></li>
+        <li><a href="kinder.html" data-i18n="nav.kinder">KINDER</a></li>
+        <li><a href="Primary.html" data-i18n="nav.primary">PRIMARY</a></li>
+        <li><a href="highschool.html" data-i18n="nav.highschool">HIGH SCHOOL</a></li>
       </ul>
     </li>
 
-    <li><a href="club-sanvi.html">CLUB SANVI</a></li>
-    <li><a href="contacto.html">CONTACT</a></li>
-    <li><a href="login.html">LOGIN</a></li>
+    <li><a href="club-sanvi.html" data-i18n="nav.clubSanvi">CLUB SANVI</a></li>
+    <li><a href="contacto.html" data-i18n="nav.contact">CONTACT</a></li>
+    <li><a href="login.html" data-i18n="nav.login">LOGIN</a></li>
   </ul>
 </nav>
 
-  <main class="institution-page">
+<main class="institution-page">
 
-    <section class="institution-hero">
-      <video class="hero-video" autoplay muted loop playsinline>
-        <source src="./assets/videos/video sanvi.mp4" type="video/mp4" />
-      </video>
+  <section class="institution-hero">
+    <video class="hero-video" autoplay muted loop playsinline>
+      <source src="./assets/videos/video sanvi.mp4" type="video/mp4" />
+    </video>
 
-      <div class="hero-overlay"></div>
+    <div class="hero-overlay"></div>
 
-      <div class="hero-content">
-        <h1>Una institución pensada para crecer, aprender y construir futuro</h1>
-        <p>
-          Acompañamos a cada estudiante en su desarrollo académico, humano y social,
-          promoviendo una educación integral basada en valores, innovación y comunidad.
-        </p>
+    <div class="hero-content">
+      <h1 data-i18n="institution.hero.title">
+        Una institución pensada para crecer, aprender y construir futuro
+      </h1>
 
-        <div class="hero-actions">
-          <a href="./contacto.html" class="btn-secondary">Contactanos</a>
+      <p data-i18n="institution.hero.text">
+        Acompañamos a cada estudiante en su desarrollo académico, humano y social,
+        promoviendo una educación integral basada en valores, innovación y comunidad.
+      </p>
+
+      <div class="hero-actions">
+        <a href="./contacto.html" class="btn-secondary" data-i18n="institution.hero.button">
+          Contactanos
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section class="edificios-section">
+    <div class="edificios-header">
+      <span data-i18n="institution.buildings.label">Nuestros edificios</span>
+            <h2 class="inicios-titulo">
+        <img 
+          src="assets/img/textos-png/espacios-del-instituto.png"
+          data-i18n-src-es="assets/img/textos-png/espacios-del-instituto.png"
+          data-i18n-src-en="assets/img/textos-png/espacios-del-instituto-en.png"
+          alt="Espacios del Instituto"
+          data-i18n-alt="institution.buildings.title"
+          class="inicios-titulo-img"
+        >
+      </h2>
+    </div>
+
+    <div class="edificios-slider">
+      <div class="edificios-slides" id="edificiosSlides">
+        <div class="edificios-slide">
+          <img 
+            src="assets/img/edificios/1.webp" 
+            alt="Edificio Instituto San Vicente"
+            data-i18n-alt="institution.buildings.image1Alt"
+          >
+        </div>
+
+        <div class="edificios-slide">
+          <img 
+            src="assets/img/edificios/2.webp" 
+            alt="Instalaciones Instituto San Vicente"
+            data-i18n-alt="institution.buildings.image2Alt"
+          >
+        </div>
+
+        <div class="edificios-slide">
+          <img 
+            src="assets/img/edificios/3.webp" 
+            alt="Espacios educativos Instituto San Vicente"
+            data-i18n-alt="institution.buildings.image3Alt"
+          >
+        </div>
+
+        <div class="edificios-slide">
+          <img 
+            src="assets/img/edificios/4.png" 
+            alt="Espacios educativos Instituto San Vicente"
+            data-i18n-alt="institution.buildings.image4Alt"
+          >
+        </div>
+
+        <div class="edificios-slide">
+          <img 
+            src="assets/img/edificios/5.webp" 
+            alt="Espacios educativos Instituto San Vicente"
+            data-i18n-alt="institution.buildings.image5Alt"
+          >
+        </div>
+
+        <div class="edificios-slide">
+          <img 
+            src="assets/img/edificios/6.webp" 
+            alt="Espacios educativos Instituto San Vicente"
+            data-i18n-alt="institution.buildings.image6Alt"
+          >
+        </div>
+
+        <div class="edificios-slide">
+          <img 
+            src="assets/img/edificios/7.webp" 
+            alt="Espacios educativos Instituto San Vicente"
+            data-i18n-alt="institution.buildings.image7Alt"
+          >
+        </div>
+
+        <div class="edificios-slide">
+          <img 
+            src="assets/img/edificios/8.webp" 
+            alt="Espacios educativos Instituto San Vicente"
+            data-i18n-alt="institution.buildings.image8Alt"
+          >
+        </div>
+
+        <div class="edificios-slide">
+          <img 
+            src="assets/img/edificios/9.webp" 
+            alt="Espacios educativos Instituto San Vicente"
+            data-i18n-alt="institution.buildings.image9Alt"
+          >
         </div>
       </div>
+    </div>
+  </section>
 
-    </section>
+  <section class="intro-section">
+    <div class="intro-text">
+      <span class="section-label" data-i18n="institution.intro.label">
+        Nuestra institución
+      </span>
 
-    <section class="edificios-section">
-  <div class="edificios-header">
-    <span>Nuestros edificios</span>
-    <h2>Espacios del Instituto</h2>
-  </div>
+      <h2 data-i18n="institution.intro.title">
+        Educación con identidad, cercanía y propósito
+      </h2>
 
-  <div class="edificios-slider">
-    <div class="edificios-slides" id="edificiosSlides">
-      <div class="edificios-slide">
-        <img src="assets/img/edificios/1.webp" alt="Edificio Instituto San Vicente">
+      <p data-i18n="institution.intro.text">
+        El Instituto San Vicente nace con la misión de brindar una propuesta educativa
+        cálida, sólida y transformadora. Nuestro objetivo es formar estudiantes capaces
+        de pensar, crear, convivir y proyectarse hacia el futuro con herramientas reales.
+      </p>
+    </div>
+
+    <div class="intro-card">
+      <h3 data-i18n="institution.intro.cardTitle">Más que una escuela</h3>
+
+      <p data-i18n="institution.intro.cardText">
+        Somos una comunidad educativa que acompaña cada etapa del crecimiento,
+        integrando conocimientos, valores, expresión artística, actividad física y
+        compromiso social.
+      </p>
+    </div>
+  </section>
+
+  <section class="final-cta">
+    <h2 data-i18n="institution.cta.title">
+      Conocé más sobre nuestra propuesta educativa
+    </h2>
+
+    <p data-i18n="institution.cta.text">
+      Te invitamos a descubrir el Instituto San Vicente y formar parte de nuestra comunidad.
+    </p>
+
+    <a href="./contacto.html" data-i18n="institution.cta.button">
+      Solicitar información
+    </a>
+  </section>
+
+</main>
+
+<!-- =========================
+     FOOTER
+========================= -->
+<footer class="footer-sanvicente">
+  <div class="footer-contenedor">
+
+    <div class="footer-grid">
+      <div class="footer-col">
+        <h3 data-i18n="footer.address.title">Dirección</h3>
+        <p data-i18n="footer.address.line1">Av. del Viento Chorrillero 2570</p>
+        <p data-i18n="footer.address.line2">Juana Koslay,San Luis, Argentina</p>
       </div>
 
-      <div class="edificios-slide">
-        <img src="assets/img/edificios/2.webp" alt="Instalaciones Instituto San Vicente">
+      <div class="footer-col">
+        <h3 data-i18n="footer.hours.title">Horario de Atención</h3>
+        <p data-i18n="footer.hours.line1">Lunes a Viernes</p>
+        <p data-i18n="footer.hours.line2">de 8:00 a 16:00 hs</p>
       </div>
 
-      <div class="edificios-slide">
-        <img src="assets/img/edificios/3.webp" alt="Espacios educativos Instituto San Vicente">
+      <div class="footer-col">
+        <h3 data-i18n="footer.contact.title">Contáctenos</h3>
+        <p data-i18n="footer.contact.phone">266 4214497</p>
+        <p data-i18n="footer.contact.email">envíos@institutosanvicente.com</p>
       </div>
-      <div class="edificios-slide">
-        <img src="assets/img/edificios/4.webp" alt="Espacios educativos Instituto San Vicente">
-      </div>
-      <div class="edificios-slide">
-        <img src="assets/img/edificios/5.webp" alt="Espacios educativos Instituto San Vicente">
-      </div>
-      <div class="edificios-slide">
-        <img src="assets/img/edificios/6.webp" alt="Espacios educativos Instituto San Vicente">
-      </div>
-      <div class="edificios-slide">
-        <img src="assets/img/edificios/7.webp" alt="Espacios educativos Instituto San Vicente">
-      </div>
-      <div class="edificios-slide">
-        <img src="assets/img/edificios/8.webp" alt="Espacios educativos Instituto San Vicente">
-      </div>
-      <div class="edificios-slide">
-        <img src="assets/img/edificios/9.webp" alt="Espacios educativos Instituto San Vicente">
-      </div>
+    </div>
 
+    <div class="footer-linea"></div>
+
+    <div class="footer-bottom">
+      <p data-i18n="footer.copy">
+        © Copyright 2026 Instituto San Vicente. Todos los derechos reservados.
+      </p>
+
+      <img 
+        src="assets/img/textos-png/hoja membretada logos varios.png"
+        data-i18n-src-es="assets/img/textos-png/hoja membretada logos varios.png"
+        data-i18n-src-en="assets/img/textos-png/hoja membretada logos varios-en.png"
+        alt="Instituciones y convenios"
+        data-i18n-alt="footer.logosAlt"
+        class="footer-logos"
+      >
     </div>
   </div>
-</section>
+</footer>
 
-    <section class="intro-section">
-      <div class="intro-text">
-        <span class="section-label">Nuestra institución</span>
-        <h2>Educación con identidad, cercanía y propósito</h2>
-        <p>
-          El Instituto San Vicente nace con la misión de brindar una propuesta educativa
-          cálida, sólida y transformadora. Nuestro objetivo es formar estudiantes capaces
-          de pensar, crear, convivir y proyectarse hacia el futuro con herramientas reales.
-        </p>
-      </div>
 
-      <div class="intro-card">
-        <h3>Más que una escuela</h3>
-        <p>
-          Somos una comunidad educativa que acompaña cada etapa del crecimiento,
-          integrando conocimientos, valores, expresión artística, actividad física y
-          compromiso social.
-        </p>
-      </div>
-    </section>
-
-    <section class="final-cta">
-      <h2>Conocé más sobre nuestra propuesta educativa</h2>
-      <p>
-        Te invitamos a descubrir el Instituto San Vicente y formar parte de nuestra comunidad.
-      </p>
-      <a href="./contacto.html">Solicitar información</a>
-    </section>
-
-  </main>   
-
-  <script src="js/script.js"></script>
-  <script src="js/loader.js"></script>
-  <script src="./js/institution.js"></script>
+<script src="js/script.js"></script>
+<script src="js/loader.js"></script>
+<script src="./js/institution.js"></script>
+<script src="js/i18n.js"></script>
 
 </body>
 </html>

@@ -5,101 +5,147 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Instituto San Vicente</title>
   <link rel="stylesheet" href="css/index.css">
+  <link rel="stylesheet" href="css/language.css">
   <link rel="stylesheet" href="css/loader.css">
 </head>
 <body>
 
-  <!-- ENCABEZADO SUPERIOR -->
-  <header class="top-header">
-    <div class="header-inner">
-      <div class="logo-superior">
-        <img src="assets/img/logo-texto-best-quality.png" alt="Instituto San Vicente">
-      </div>
+<div class="language-switcher">
+  <button class="language-toggle" id="languageToggle" type="button" aria-label="Cambiar idioma">
+    🌐 <span id="currentLanguageLabel">ES</span>
+  </button>
 
-      <button class="hamburger" id="hamburger" aria-label="Abrir menú">
-        <span></span>
-        <span></span>
-        <span></span>
-      </button>
+  <div class="language-menu" id="languageMenu">
+    <button type="button" data-lang="es">Spanish</button>
+    <button type="button" data-lang="en">English</button>
+  </div>
+</div>
 
-      <ul class="mobile-menu" id="nav-menu">
-        <li><a href="index.html">OUR SCHOOL</a></li>
-        <li><a href="institution.html">INSTITUTION</a></li>
-        <li><a href="english.html">ENGLISH</a></li>
-        <li><a href="Academic-Levels.html">ACADEMIC LEVELS</a></li>
-        <li><a href="club-sanvi.html">CLUB SANVI</a></li>
-        <li><a href="contacto.html">CONTACT</a></li>
-        <li><a href="login.html">LOGIN</a></li>
-      </ul>
+<!-- ENCABEZADO SUPERIOR -->
+<header class="top-header">
+  <div class="header-inner">
+    <div class="logo-superior">
+      <img 
+        src="assets/img/logo-texto-best-quality.png" 
+        alt="Instituto San Vicente"
+        data-i18n-alt="brand.logoAlt"
+      >
     </div>
-  </header>
 
-  <!-- BARRA DE NAVEGACIÓN DESKTOP -->
+    <button class="hamburger" id="hamburger" aria-label="Abrir menú">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+
+    <ul class="mobile-menu" id="nav-menu">
+      <li><a href="index.html" data-i18n="nav.ourSchool">OUR SCHOOL</a></li>
+      <li><a href="institution.html" data-i18n="nav.institution">INSTITUTION</a></li>
+      <li><a href="english.html" data-i18n="nav.english">ENGLISH</a></li>
+      <li><a href="Academic-Levels.html" data-i18n="nav.academicLevels">ACADEMIC LEVELS</a></li>
+      <li><a href="club-sanvi.html" data-i18n="nav.clubSanvi">CLUB SANVI</a></li>
+      <li><a href="contacto.html" data-i18n="nav.contact">CONTACT</a></li>
+      <li><a href="login.html" data-i18n="nav.login">LOGIN</a></li>
+    </ul>
+  </div>
+</header>
+
+<!-- BARRA DE NAVEGACIÓN DESKTOP -->
 <nav class="navbar">
   <ul class="nav-menu">
-    <li><a href="institution.html">OUR SCHOOL</a></li>
-      <li><a href="institution.html">INSTITUTION</a></li>
-    <li><a href="english.html">ENGLISH</a></li>
+    <li><a href="index.html" data-i18n="nav.ourSchool">OUR SCHOOL</a></li>
+    <li><a href="institution.html" data-i18n="nav.institution">INSTITUTION</a></li>
+    <li><a href="english.html" data-i18n="nav.english">ENGLISH</a></li>
+
     <li class="dropdown">
-      <a href="Academic-Levels.html">ACADEMIC LEVELS</a>
+      <a href="Academic-Levels.html" data-i18n="nav.academicLevels">ACADEMIC LEVELS</a>
       <ul class="submenu">
-        <li><a href="kinder.html">KINDER</a></li>
-        <li><a href="Primary.html">PRIMARY</a></li>
-        <li><a href="highschool.html">HIGH SCHOOL</a></li>
+        <li><a href="kinder.html" data-i18n="nav.kinder">KINDER</a></li>
+        <li><a href="Primary.html" data-i18n="nav.primary">PRIMARY</a></li>
+        <li><a href="highschool.html" data-i18n="nav.highschool">HIGH SCHOOL</a></li>
       </ul>
     </li>
 
-    <li><a href="club-sanvi.html">CLUB SANVI</a></li>
-    <li><a href="contacto.html">CONTACT</a></li>
-    <li><a href="login.html">LOGIN</a></li>
+    <li><a href="club-sanvi.html" data-i18n="nav.clubSanvi">CLUB SANVI</a></li>
+    <li><a href="contacto.html" data-i18n="nav.contact">CONTACT</a></li>
+    <li><a href="login.html" data-i18n="nav.login">LOGIN</a></li>
   </ul>
 </nav>
-  <!-- HERO / VISOR AUTOMÁTICO -->
-  
-    <section class="hero">
-      <div class="slider" id="slider">
-        <div class="slides" id="slides">
-          <div class="slide">
-            <img src="assets/img/hero-1.webp" alt="Imagen institucional 1">
-          </div>
-          <div class="slide">
-            <img src="assets/img/hero-2.webp" alt="Imagen institucional 2">
-          </div>
-          <div class="slide">
-            <img src="assets/img/hero-3.webp" alt="Imagen institucional 3">
-          </div>
-          <div class="slide">
-            <img src="assets/img/hero-4.webp" alt="Imagen institucional 4">
-          </div>
-        </div>
-      </div>
-    </section>
 
-  <!-- MENSAJE -->
-  <section class="mensaje-principal">
-    <div class="mensaje-contenedor">
-      <img src="assets/img/eslogan.png" alt="Mensaje institucional" class="eslogan">
+<!-- HERO / VISOR AUTOMÁTICO -->
+<section class="hero">
+  <div class="slider" id="slider">
+    <div class="slides" id="slides">
+      <div class="slide">
+        <img 
+          src="assets/img/hero-1.webp" 
+          alt="Imagen institucional 1"
+          data-i18n-alt="home.hero.image1Alt"
+        >
+      </div>
+
+      <div class="slide">
+        <img 
+          src="assets/img/hero-2.webp" 
+          alt="Imagen institucional 2"
+          data-i18n-alt="home.hero.image2Alt"
+        >
+      </div>
+
+      <div class="slide">
+        <img 
+          src="assets/img/hero-3.webp" 
+          alt="Imagen institucional 3"
+          data-i18n-alt="home.hero.image3Alt"
+        >
+      </div>
+
+      <div class="slide">
+        <img 
+          src="assets/img/hero-4.webp" 
+          alt="Imagen institucional 4"
+          data-i18n-alt="home.hero.image4Alt"
+        >
+      </div>
     </div>
-  </section>
+  </div>
+</section>
+
+<!-- MENSAJE -->
+<section class="mensaje-principal">
+  <div class="mensaje-contenedor">
+    <img 
+      src="assets/img/eslogan.png" 
+      data-i18n-src-es="assets/img/eslogan.png"
+      data-i18n-src-en="assets/img/eslogan-en.png"
+      alt="Mensaje institucional" 
+      data-i18n-alt="home.slogan.alt"
+      class="eslogan"
+    >
+  </div>
+</section>
 
 <section class="instalaciones-preview">
   <div class="instalaciones-preview-contenedor">
 
     <div class="instalaciones-preview-info">
-      <span class="instalaciones-etiqueta">
+      <span class="instalaciones-etiqueta" data-i18n="home.installations.label">
         ESPACIOS SAN VICENTE
       </span>
 
       <h2>
-        Conocé nuestras
-          <img 
-    src="assets/img/textos-png/instalaciones-png.png" 
-    alt="instalaciones" 
-    class="titulo-instalaciones-img"
-  >
+        <span data-i18n="home.installations.title">Conocé nuestras</span>
+        <img 
+          src="assets/img/textos-png/instalaciones-png.png"
+          data-i18n-src-es="assets/img/textos-png/instalaciones-png.png"
+          data-i18n-src-en="assets/img/textos-png/instalaciones-png-en.png"
+          alt="instalaciones"
+          data-i18n-alt="home.installations.imageAlt"
+          class="titulo-instalaciones-img"
+        >
       </h2>
 
-      <p>
+      <p data-i18n="home.installations.text">
         Una institución de Nivel Inicial, Primario y Secundario
         pensada para que cada estudiante aprenda, disfrute
         y desarrolle al máximo sus capacidades.
@@ -108,25 +154,25 @@
       <div class="instalaciones-features">
         <div class="feature-item">
           <div class="feature-icon">⌂</div>
-          <h4>ESPACIOS</h4>
-          <p>PENSADOS PARA APRENDER</p>
+          <h4 data-i18n="home.installations.feature1.title">ESPACIOS</h4>
+          <p data-i18n="home.installations.feature1.text">PENSADOS PARA APRENDER</p>
         </div>
 
         <div class="feature-item">
           <div class="feature-icon">♡</div>
-          <h4>AMBIENTES</h4>
-          <p>SEGUROS Y ACOGEDORES</p>
+          <h4 data-i18n="home.installations.feature2.title">AMBIENTES</h4>
+          <p data-i18n="home.installations.feature2.text">SEGUROS Y ACOGEDORES</p>
         </div>
 
         <div class="feature-item">
           <div class="feature-icon">☆</div>
-          <h4>RECURSOS</h4>
-          <p>PARA CRECER Y CREAR</p>
+          <h4 data-i18n="home.installations.feature3.title">RECURSOS</h4>
+          <p data-i18n="home.installations.feature3.text">PARA CRECER Y CREAR</p>
         </div>
       </div>
 
       <div class="instalaciones-bottom">
-        <a href="institution.html" class="btn-ver-galeria">
+        <a href="institution.html" class="btn-ver-galeria" data-i18n="home.installations.button">
           VER GALERÍA
         </a>
       </div>
@@ -134,23 +180,43 @@
 
     <div class="instalaciones-galeria">
       <div class="galeria-img grande">
-        <img src="assets/img/instalaciones-galeria/1.JPG" alt="Instalaciones del Instituto San Vicente">
+        <img 
+          src="assets/img/instalaciones-galeria/1.JPG" 
+          alt="Instalaciones del Instituto San Vicente"
+          data-i18n-alt="home.installations.gallery1Alt"
+        >
       </div>
 
       <div class="galeria-img">
-        <img src="assets/img/instalaciones-galeria/2.JPG" alt="Espacios educativos San Vicente">
+        <img 
+          src="assets/img/instalaciones-galeria/2.JPG" 
+          alt="Espacios educativos San Vicente"
+          data-i18n-alt="home.installations.gallery2Alt"
+        >
       </div>
 
       <div class="galeria-img">
-        <img src="assets/img/instalaciones-galeria/3.JPG" alt="Galería institucional San Vicente">
+        <img 
+          src="assets/img/instalaciones-galeria/3.JPG" 
+          alt="Galería institucional San Vicente"
+          data-i18n-alt="home.installations.gallery3Alt"
+        >
       </div>
 
       <div class="galeria-img">
-        <img src="assets/img/instalaciones-galeria/4.png" alt="Ambientes del Instituto San Vicente">
+        <img 
+          src="assets/img/instalaciones-galeria/4.png" 
+          alt="Ambientes del Instituto San Vicente"
+          data-i18n-alt="home.installations.gallery4Alt"
+        >
       </div>
 
       <div class="galeria-img">
-        <img src="assets/img/instalaciones-galeria/5.png" alt="Recursos y espacios San Vicente">
+        <img 
+          src="assets/img/instalaciones-galeria/5.png" 
+          alt="Recursos y espacios San Vicente"
+          data-i18n-alt="home.installations.gallery5Alt"
+        >
       </div>
     </div>
 
@@ -162,71 +228,89 @@
 
     <div class="inicios-encabezado">
       <h2 class="inicios-titulo">
-  <img 
-    src="assets/img/textos-png/nuestros-inicios.png" 
-    alt="Nuestros Inicios" 
-    class="inicios-titulo-img"
-  >
-</h2>
-      <span class="inicios-etiqueta">2014</span>
-      
+        <img 
+          src="assets/img/textos-png/nuestros-inicios.png"
+          data-i18n-src-es="assets/img/textos-png/nuestros-inicios.png"
+          data-i18n-src-en="assets/img/textos-png/nuestros-inicios-en.png"
+          alt="Nuestros Inicios"
+          data-i18n-alt="home.beginnings.imageAlt"
+          class="inicios-titulo-img"
+        >
+      </h2>
 
+      <span class="inicios-etiqueta" data-i18n="home.beginnings.year">2014</span>
     </div>
 
     <div class="inicios-bloque">
       <div class="inicios-texto-card">
-        <h3>San Vicente</h3>
-        <p>  
+        <h3 data-i18n="home.beginnings.card1.title">San Vicente</h3>
+        <p data-i18n="home.beginnings.card1.text">
           Un proyecto educativo que nació con el deseo de crear un espacio diferente para aprender, crecer y sentirse parte.
         </p>
-        <h3>Apertura institucional</h3>
-        <p>  
-            En 2014 comenzamos a construir el Instituto San Vicente con una visión clara: ofrecer a las familias de San Luis y Juana Koslay una educación moderna, cercana y pensada para los desafíos del presente y del futuro.        
+
+        <h3 data-i18n="home.beginnings.card2.title">Apertura institucional</h3>
+        <p data-i18n="home.beginnings.card2.text">
+          En 2014 comenzamos a construir el Instituto San Vicente con una visión clara: ofrecer a las familias de San Luis y Juana Koslay una educación moderna, cercana y pensada para los desafíos del presente y del futuro.
         </p>
       </div>
 
       <div class="inicios-img-card">
-        <img src="assets/img/2014/2014-1.jpg" alt="Apertura institucional del Instituto San Vicente">
+        <img 
+          src="assets/img/2014/2014-1.jpg" 
+          alt="Apertura institucional del Instituto San Vicente"
+          data-i18n-alt="home.beginnings.photo1Alt"
+        >
       </div>
     </div>
 
     <div class="inicios-bloque reverse">
       <div class="inicios-texto-card">
-        <h3>Primeros estudiantes y familias</h3>
-        <p>
+        <h3 data-i18n="home.beginnings.card3.title">Primeros estudiantes y familias</h3>
+        <p data-i18n="home.beginnings.card3.text">
           Desde el primer día soñamos con una escuela donde cada estudiante pudiera aprender con alegría, desarrollar su potencial y crecer acompañado en cada etapa.
         </p>
       </div>
 
       <div class="inicios-img-card">
-        <img src="assets/img/2014/2014-2.jpg" alt="Primeros alumnos y familias">
+        <img 
+          src="assets/img/2014/2014-2.jpg" 
+          alt="Primeros alumnos y familias"
+          data-i18n-alt="home.beginnings.photo2Alt"
+        >
       </div>
     </div>
 
     <div class="inicios-bloque">
       <div class="inicios-texto-card">
-        <h3>Una propuesta integral</h3>
-        <p>
+        <h3 data-i18n="home.beginnings.card4.title">Una propuesta integral</h3>
+        <p data-i18n="home.beginnings.card4.text">
           Incorporamos doble escolaridad, inglés, deportes, arte, tecnología y educación emocional como parte de una formación integral, activa y humana.
         </p>
-</div>
+      </div>
+
       <div class="inicios-img-card">
-        <img src="assets/img/2014/2014-3.jpg" alt="Acto de presentación institucional">
+        <img 
+          src="assets/img/2014/2014-3.jpg" 
+          alt="Acto de presentación institucional"
+          data-i18n-alt="home.beginnings.photo3Alt"
+        >
       </div>
     </div>
 
     <div class="inicios-bloque reverse">
       <div class="inicios-texto-card">
-
-
-        <h3>Nuestra esencia</h3>
-        <p>
+        <h3 data-i18n="home.beginnings.card5.title">Nuestra esencia</h3>
+        <p data-i18n="home.beginnings.card5.text">
           Creemos en una educación que forme personas autónomas, creativas, comprometidas y capaces de transformar su realidad.
         </p>
       </div>
 
       <div class="inicios-img-card">
-        <img src="assets/img/2014/2014-5.jpg" alt="Espacios iniciales del Instituto San Vicente">
+        <img 
+          src="assets/img/2014/2014-5.jpg" 
+          alt="Espacios iniciales del Instituto San Vicente"
+          data-i18n-alt="home.beginnings.photo4Alt"
+        >
       </div>
     </div>
 
@@ -241,15 +325,17 @@
 
   <div class="inscripcion-contenedor">
     <div class="inscripcion-texto">
-      <h2>Inscripción: Ciclo Lectivo 2026</h2>
-      <p>
+      <h2 data-i18n="home.cta.title">Inscripción: Ciclo Lectivo 2027</h2>
+      <p data-i18n="home.cta.text">
         Solicitá una entrevista con nuestro equipo directivo y conocé
         nuestra propuesta de Nivel Inicial, Primario y Secundario.
       </p>
     </div>
 
     <div class="inscripcion-boton">
-      <a href="contacto.html" class="btn-inscripcion">SOLICITAR ENTREVISTA</a>
+      <a href="contacto.html" class="btn-inscripcion" data-i18n="home.cta.button">
+        SOLICITAR ENTREVISTA
+      </a>
     </div>
   </div>
 </section>
@@ -262,46 +348,54 @@
 
     <div class="footer-grid">
       <div class="footer-col">
-        <h3>Dirección</h3>
-        <p>Av. del Viento Chorrillero 2570</p>
-        <p>Juana Koslay,San Luis, Argentina</p>
+        <h3 data-i18n="footer.address.title">Dirección</h3>
+        <p data-i18n="footer.address.line1">Av. del Viento Chorrillero 2570</p>
+        <p data-i18n="footer.address.line2">Juana Koslay,San Luis, Argentina</p>
       </div>
 
       <div class="footer-col">
-        <h3>Horario de Atención</h3>
-        <p>Lunes a Viernes</p>
-        <p>de 8:00 a 16:00 hs</p>
+        <h3 data-i18n="footer.hours.title">Horario de Atención</h3>
+        <p data-i18n="footer.hours.line1">Lunes a Viernes</p>
+        <p data-i18n="footer.hours.line2">de 8:00 a 16:00 hs</p>
       </div>
 
       <div class="footer-col">
-        <h3>Contáctenos</h3>
-        <p>266 4214497</p>
-        <p>envíos@institutosanvicente.com</p>
+        <h3 data-i18n="footer.contact.title">Contáctenos</h3>
+        <p data-i18n="footer.contact.phone">266 4214497</p>
+        <p data-i18n="footer.contact.email">envíos@institutosanvicente.com</p>
       </div>
     </div>
 
     <div class="footer-linea"></div>
 
-<div class="footer-bottom">
-  <p>© Copyright 2026 Instituto San Vicente. Todos los derechos reservados.</p>
+    <div class="footer-bottom">
+      <p data-i18n="footer.copy">
+        © Copyright 2026 Instituto San Vicente. Todos los derechos reservados.
+      </p>
 
-  <img 
-    src="assets/img/textos-png/hoja membretada logos varios.png" 
-    alt="Instituciones y convenios"
-    class="footer-logos"
-  >
-</div>
+      <img 
+        src="assets/img/textos-png/hoja membretada logos varios.png"
+        data-i18n-src-es="assets/img/textos-png/hoja membretada logos varios.png"
+        data-i18n-src-en="assets/img/textos-png/hoja membretada logos varios-en.png"
+        alt="Instituciones y convenios"
+        data-i18n-alt="footer.logosAlt"
+        class="footer-logos"
+      >
+    </div>
   </div>
-
-
 </footer>
 
-  <!-- BOTÓN WHATSAPP -->
-  <a href="https://api.whatsapp.com/send?phone=542664214497" class="whatsapp-btn" aria-label="WhatsApp">
-    <img src="assets/img/whatsapp.png" alt="WhatsApp">
-  </a>
+<!-- BOTÓN WHATSAPP -->
+<a href="https://api.whatsapp.com/send?phone=542664214497" class="whatsapp-btn" aria-label="WhatsApp">
+  <img 
+    src="assets/img/whatsapp.png" 
+    alt="WhatsApp"
+    data-i18n-alt="whatsapp.alt"
+  >
+</a>
 
-  <script src="js/script.js"></script>
-  <script src="js/loader.js"></script>
+<script src="js/script.js"></script>
+<script src="js/loader.js"></script>
+<script src="js/i18n.js"></script>
 </body>
 </html>

@@ -5,114 +5,171 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Academic Levels | Instituto San Vicente</title>
   <link rel="stylesheet" href="css/index.css">
+  <link rel="stylesheet" href="css/language.css">
   <link rel="stylesheet" href="css/academic-levels.css">
   <link rel="stylesheet" href="css/loader.css">
 </head>
 <body>
 
- <header class="top-header">
-    <div class="header-inner">
-      <div class="logo-superior">
-        <img src="assets/img/logo-texto-best-quality.png" alt="Instituto San Vicente">
-      </div>
+<div class="language-switcher">
+  <button class="language-toggle" id="languageToggle" type="button" aria-label="Cambiar idioma">
+    🌐 <span id="currentLanguageLabel">ES</span>
+  </button>
 
-      <button class="hamburger" id="hamburger" aria-label="Abrir menú">
-        <span></span>
-        <span></span>
-        <span></span>
-      </button>
+  <div class="language-menu" id="languageMenu">
+    <button type="button" data-lang="es">Spanish</button>
+    <button type="button" data-lang="en">English</button>
+  </div>
+</div>
 
-      <ul class="mobile-menu" id="nav-menu">
-        <li><a href="index.html">OUR SCHOOL</a></li>
-        <li><a href="institution.html">INSTITUTION</a></li>
-        <li><a href="english.html">ENGLISH</a></li>
-        <li><a href="Academic-Levels.html">ACADEMIC LEVELS</a></li>
-        <li><a href="club-sanvi.html">CLUB SANVI</a></li>
-        <li><a href="contacto.html">CONTACT</a></li>
-        <li><a href="login.html">LOGIN</a></li>
-      </ul>
+<!-- ENCABEZADO SUPERIOR -->
+<header class="top-header">
+  <div class="header-inner">
+    <div class="logo-superior">
+      <img 
+        src="assets/img/logo-texto-best-quality.png" 
+        alt="Instituto San Vicente"
+        data-i18n-alt="brand.logoAlt"
+      >
     </div>
-  </header>
 
+    <button class="hamburger" id="hamburger" aria-label="Abrir menú">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+
+    <ul class="mobile-menu" id="nav-menu">
+      <li><a href="index.html" data-i18n="nav.ourSchool">OUR SCHOOL</a></li>
+      <li><a href="institution.html" data-i18n="nav.institution">INSTITUTION</a></li>
+      <li><a href="english.html" data-i18n="nav.english">ENGLISH</a></li>
+      <li><a href="Academic-Levels.html" data-i18n="nav.academicLevels">ACADEMIC LEVELS</a></li>
+      <li><a href="club-sanvi.html" data-i18n="nav.clubSanvi">CLUB SANVI</a></li>
+      <li><a href="contacto.html" data-i18n="nav.contact">CONTACT</a></li>
+      <li><a href="login.html" data-i18n="nav.login">LOGIN</a></li>
+    </ul>
+  </div>
+</header>
+
+<!-- BARRA DE NAVEGACIÓN DESKTOP -->
 <nav class="navbar">
   <ul class="nav-menu">
-    <li><a href="index.html">OUR SCHOOL</a></li>
-    <li><a href="institution.html">INSTITUTION</a></li>
-    <li><a href="english.html">ENGLISH</a></li>
+    <li><a href="index.html" data-i18n="nav.ourSchool">OUR SCHOOL</a></li>
+    <li><a href="institution.html" data-i18n="nav.institution">INSTITUTION</a></li>
+    <li><a href="english.html" data-i18n="nav.english">ENGLISH</a></li>
+
     <li class="dropdown">
-      <a href="Academic-Levels.html">ACADEMIC LEVELS</a>
+      <a href="Academic-Levels.html" data-i18n="nav.academicLevels">ACADEMIC LEVELS</a>
       <ul class="submenu">
-        <li><a href="kinder.html">KINDER</a></li>
-        <li><a href="Primary.html">PRIMARY</a></li>
-        <li><a href="highschool.html">HIGH SCHOOL</a></li>
+        <li><a href="kinder.html" data-i18n="nav.kinder">KINDER</a></li>
+        <li><a href="Primary.html" data-i18n="nav.primary">PRIMARY</a></li>
+        <li><a href="highschool.html" data-i18n="nav.highschool">HIGH SCHOOL</a></li>
       </ul>
     </li>
 
-    <li><a href="club-sanvi.html">CLUB SANVI</a></li>
-    <li><a href="contacto.html">CONTACT</a></li>
-    <li><a href="login.html">LOGIN</a></li>
+    <li><a href="club-sanvi.html" data-i18n="nav.clubSanvi">CLUB SANVI</a></li>
+    <li><a href="contacto.html" data-i18n="nav.contact">CONTACT</a></li>
+    <li><a href="login.html" data-i18n="nav.login">LOGIN</a></li>
   </ul>
 </nav>
 
+<!-- TARJETAS -->
+<section class="levels-cards-section">
+  <div class="levels-cards-container">
 
+    <!-- KINDER -->
+    <article class="level-card">
+      <div class="level-card-image">
+        <img 
+          src="assets/img/niveles-iniciales/kinder/kinder-logo.jpeg" 
+          alt="Nivel Inicial"
+          data-i18n-alt="levels.kinder.imageAlt"
+        >
+      </div>
 
-  <!-- TARJETAS -->
-  <section class="levels-cards-section">
-    <div class="levels-cards-container">
+      <div class="level-card-content">
+        <span class="level-label" data-i18n="levels.kinder.label">Nivel Inicial</span>
+        <h3 class="inicios-titulo">
+        <img 
+          src="assets/img/textos-png/Jardin.png"
+          data-i18n-src-es="assets/img/textos-png/Jardin.png"
+          data-i18n-src-en="assets/img/textos-png/Jardin-en.png"
+          alt="Nuestros Inicios"
+          data-i18n-alt="home.beginnings.imageAlt"
+          class="inicios-titulo-img"
+        >
+      </h3>
+        <p data-i18n="levels.kinder.text">
+          Jardín de Infantes de lunes a viernes de 9:00 a 12:30 hs, con posibilidad de pre y post hora, horario extendido hasta las 16:00 hs y espacio lúdico de 13:00 a 16:00 hs para niños de 2 y 3 años.
+        </p>
+        <a href="kinder.html" class="level-btn" data-i18n="levels.button">VER NIVEL</a>
+      </div>
+    </article>
 
-      <!-- KINDER -->
-      <article class="level-card">
-        <div class="level-card-image">
-          <img src="assets/img/niveles-iniciales/kinder/kinder-logo.jpeg" alt="Nivel Kínder">
-        </div>
+    <!-- PRIMARY -->
+    <article class="level-card">
+      <div class="level-card-image">
+        <img 
+          src="assets/img/niveles-iniciales/primary/primary-logo.jpeg" 
+          alt="Nivel Primario"
+          data-i18n-alt="levels.primary.imageAlt"
+        >
+      </div>
 
-        <div class="level-card-content">
-          <span class="level-label">Nivel Inicial</span>
-          <h3>Kinder</h3>
-          <p>
-            Jardín de Infantes de lunes a viernes de 9:00 a 12:30 hs, con posibilidad de pre y post hora, horario extendido hasta las 16:00 hs y espacio lúdico de 13:00 a 16:00 hs para niños de 2 y 3 años.
-          </p>
-          <a href="kinder.html" class="level-btn">VER NIVEL</a>
-        </div>
-      </article>
+      <div class="level-card-content">
+        <span class="level-label" data-i18n="levels.primary.label">Nivel Primario</span>
+        <h3 class="inicios-titulo">
+        <img 
+          src="assets/img/textos-png/primaria.png"
+          data-i18n-src-es="assets/img/textos-png/primaria.png"
+          data-i18n-src-en="assets/img/textos-png/primaria-en.png"
+          alt="Nuestros Inicios"
+          data-i18n-alt="home.beginnings.imageAlt"
+          class="inicios-titulo-img"
+        >
+      </h3>
+        <p data-i18n="levels.primary.text">
+          Funciona de lunes a viernes de 8:00 a 16:00 hs, integrando experiencias académicas, inglés, deportes, arte, educación emocional y cultura.
+        </p>
+        <a href="Primary.html" class="level-btn" data-i18n="levels.button">VER NIVEL</a>
+      </div>
+    </article>
 
-      <!-- PRIMARY -->
-      <article class="level-card">
-        <div class="level-card-image">
-          <img src="assets/img/niveles-iniciales/primary/primary-logo.jpeg" alt="Nivel Primary">
-        </div>
+    <!-- HIGH SCHOOL -->
+    <article class="level-card">
+      <div class="level-card-image">
+        <img 
+          src="assets/img/niveles-iniciales/high-school/high-school-logo.jpeg" 
+          alt="Nivel Secundario"
+          data-i18n-alt="levels.highschool.imageAlt"
+        >
+      </div>
 
-        <div class="level-card-content">
-          <span class="level-label">Nivel Primario</span>
-          <h3>Primary</h3>
-          <p>
-            Funciona de lunes a viernes de 8:00 a 16:00 hs, integrando experiencias académicas, inglés, deportes, arte, educación emocional y cultura.
-          </p>
-          <a href="Primary.html" class="level-btn">VER NIVEL</a>
-        </div>
-      </article>
+      <div class="level-card-content">
+        <span class="level-label" data-i18n="levels.highschool.label">Nivel Secundario</span>
+        <h3 class="inicios-titulo">
+        <img 
+          src="assets/img/textos-png/high-school.png"
+          data-i18n-src-es="assets/img/textos-png/high-school.png"
+          data-i18n-src-en="assets/img/textos-png/high-school-en.png"
+          alt="Nuestros Inicios"
+          data-i18n-alt="home.beginnings.imageAlt"
+          class="inicios-titulo-img"
+        >
+      </h3>
+        <p data-i18n="levels.highschool.text">
+          Funciona de 7:45 a 15:30 hs, con espacio de tutoría hasta las 16:00 hs, acompañando la autonomía, la responsabilidad y el proyecto personal de cada estudiante.
+        </p>
+        <a href="highschool.html" class="level-btn" data-i18n="levels.button">VER NIVEL</a>
+      </div>
+    </article>
 
-      <!-- HIGH SCHOOL -->
-      <article class="level-card">
-        <div class="level-card-image">
-          <img src="assets/img/niveles-iniciales/high-school/high-school-logo.jpeg" alt="Nivel High School">
-        </div>
+  </div>
+</section>
 
-        <div class="level-card-content">
-          <span class="level-label">Nivel Secundario</span>
-          <h3>High School</h3>
-          <p>
-            Funciona de 7:45 a 15:30 hs, con espacio de tutoría hasta las 16:00 hs, acompañando la autonomía, la responsabilidad y el proyecto personal de cada estudiante.
-          </p>
-          <a href="highschool.html" class="level-btn">VER NIVEL</a>
-        </div>
-      </article>
-
-    </div>
-  </section>
-
-  <script src="js/script.js"></script>
-  <script src="js/loader.js"></script>
+<script src="js/script.js"></script>
+<script src="js/loader.js"></script>
+<script src="js/i18n.js"></script>
 
 </body>
 </html>

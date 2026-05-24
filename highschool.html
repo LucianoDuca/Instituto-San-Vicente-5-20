@@ -4,148 +4,243 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>High School | Instituto San Vicente</title>
-      <link rel="stylesheet" href="css/index.css">
-      <link rel="stylesheet" href="css/highschool.css">
-      <link rel="stylesheet" href="css/loader.css">
-
+  <link rel="stylesheet" href="css/index.css">
+  <link rel="stylesheet" href="css/language.css">
+  <link rel="stylesheet" href="css/highschool.css">
+  <link rel="stylesheet" href="css/loader.css">
 </head>
 <body>
 
+<div class="language-switcher">
+  <button class="language-toggle" id="languageToggle" type="button" aria-label="Cambiar idioma">
+    🌐 <span id="currentLanguageLabel">ES</span>
+  </button>
 
-  <!-- ENCABEZADO SUPERIOR -->
-  <header class="top-header">
-    <div class="header-inner">
-      <div class="logo-superior">
-        <img src="assets/img/logo-texto-best-quality.png" alt="Instituto San Vicente">
-      </div>
+  <div class="language-menu" id="languageMenu">
+    <button type="button" data-lang="es">Spanish</button>
+    <button type="button" data-lang="en">English</button>
+  </div>
+</div>
 
-      <button class="hamburger" id="hamburger" aria-label="Abrir menú">
-        <span></span>
-        <span></span>
-        <span></span>
-      </button>
-
-      <ul class="mobile-menu" id="nav-menu">
-        <li><a href="index.html">OUR SCHOOL</a></li>
-        <li><a href="institution.html">INSTITUTION</a></li>
-        <li><a href="english.html">ENGLISH</a></li>
-        <li><a href="#">FAMILY</a></li>
-        <li><a href="Academic-Levels.html">ACADEMIC LEVELS</a></li>
-        <li><a href="club-sanvi.html">CLUB SANVI</a></li>
-        <li><a href="contacto.html">CONTACT</a></li>
-        <li><a href="login.html">LOGIN</a></li>
-      </ul>
+<!-- ENCABEZADO SUPERIOR -->
+<header class="top-header">
+  <div class="header-inner">
+    <div class="logo-superior">
+      <img 
+        src="assets/img/logo-texto-best-quality.png" 
+        alt="Instituto San Vicente"
+        data-i18n-alt="brand.logoAlt"
+      >
     </div>
-  </header>
 
+    <button class="hamburger" id="hamburger" aria-label="Abrir menú">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+
+    <ul class="mobile-menu" id="nav-menu">
+      <li><a href="index.html" data-i18n="nav.ourSchool">OUR SCHOOL</a></li>
+      <li><a href="institution.html" data-i18n="nav.institution">INSTITUTION</a></li>
+      <li><a href="english.html" data-i18n="nav.english">ENGLISH</a></li>
+      <li><a href="Academic-Levels.html" data-i18n="nav.academicLevels">ACADEMIC LEVELS</a></li>
+      <li><a href="club-sanvi.html" data-i18n="nav.clubSanvi">CLUB SANVI</a></li>
+      <li><a href="contacto.html" data-i18n="nav.contact">CONTACT</a></li>
+      <li><a href="login.html" data-i18n="nav.login">LOGIN</a></li>
+    </ul>
+  </div>
+</header>
+
+<!-- BARRA DE NAVEGACIÓN DESKTOP -->
 <nav class="navbar">
   <ul class="nav-menu">
-    <li><a href="index.html">OUR SCHOOL</a></li>
-      <li><a href="institution.html">INSTITUTION</a></li>
-    <li><a href="english.html">ENGLISH</a></li>
+    <li><a href="index.html" data-i18n="nav.ourSchool">OUR SCHOOL</a></li>
+    <li><a href="institution.html" data-i18n="nav.institution">INSTITUTION</a></li>
+    <li><a href="english.html" data-i18n="nav.english">ENGLISH</a></li>
+
     <li class="dropdown">
-      <a href="Academic-Levels.html">ACADEMIC LEVELS</a>
+      <a href="Academic-Levels.html" data-i18n="nav.academicLevels">ACADEMIC LEVELS</a>
       <ul class="submenu">
-        <li><a href="kinder.html">KINDER</a></li>
-        <li><a href="Primary.html">PRIMARY</a></li>
-        <li><a href="highschool.html">HIGH SCHOOL</a></li>
+        <li><a href="kinder.html" data-i18n="nav.kinder">KINDER</a></li>
+        <li><a href="Primary.html" data-i18n="nav.primary">PRIMARY</a></li>
+        <li><a href="highschool.html" data-i18n="nav.highschool">HIGH SCHOOL</a></li>
       </ul>
     </li>
 
-    <li><a href="club-sanvi.html">CLUB SANVI</a></li>
-    <li><a href="contacto.html">CONTACT</a></li>
-    <li><a href="login.html">LOGIN</a></li>
+    <li><a href="club-sanvi.html" data-i18n="nav.clubSanvi">CLUB SANVI</a></li>
+    <li><a href="contacto.html" data-i18n="nav.contact">CONTACT</a></li>
+    <li><a href="login.html" data-i18n="nav.login">LOGIN</a></li>
   </ul>
 </nav>
 
-  <section class="nivel-principal">
-    <div class="nivel-principal-contenedor">
+<section class="nivel-principal">
+  <div class="nivel-principal-contenedor">
 
-      <div class="nivel-slider-box">
-        <div class="nivel-slider" id="nivelSlider">
-          <div class="nivel-slide active">
-            <img src="assets/img/niveles-iniciales/high-school/foto-299.webp" alt="Estudiantes de High School en actividad educativa">
-          </div>
-          <div class="nivel-slide">
-            <img src="assets/img/niveles-iniciales/high-school/IMG-20250505-WA0074.jpg" alt="Espacios de aprendizaje del Nivel Secundario">
-          </div>
-          <div class="nivel-slide">
-            <img src="assets/img/niveles-iniciales/high-school/IMG-20250506-WA0132.jpg" alt="Jornada institucional del Nivel Secundario">
-          </div>
+    <div class="nivel-slider-box">
+      <div class="nivel-slider" id="nivelSlider">
+        <div class="nivel-slide active">
+          <img 
+            src="assets/img/niveles-iniciales/high-school/foto-299.webp" 
+            alt="Estudiantes de Secundaria en actividad educativa"
+            data-i18n-alt="highschool.slider.image1Alt"
+          >
         </div>
 
-        <button class="slider-btn prev" id="prevBtn" aria-label="Imagen anterior">&#10094;</button>
-        <button class="slider-btn next" id="nextBtn" aria-label="Imagen siguiente">&#10095;</button>
+        <div class="nivel-slide">
+          <img 
+            src="assets/img/niveles-iniciales/high-school/IMG-20250505-WA0074.jpg" 
+            alt="Espacios de aprendizaje del Nivel Secundario"
+            data-i18n-alt="highschool.slider.image2Alt"
+          >
+        </div>
 
-        <div class="slider-dots" id="sliderDots">
-          <button class="dot active" data-index="0" aria-label="Ir a imagen 1"></button>
-          <button class="dot" data-index="1" aria-label="Ir a imagen 2"></button>
-          <button class="dot" data-index="2" aria-label="Ir a imagen 3"></button>
-          <button class="dot" data-index="3" aria-label="Ir a imagen 4"></button>
+        <div class="nivel-slide">
+          <img 
+            src="assets/img/niveles-iniciales/high-school/IMG-20250506-WA0132.jpg" 
+            alt="Jornada institucional del Nivel Secundario"
+            data-i18n-alt="highschool.slider.image3Alt"
+          >
         </div>
       </div>
 
-      <div class="nivel-info">
-        <h2>High School</h2>
-        <div class="nivel-datos">
-          <p><strong>Etapa:</strong> Nivel Secundario</p>
-          <p><strong>Horario:</strong> de 7:45 a 15:30 hs</p>
-          <p><strong>Tutoría:</strong> espacio de acompañamiento hasta las 16:00 hs</p>
-          <p><strong>Modalidad:</strong> formación académica integral, autonomía y proyecto personal</p>
-        </div>
+      <button class="slider-btn prev" id="prevBtn" aria-label="Imagen anterior">&#10094;</button>
+      <button class="slider-btn next" id="nextBtn" aria-label="Imagen siguiente">&#10095;</button>
 
-        <blockquote>
-          Formamos jóvenes capaces de vivir los valores del respeto, usar responsablemente su libertad, pensar rigurosamente y ser protagonistas de su futuro.
-        </blockquote>
-
-        <a href="contacto.html" class="nivel-btn">SOLICITÁ TU ENTREVISTA</a>
-      </div>
-
-    </div>
-  </section>
-
-  <section class="nivel-descripcion">
-    <div class="nivel-descripcion-contenedor">
-      <div class="descripcion-texto">
-        <span class="seccion-etiqueta">PROPUESTA EDUCATIVA</span>
-        <h3>Autonomía, responsabilidad y futuro</h3>
-
-        <p>
-          El Nivel Secundario del Instituto San Vicente funciona de 7:45 a 15:30 hs, con espacio de tutoría hasta las 16:00 hs, acompañando a los estudiantes en una etapa clave de crecimiento académico, personal y social.
-        </p>
-
-        <p>
-          La propuesta busca que cada estudiante desarrolle sus múltiples inteligencias, dé lo mejor de sí desde su singularidad y utilice su libertad responsablemente, fortaleciendo su autonomía.
-        </p>
-
-        <p>
-          Acompañamos una formación integral donde el alumno no solo aprende, sino que aprende a pensar cómo piensa y actúa, desarrollando su metacognición y su capacidad de sumar valor como creador de futuro.
-        </p>
+      <div class="slider-dots" id="sliderDots">
+        <button class="dot active" data-index="0" aria-label="Ir a imagen 1"></button>
+        <button class="dot" data-index="1" aria-label="Ir a imagen 2"></button>
+        <button class="dot" data-index="2" aria-label="Ir a imagen 3"></button>
       </div>
     </div>
-  </section>
+
+    <div class="nivel-info">
+        <h2 class="inicios-titulo">
+        <img 
+          src="assets/img/textos-png/high-school2-en.png"
+          data-i18n-src-es="assets/img/textos-png/high-school2.png"
+          data-i18n-src-en="assets/img/textos-png/high-school2-en.png"
+          alt="Nuestros Inicios"
+          data-i18n-alt="home.beginnings.imageAlt"
+          class="inicios-titulo-img"
+        >
+      </h2>
+
+      <div class="nivel-datos">
+        <p data-i18n-html="highschool.main.stage"><strong>Etapa:</strong> Nivel Secundario</p>
+        <p data-i18n-html="highschool.main.schedule"><strong>Horario:</strong> de 7:45 a 15:30 hs</p>
+        <p data-i18n-html="highschool.main.tutoring"><strong>Tutoría:</strong> espacio de acompañamiento hasta las 16:00 hs</p>
+        <p data-i18n-html="highschool.main.modality"><strong>Modalidad:</strong> formación académica integral, autonomía y proyecto personal</p>
+      </div>
+
+      <blockquote data-i18n="highschool.main.quote">
+        Formamos jóvenes capaces de vivir los valores del respeto, usar responsablemente su libertad, pensar rigurosamente y ser protagonistas de su futuro.
+      </blockquote>
+
+      <a href="contacto.html" class="nivel-btn" data-i18n="highschool.main.button">
+        SOLICITÁ TU ENTREVISTA
+      </a>
+    </div>
+
+  </div>
+</section>
+
+<section class="nivel-descripcion">
+  <div class="nivel-descripcion-contenedor">
+    <div class="descripcion-texto">
+      <span class="seccion-etiqueta" data-i18n="highschool.description.label">
+        PROPUESTA EDUCATIVA
+      </span>
+
+      <h3 data-i18n="highschool.description.title">
+        Autonomía, responsabilidad y futuro
+      </h3>
+
+      <p data-i18n="highschool.description.text1">
+        El Nivel Secundario del Instituto San Vicente funciona de 7:45 a 15:30 hs, con espacio de tutoría hasta las 16:00 hs, acompañando a los estudiantes en una etapa clave de crecimiento académico, personal y social.
+      </p>
+
+      <p data-i18n="highschool.description.text2">
+        La propuesta busca que cada estudiante desarrolle sus múltiples inteligencias, dé lo mejor de sí desde su singularidad y utilice su libertad responsablemente, fortaleciendo su autonomía.
+      </p>
+
+      <p data-i18n="highschool.description.text3">
+        Acompañamos una formación integral donde el alumno no solo aprende, sino que aprende a pensar cómo piensa y actúa, desarrollando su metacognición y su capacidad de sumar valor como creador de futuro.
+      </p>
+    </div>
+  </div>
+</section>
 
 <section class="inscripcion-cta">
   <div class="inscripcion-overlay"></div>
 
   <div class="inscripcion-contenedor">
     <div class="inscripcion-texto">
-      <h2>Inscripción: Ciclo Lectivo 2026</h2>
-      <p>
+      <h2 data-i18n="highschool.enrollment.title">Inscripción: Ciclo Lectivo 2026</h2>
+
+      <p data-i18n="highschool.enrollment.text">
         Solicitá una entrevista con nuestro equipo directivo y conocé
         la propuesta educativa del Nivel Secundario.
       </p>
     </div>
 
     <div class="inscripcion-boton">
-      <a href="contacto.html" class="btn-inscripcion">SOLICITAR ENTREVISTA</a>
+      <a href="contacto.html" class="btn-inscripcion" data-i18n="sharedEnrollment.button">
+        SOLICITAR ENTREVISTA
+      </a>
     </div>
   </div>
 </section>
 
-  <script src="js/script.js"></script>
-  <script src="js/loader.js"></script>
-  <script src="js/highschool.js"></script>
+<!-- =========================
+     FOOTER
+========================= -->
+<footer class="footer-sanvicente">
+  <div class="footer-contenedor">
+
+    <div class="footer-grid">
+      <div class="footer-col">
+        <h3 data-i18n="footer.address.title">Dirección</h3>
+        <p data-i18n="footer.address.line1">Av. del Viento Chorrillero 2570</p>
+        <p data-i18n="footer.address.line2">Juana Koslay,San Luis, Argentina</p>
+      </div>
+
+      <div class="footer-col">
+        <h3 data-i18n="footer.hours.title">Horario de Atención</h3>
+        <p data-i18n="footer.hours.line1">Lunes a Viernes</p>
+        <p data-i18n="footer.hours.line2">de 8:00 a 16:00 hs</p>
+      </div>
+
+      <div class="footer-col">
+        <h3 data-i18n="footer.contact.title">Contáctenos</h3>
+        <p data-i18n="footer.contact.phone">266 4214497</p>
+        <p data-i18n="footer.contact.email">envíos@institutosanvicente.com</p>
+      </div>
+    </div>
+
+    <div class="footer-linea"></div>
+
+    <div class="footer-bottom">
+      <p data-i18n="footer.copy">
+        © Copyright 2026 Instituto San Vicente. Todos los derechos reservados.
+      </p>
+
+      <img 
+        src="assets/img/textos-png/hoja membretada logos varios.png"
+        data-i18n-src-es="assets/img/textos-png/hoja membretada logos varios.png"
+        data-i18n-src-en="assets/img/textos-png/hoja membretada logos varios-en.png"
+        alt="Instituciones y convenios"
+        data-i18n-alt="footer.logosAlt"
+        class="footer-logos"
+      >
+    </div>
+  </div>
+</footer>
+
+
+<script src="js/script.js"></script>
+<script src="js/loader.js"></script>
+<script src="js/highschool.js"></script>
+<script src="js/i18n.js"></script>
 
 </body>
 </html>
