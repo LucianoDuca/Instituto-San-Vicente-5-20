@@ -74,136 +74,115 @@
 </nav>
 
 <!-- BLOQUE PRINCIPAL -->
-<section class="nivel-principal">
-  <div class="nivel-principal-contenedor">
+<main class="kinder-page">
 
-    <div class="nivel-slider-box">
-      <div class="nivel-slider" id="nivelSlider">
-        <div class="nivel-slide active">
-          <img 
-            src="assets/img/niveles-iniciales/kinder/IMG-20260319-WA0065.jpg" 
-            alt="Alumnos de Kínder en actividad educativa"
-            data-i18n-alt="kinder.slider.image1Alt"
-          >
+  <section class="kinder-showcase">
+    <div class="kinder-layout">
+
+      <div class="kinder-slider-card">
+        <div class="nivel-slider" id="nivelSlider">
+          <div class="nivel-slide active">
+            <img src="assets/img/niveles-iniciales/kinder/IMG-20260319-WA0065.jpg" alt="Alumnos de Kínder en actividad educativa">
+          </div>
+          <div class="nivel-slide">
+            <img src="assets/img/niveles-iniciales/kinder/IMG-20260401-WA0063.jpg" alt="Espacios de aprendizaje del Nivel Inicial">
+          </div>
+          <div class="nivel-slide">
+            <img src="assets/img/niveles-iniciales/kinder/IMG-20260319-WA0070.jpg" alt="Jornada recreativa del Nivel Inicial">
+          </div>
+          <div class="nivel-slide">
+            <img src="assets/img/niveles-iniciales/kinder/IMG-20260319-WA0068.jpg" alt="Actividades de juego y exploración">
+          </div>
         </div>
 
-        <div class="nivel-slide">
-          <img 
-            src="assets/img/niveles-iniciales/kinder/IMG-20260401-WA0063.jpg" 
-            alt="Espacios de aprendizaje del Nivel Inicial"
-            data-i18n-alt="kinder.slider.image2Alt"
-          >
-        </div>
+        <button class="slider-btn prev" id="prevBtn">&#10094;</button>
+        <button class="slider-btn next" id="nextBtn">&#10095;</button>
 
-        <div class="nivel-slide">
-          <img 
-            src="assets/img/niveles-iniciales/kinder/IMG-20260319-WA0070.jpg" 
-            alt="Jornada recreativa del Nivel Inicial"
-            data-i18n-alt="kinder.slider.image3Alt"
-          >
-        </div>
-
-        <div class="nivel-slide">
-          <img 
-            src="assets/img/niveles-iniciales/kinder/IMG-20260319-WA0068.jpg" 
-            alt="Actividades de juego y exploración"
-            data-i18n-alt="kinder.slider.image4Alt"
-          >
+        <div class="slider-dots" id="sliderDots">
+          <button class="dot active" data-index="0"></button>
+          <button class="dot" data-index="1"></button>
+          <button class="dot" data-index="2"></button>
+          <button class="dot" data-index="3"></button>
         </div>
       </div>
 
-      <button class="slider-btn prev" id="prevBtn" aria-label="Imagen anterior">&#10094;</button>
-      <button class="slider-btn next" id="nextBtn" aria-label="Imagen siguiente">&#10095;</button>
+      <aside class="kinder-info-card">
+        <span class="kinder-label">NIVEL</span>
 
-      <div class="slider-dots" id="sliderDots">
-        <button class="dot active" data-index="0" aria-label="Ir a imagen 1"></button>
-        <button class="dot" data-index="1" aria-label="Ir a imagen 2"></button>
-        <button class="dot" data-index="2" aria-label="Ir a imagen 3"></button>
-        <button class="dot" data-index="3" aria-label="Ir a imagen 4"></button>
+        <h1>
+          <img 
+            src="assets/img/textos-png/nivel-inicial.png"
+            data-i18n-src-es="assets/img/textos-png/nivel-inicial.png"
+            data-i18n-src-en="assets/img/textos-png/nivel-inicial-en.png"
+            alt="Nivel Inicial"
+          >
+        </h1>
+
+        <p class="kinder-intro">
+          Un espacio de descubrimiento, juego y aprendizaje donde cada niño comienza a explorar el mundo con alegría, creatividad y confianza.
+        </p>
+
+        <div class="kinder-data-list">
+          <p><span>👧</span><strong>Edades:</strong> de 1 a 5 años</p>
+          <p><span>🕘</span><strong>Horario:</strong> lunes a viernes de 9:00 a 12:30 hs</p>
+          <p><span>🗓️</span><strong>Opciones:</strong> pre y post hora, horario extendido hasta las 16:00 hs</p>
+          <p><span>🎨</span><strong>Espacio lúdico:</strong> de 13:00 a 16:00 hs para niños de 2 y 3 años</p>
+          <p><span>♡</span><strong>Modalidad:</strong> acompañamiento integral y personalizado</p>
+        </div>
+
+        <a href="contacto.html" class="kinder-main-btn">
+          SOLICITÁ TU ENTREVISTA <span>›</span>
+        </a>
+      </aside>
+
+    </div>
+  </section>
+
+  <section class="kinder-proposal">
+    <div class="kinder-proposal-card">
+      <div class="kinder-proposal-text">
+        <span>NUESTRA PROPUESTA</span>
+        <h2>Aprender jugando</h2>
+
+        <p>
+          Acompañamos los primeros aprendizajes desde una propuesta que invita a descubrir, explorar y aprender a través del juego, en un entorno cálido, creativo y pensado para cada etapa del crecimiento.
+        </p>
+
+        <div class="proposal-points">
+          <p><i>🕘</i> El Nivel Inicial funciona de lunes a viernes de 9:00 a 12:30 hs, con opciones de pre y post hora y modalidad de horario extendido hasta las 16:00 hs.</p>
+          <p><i>👧</i> El espacio lúdico, destinado a niños de 2 y 3 años, ofrece un ambiente pensado para compartir, disfrutar y crecer.</p>
+          <p><i>♡</i> Nuestra propuesta integra inglés, deportes, arte, educación emocional y cultura, promoviendo una formación integral desde los primeros años.</p>
+        </div>
+      </div>
+
+      <div class="kinder-proposal-img">
+        <img src="assets/img/niveles-iniciales/kinder/IMG-20260401-WA0063.jpg" alt="Actividad artística Nivel Inicial">
       </div>
     </div>
+  </section>
 
-    <div class="nivel-info">
-        <h2 class="inicios-titulo">
-        <img 
-          src="assets/img/textos-png/nivel-inicial.png"
-          data-i18n-src-es="assets/img/textos-png/nivel-inicial.png"
-          data-i18n-src-en="assets/img/textos-png/nivel-inicial-en.png"
-          alt="Nuestros Inicios"
-          data-i18n-alt="home.beginnings.imageAlt"
-          class="inicios-titulo-img"
-        >
-      </h2>
+  <section class="kinder-experiences">
+    <h2>Experiencias que acompañan su crecimiento</h2>
 
-      <div class="nivel-datos">
-        <p data-i18n-html="kinder.main.ages"><strong>Edades:</strong> de 1 a 5 años</p>
-        <p data-i18n-html="kinder.main.schedule"><strong>Horario:</strong> lunes a viernes de 9:00 a 12:30 hs</p>
-        <p data-i18n-html="kinder.main.options"><strong>Opciones:</strong> pre y post hora, horario extendido hasta las 16:00 hs</p>
-        <p data-i18n-html="kinder.main.playSpace"><strong>Espacio lúdico:</strong> de 13:00 a 16:00 hs para niños de 2 y 3 años</p>
-        <p data-i18n-html="kinder.main.modality"><strong>Modalidad:</strong> acompañamiento integral y personalizado</p>
-      </div>
-
-      <blockquote data-i18n="kinder.main.quote">
-        Acompañamos los primeros aprendizajes desde una propuesta que invita a aprender jugando, incorporando experiencias y desarrollando al máximo las múltiples inteligencias.
-      </blockquote>
-
-      <a href="contacto.html" class="nivel-btn" data-i18n="kinder.main.button">
-        SOLICITÁ TU ENTREVISTA
-      </a>
+    <div class="experience-grid">
+      <article><span>🌎</span><h3>Inglés</h3><p>Aprendemos jugando y explorando un nuevo idioma desde pequeños.</p></article>
+      <article><span>🏃</span><h3>Educación física</h3><p>Nos movemos, jugamos y desarrollamos hábitos saludables.</p></article>
+      <article><span>🎵</span><h3>Música</h3><p>Exploramos sonidos, ritmos y canciones que despiertan emociones.</p></article>
+      <article><span>🧘</span><h3>Yoga</h3><p>Promovemos el bienestar, la concentración y la calma.</p></article>
+      <article><span>🎨</span><h3>Arte y creatividad</h3><p>Expresamos ideas, emociones y creatividad en cada actividad.</p></article>
+      <article><span>💛</span><h3>Educación emocional</h3><p>Acompañamos el desarrollo emocional y las habilidades para convivir.</p></article>
     </div>
+  </section>
 
-  </div>
-</section>
-
-<!-- TEXTO INSTITUCIONAL -->
-<section class="nivel-descripcion">
-  <div class="nivel-descripcion-contenedor">
-    <div class="descripcion-texto">
-      <span class="seccion-etiqueta" data-i18n="kinder.description.label">
-        PROPUESTA EDUCATIVA
-      </span>
-
-      <h3 data-i18n="kinder.description.title">Aprender jugando</h3>
-
-      <p data-i18n="kinder.description.text1">
-        El Jardín de Infantes del Instituto San Vicente funciona de lunes a viernes de 9:00 a 12:30 hs, con la posibilidad de pre y post hora y modalidad de horario extendido hasta las 16:00 hs.
-      </p>
-
-      <p data-i18n="kinder.description.text2">
-        El espacio lúdico está habilitado para niños de 2 y 3 años en el horario de 13:00 a 16:00 hs, pensado como un entorno agradable para disfrutar, compartir y crecer mediante desafíos y metas personales.
-      </p>
-
-      <p data-i18n="kinder.description.text3">
-        La propuesta institucional integra inglés, deportes, arte, educación emocional y cultura, promoviendo una formación integral desde los primeros años.
-      </p>
+  <section class="kinder-final-cta">
+    <div>
+      <h2>Sumate al Nivel Inicial</h2>
+      <p>Coordiná una entrevista con nuestro equipo y conocé de cerca nuestra propuesta educativa.</p>
+      <a href="contacto.html">SOLICITAR ENTREVISTA <span>›</span></a>
     </div>
-  </div>
-</section>
+  </section>
 
-<!-- =========================
-     BLOQUE INSCRIPCIÓN
-========================= -->
-<section class="inscripcion-cta">
-  <div class="inscripcion-overlay"></div>
-
-  <div class="inscripcion-contenedor">
-    <div class="inscripcion-texto">
-      <h2 data-i18n="sharedEnrollment.title">Inscripción: Ciclo Lectivo 2026</h2>
-
-      <p data-i18n="sharedEnrollment.text">
-        Solicitá una entrevista con nuestro equipo directivo y conocé
-        la propuesta educativa que tenemos para ofrecerte.
-      </p>
-    </div>
-
-    <div class="inscripcion-boton">
-      <a href="contacto.html" class="btn-inscripcion" data-i18n="sharedEnrollment.button">
-        SOLICITAR ENTREVISTA
-      </a>
-    </div>
-  </div>
-</section>
-
+</main>
 <!-- =========================
      FOOTER
 ========================= -->
