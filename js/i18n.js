@@ -349,6 +349,10 @@ const translations = {
     "club.gallery.image5Alt": "Comunidad Club Sanvi",
     "club.gallery.image6Alt": "Familias Club Sanvi",
 
+    "club.activities.imageAlt": "Actividades del Club",
+    "club.gallery.imageAlt": "Galería",
+    "club.cta.imageAlt": "Las puertas están abiertas",
+
     "club.cta.title": "Las puertas están abiertas",
     "club.cta.text": "Sumate a practicar, aprender y divertirte en cualquiera de nuestros talleres.",
     "club.cta.button": "Consultar inscripción"
@@ -702,6 +706,10 @@ const translations = {
     "club.gallery.image5Alt": "Club Sanvi community",
     "club.gallery.image6Alt": "Club Sanvi families",
 
+    "club.activities.imageAlt": "Club Activities",
+    "club.gallery.imageAlt": "Gallery",
+    "club.cta.imageAlt": "The doors are open",
+
     "club.cta.title": "The doors are open",
     "club.cta.text": "Join us to practice, learn and have fun in any of our workshops.",
     "club.cta.button": "Enrollment inquiry"
@@ -740,6 +748,22 @@ function setLanguage(lang) {
 
     if (value) {
       element.alt = value;
+    }
+  });
+
+  document.querySelectorAll("[data-i18n-placeholder]").forEach((element) => {
+    const key = element.dataset.i18nPlaceholder;
+    const value = selectedTranslations[key];
+    if (value) {
+      element.placeholder = value;
+    }
+  });
+
+  document.querySelectorAll("[data-i18n-title]").forEach((element) => {
+    const key = element.dataset.i18nTitle;
+    const value = selectedTranslations[key];
+    if (value) {
+      element.title = value;
     }
   });
 
