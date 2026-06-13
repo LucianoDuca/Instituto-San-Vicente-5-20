@@ -309,3 +309,121 @@ body {
     width: 100%;
   }
 }
+
+/* Tabs */
+.panel-tabs {
+  display: flex;
+  gap: 4px;
+  border-bottom: 2px solid rgba(11, 53, 88, 0.1);
+  margin-bottom: 22px;
+}
+
+.tab-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border: none;
+  background: none;
+  padding: 13px 20px;
+  font-family: inherit;
+  font-weight: 800;
+  font-size: 0.95rem;
+  color: #66798b;
+  cursor: pointer;
+  border-bottom: 3px solid transparent;
+  margin-bottom: -2px;
+  transition: color 0.2s, border-color 0.2s;
+}
+
+.tab-btn.active,
+.tab-btn:hover {
+  color: #0b3558;
+  border-bottom-color: #c1121f;
+}
+
+.tab-badge {
+  background: rgba(193, 18, 31, 0.12);
+  color: #c1121f;
+  font-size: 0.72rem;
+  font-weight: 900;
+  padding: 2px 8px;
+  border-radius: 999px;
+  min-width: 20px;
+  text-align: center;
+}
+
+.tab-panel {
+  display: none;
+}
+
+.tab-panel.active {
+  display: block;
+}
+
+/* Search toolbar */
+.doc-toolbar {
+  display: flex;
+  gap: 14px;
+  align-items: center;
+  margin-bottom: 14px;
+  flex-wrap: wrap;
+}
+
+.doc-search {
+  flex: 1;
+  min-width: 200px;
+  border: 1px solid rgba(11, 53, 88, 0.16);
+  border-radius: 14px;
+  padding: 13px 14px;
+  font: inherit;
+  font-size: 0.96rem;
+  outline: none;
+  background: #f8fbfd;
+  color: #102033;
+}
+
+.doc-search:focus {
+  border-color: #0b4a78;
+  box-shadow: 0 0 0 4px rgba(11, 74, 120, 0.12);
+}
+
+.doc-count {
+  margin: 0;
+  font-size: 0.82rem;
+  color: #66798b;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+/* Dates */
+.doc-date,
+.ann-date {
+  font-size: 0.75rem;
+  color: #8fa0b0;
+  margin-top: 10px;
+  margin-bottom: 0;
+}
+
+/* Skeleton */
+@keyframes shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+.skeleton {
+  background: linear-gradient(90deg, #e8eef3 25%, #f5f8fa 50%, #e8eef3 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.4s infinite;
+  border-radius: 14px;
+  display: block;
+}
+
+.skeleton-card {
+  height: 80px;
+  border-radius: 18px;
+}
+
+.skeleton-doc {
+  height: 220px;
+  border-radius: 24px;
+}
