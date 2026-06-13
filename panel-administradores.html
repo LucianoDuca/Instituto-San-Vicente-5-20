@@ -10,6 +10,7 @@
 <body>
 
 <main class="admin-shell">
+  <div class="sidebar-overlay" id="sidebarOverlay"></div>
   <aside class="admin-sidebar">
     <div class="brand">
       <span>ISV</span>
@@ -32,6 +33,9 @@
   <section class="admin-main">
 
     <header class="admin-topbar">
+      <button class="hamburger-toggle" id="hamburgerToggle" aria-label="Abrir menú">
+        <span></span><span></span><span></span>
+      </button>
       <div>
         <span>PANEL ADMINISTRATIVO</span>
         <h1 id="sectionTitle">Dashboard</h1>
@@ -94,7 +98,7 @@
 
         <div class="admin-card">
           <div class="card-head">
-            <h2>Usuarios existentes</h2>
+            <h2>Usuarios existentes <span id="usersCount" class="list-counter"></span></h2>
             <button id="reloadUsersBtn">Actualizar</button>
           </div>
           <div id="usersContainer" class="list-container"></div>
@@ -162,6 +166,7 @@
             <h2>Biblioteca</h2>
             <button id="reloadDocumentsBtn">Actualizar</button>
           </div>
+          <p id="docsCount" class="list-counter"></p>
 
           <input id="documentSearch" class="search-input" type="search" placeholder="Buscar documento..." />
           <div id="adminDocumentsContainer" class="list-container"></div>
@@ -192,7 +197,7 @@
 
         <div class="admin-card">
           <div class="card-head">
-            <h2>Comunicados publicados</h2>
+            <h2>Comunicados publicados <span id="commsCount" class="list-counter"></span></h2>
             <button id="reloadAnnouncementsBtn">Actualizar</button>
           </div>
 
