@@ -33,6 +33,15 @@ const announcementsContainer = document.getElementById("announcementsContainer")
 
 let documentosAdmin = [];
 
+function escaparHTML(str) {
+  return String(str ?? "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
 function setStatus(element, message, type = "") {
   element.textContent = message;
   element.className = `status ${type}`;
@@ -133,19 +142,19 @@ async function cargarUsuarios() {
 
       card.innerHTML = `
         <div>
-          <h3>${user.nombre || "Sin nombre"} ${user.apellido || ""}</h3>
-          <p>${user.email || "Sin email"}</p>
+          <h3>${escaparHTML(user.nombre) || "Sin nombre"} ${escaparHTML(user.apellido)}</h3>
+          <p>${escaparHTML(user.email) || "Sin email"}</p>
 
           <div class="meta">
-            <span class="role">${user.rol || "sin rol"}</span>
-            <span>${user.nivel || "General"}</span>
-            <span>${user.area || "Sin área"}</span>
-            <span>${user.cargo || "Sin cargo"}</span>
+            <span class="role">${escaparHTML(user.rol) || "sin rol"}</span>
+            <span>${escaparHTML(user.nivel) || "General"}</span>
+            <span>${escaparHTML(user.area) || "Sin área"}</span>
+            <span>${escaparHTML(user.cargo) || "Sin cargo"}</span>
           </div>
         </div>
 
         <div class="item-actions">
-          <button class="delete-btn" data-id="${user.id}">Borrar</button>
+          <button class="delete-btn" data-id="${escaparHTML(user.id)}">Borrar</button>
         </div>
       `;
 
@@ -230,21 +239,21 @@ function renderDocumentos(lista) {
 
     card.innerHTML = `
       <div>
-        <h3>${doc.titulo}</h3>
-        <p>${doc.descripcion || "Sin descripción"}</p>
+        <h3>${escaparHTML(doc.titulo)}</h3>
+        <p>${escaparHTML(doc.descripcion) || "Sin descripción"}</p>
 
         <div class="meta">
-          <span>${doc.categoria}</span>
-          <span>${doc.nivel}</span>
-          <span>${doc.area}</span>
-          <span class="role">${doc.rol_visible}</span>
+          <span>${escaparHTML(doc.categoria)}</span>
+          <span>${escaparHTML(doc.nivel)}</span>
+          <span>${escaparHTML(doc.area)}</span>
+          <span class="role">${escaparHTML(doc.rol_visible)}</span>
         </div>
       </div>
 
       <div class="item-actions">
-        <a class="open-link" href="${doc.drive_url}" target="_blank" rel="noopener noreferrer">Abrir</a>
-        <button class="edit-btn" data-id="${doc.id}">Editar</button>
-        <button class="delete-btn" data-id="${doc.id}">Borrar</button>
+        <a class="open-link" href="${escaparHTML(doc.drive_url)}" target="_blank" rel="noopener noreferrer">Abrir</a>
+        <button class="edit-btn" data-id="${escaparHTML(doc.id)}">Editar</button>
+        <button class="delete-btn" data-id="${escaparHTML(doc.id)}">Borrar</button>
       </div>
     `;
 
@@ -406,17 +415,17 @@ async function cargarComunicados() {
 
       card.innerHTML = `
         <div>
-          <h3>${item.titulo}</h3>
-          <p>${item.contenido}</p>
+          <h3>${escaparHTML(item.titulo)}</h3>
+          <p>${escaparHTML(item.contenido)}</p>
 
           <div class="meta">
-            <span class="role">${item.rol_visible}</span>
+            <span class="role">${escaparHTML(item.rol_visible)}</span>
             <span>${formatDate(item.created_at)}</span>
           </div>
         </div>
 
         <div class="item-actions">
-          <button class="delete-btn" data-id="${item.id}">Borrar</button>
+          <button class="delete-btn" data-id="${escaparHTML(item.id)}">Borrar</button>
         </div>
       `;
 
@@ -487,7 +496,20 @@ reloadAnnouncementsBtn.addEventListener("click", cargarComunicados);
 
 /* Inicio */
 
+async function verificarAdmin() {
+  const token = await obtenerToken();
+  if (!token) return;
+
+  const response = await fetchAuth("/api/me");
+  const result = await response.json();
+
+  if (!response.ok || result.profile?.rol !== "admin") {
+    window.location.href = "login.html";
+  }
+}
+
 async function iniciarAdmin() {
+  await verificarAdmin();
   await Promise.all([
     cargarStats(),
     cargarUsuarios(),

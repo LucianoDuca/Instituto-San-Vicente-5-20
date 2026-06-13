@@ -9,6 +9,15 @@ const categoriaFilter = document.getElementById("categoriaFilter");
 
 let documentos = [];
 
+function escaparHTML(str) {
+  return String(str ?? "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
 async function obtenerToken() {
   const { data, error } = await window.supabaseClient.auth.getSession();
 
@@ -44,17 +53,17 @@ function pintarDocumentos(lista) {
 
     card.innerHTML = `
       <div>
-        <span class="doc-category">${doc.categoria}</span>
-        <h3>${doc.titulo}</h3>
-        <p>${doc.descripcion || "Sin descripción."}</p>
+        <span class="doc-category">${escaparHTML(doc.categoria)}</span>
+        <h3>${escaparHTML(doc.titulo)}</h3>
+        <p>${escaparHTML(doc.descripcion) || "Sin descripción."}</p>
 
         <div class="doc-meta">
-          <span>${doc.nivel}</span>
-          <span>${doc.area}</span>
+          <span>${escaparHTML(doc.nivel)}</span>
+          <span>${escaparHTML(doc.area)}</span>
         </div>
       </div>
 
-      <a href="${doc.drive_url}" target="_blank" rel="noopener noreferrer">
+      <a href="${escaparHTML(doc.drive_url)}" target="_blank" rel="noopener noreferrer">
         Abrir documento
       </a>
     `;
@@ -115,9 +124,9 @@ async function cargarComunicados() {
     card.className = "announcement-card";
 
     card.innerHTML = `
-      <span>${item.rol_visible === "todos" ? "General" : item.rol_visible}</span>
-      <h3>${item.titulo}</h3>
-      <p>${item.contenido}</p>
+      <span>${item.rol_visible === "todos" ? "General" : escaparHTML(item.rol_visible)}</span>
+      <h3>${escaparHTML(item.titulo)}</h3>
+      <p>${escaparHTML(item.contenido)}</p>
     `;
 
     announcementsContainer.appendChild(card);

@@ -21,6 +21,15 @@ function limpiarTexto(valor) {
   return String(valor).trim().replace(/[<>]/g, "").slice(0, 2500);
 }
 
+function validarUrlDrive(url) {
+  try {
+    const parsed = new URL(url);
+    return parsed.protocol === "https:";
+  } catch {
+    return false;
+  }
+}
+
 function detectarRolPorEmail(email) {
   const correo = String(email || "").toLowerCase().trim();
 
@@ -440,9 +449,9 @@ app.patch("/api/admin/users/:id/password", soloAdmin, async (req, res) => {
     const { id } = req.params;
     const password = String(req.body.password || "").trim();
 
-    if (!password || password.length < 4) {
+    if (!password || password.length < 6) {
       return res.status(400).json({
-        error: "La contraseña debe tener al menos 4 caracteres"
+        error: "La contraseña debe tener al menos 6 caracteres"
       });
     }
 
@@ -571,6 +580,12 @@ app.post("/api/admin/library", soloAdmin, async (req, res) => {
       });
     }
 
+    if (!validarUrlDrive(documento.drive_url)) {
+      return res.status(400).json({
+        error: "La URL del documento debe comenzar con https://"
+      });
+    }
+
     const { data, error } = await supabaseAdmin
       .from("documents_library")
       .insert(documento)
@@ -625,6 +640,12 @@ app.patch("/api/admin/library/:id", soloAdmin, async (req, res) => {
     if (!["admin", "directivo", "docente", "todos"].includes(updates.rol_visible)) {
       return res.status(400).json({
         error: "Rol visible inválido"
+      });
+    }
+
+    if (!validarUrlDrive(updates.drive_url)) {
+      return res.status(400).json({
+        error: "La URL del documento debe comenzar con https://"
       });
     }
 
