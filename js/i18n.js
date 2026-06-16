@@ -6,7 +6,7 @@ const translations = {
     "nav.institution": "INSTITUCIÓN",
     "nav.english": "INGLÉS",
     "nav.academicLevels": "NIVELES ACADÉMICOS",
-    "nav.kinder": "JARDÍN",
+    "nav.kinder": "INICIAL",
     "nav.primary": "PRIMARIA",
     "nav.highschool": "SECUNDARIA",
     "nav.clubSanvi": "CLUB SANVI",
@@ -55,7 +55,7 @@ const translations = {
     "home.beginnings.photo4Alt": "Espacios iniciales del Instituto San Vicente",
 
     "home.cta.title": "Inscripción: Ciclo Lectivo 2027",
-    "home.cta.text": "Solicitá una entrevista con nuestro equipo directivo y conocé nuestra propuesta de Nivel Inicial, Primario y Secundario.",
+    "home.cta.text": "Solicitá una entrevista con el equipo directivo y conocé nuestra propuesta de nivel inicial, primario y secundario.",
     "home.cta.button": "SOLICITAR ENTREVISTA",
 
     "footer.address.title": "Dirección",
@@ -156,7 +156,7 @@ const translations = {
     "levels.kinder.imageAlt": "Nivel Inicial",
     "levels.kinder.label": "Nivel Inicial",
     "levels.kinder.title": "Jardín",
-    "levels.kinder.text": "Jardín de Infantes de lunes a viernes de 9:00 a 12:30 hs, con posibilidad de pre y post hora, horario extendido hasta las 16:00 hs y espacio lúdico de 13:00 a 16:00 hs para niños de 2 y 3 años.",
+    "levels.kinder.text": "Funciona de lunes a viernes de 9:00 a 12:30 hs, con servicio de pre hora desde las 8:00 hs, post hora hasta las 13:30 hs y jornada extendida hasta las 16:00 hs.",
 
     "levels.primary.imageAlt": "Nivel Primario",
     "levels.primary.label": "Nivel Primario",
