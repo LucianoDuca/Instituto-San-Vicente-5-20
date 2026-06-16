@@ -125,7 +125,7 @@ app.post("/api/contacto", async (req, res) => {
 
     const { error } = await resend.emails.send({
       from: "Instituto San Vicente <onboarding@resend.dev>",
-      to: ["Admsanvicentejk@gmail.com"],
+      to: [process.env.CONTACT_EMAIL || "lucianoduca123@gmail.com"],
       subject: asunto || "Nueva consulta desde la web",
       reply_to: correo,
       html: `
