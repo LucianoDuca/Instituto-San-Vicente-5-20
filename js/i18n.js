@@ -66,7 +66,7 @@ const translations = {
     "footer.hours.line2": "de 8:00 a 16:00 hs",
     "footer.contact.title": "Contáctenos",
     "footer.contact.phone": "266 4214497",
-    "footer.contact.email": "envíos@institutosanvicente.com",
+    "footer.contact.email": "Admsanvicentejk@gmail.com",
     "footer.copy": "© Copyright 2027 Instituto San Vicente. Todos los derechos reservados.",
     "footer.logosAlt": "Instituciones y convenios",
 
@@ -259,7 +259,7 @@ const translations = {
     "contact.info.phoneTitle": "Teléfono",
     "contact.info.phoneText": "266 4214497",
     "contact.info.emailTitle": "Email",
-    "contact.info.emailText": "envíos@institutosanvicente.com",
+    "contact.info.emailText": "Admsanvicentejk@gmail.com",
     "contact.info.socialTitle": "Redes",
 
     "contact.form.title": "Consulta institucional",
@@ -426,7 +426,7 @@ const translations = {
     "footer.hours.line2": "from 8:00 AM to 4:00 PM",
     "footer.contact.title": "Contact Us",
     "footer.contact.phone": "266 4214497",
-    "footer.contact.email": "envíos@institutosanvicente.com",
+    "footer.contact.email": "Admsanvicentejk@gmail.com",
     "footer.copy": "© Copyright 2027 Instituto San Vicente. All rights reserved.",
     "footer.logosAlt": "Institutions and partnerships",
 
@@ -613,7 +613,7 @@ const translations = {
     "contact.info.phoneTitle": "Phone",
     "contact.info.phoneText": "266 4214497",
     "contact.info.emailTitle": "Email",
-    "contact.info.emailText": "envíos@institutosanvicente.com",
+    "contact.info.emailText": "Admsanvicentejk@gmail.com",
     "contact.info.socialTitle": "Social Media",
 
     "contact.form.title": "Institutional inquiry",
