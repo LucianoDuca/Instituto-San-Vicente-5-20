@@ -27,8 +27,8 @@
 <header class="top-header">
   <div class="header-inner">
     <div class="logo-superior">
-      <img 
-        src="assets/img/logo-texto-best-quality.png" 
+      <img
+        src="assets/img/logo-texto-best-quality.png"
         alt="Instituto San Vicente"
         data-i18n-alt="brand.logoAlt"
       >
@@ -74,123 +74,111 @@
   </ul>
 </nav>
 
-<section class="nivel-principal">
-  <div class="nivel-principal-contenedor">
+<!-- BLOQUE PRINCIPAL -->
+<main class="highschool-page">
 
-    <div class="nivel-slider-box">
-      <div class="nivel-slider" id="nivelSlider">
-        <div class="nivel-slide active">
-          <img 
-            src="assets/img/niveles-iniciales/high-school/foto-299.webp" 
-            alt="Estudiantes de Secundaria en actividad educativa"
-            data-i18n-alt="highschool.slider.image1Alt"
-          >
+  <section class="highschool-showcase">
+    <div class="highschool-layout">
+
+      <div class="highschool-slider-card">
+        <div class="nivel-slider" id="nivelSlider">
+          <div class="nivel-slide active">
+            <img src="assets/img/niveles-iniciales/high-school/foto-299.webp" alt="Estudiantes de Secundaria en actividad educativa" data-i18n-alt="highschool.slider.image1Alt">
+          </div>
+          <div class="nivel-slide">
+            <img src="assets/img/niveles-iniciales/high-school/IMG-20250505-WA0074.jpg" alt="Espacios de aprendizaje del Nivel Secundario" data-i18n-alt="highschool.slider.image2Alt">
+          </div>
+          <div class="nivel-slide">
+            <img src="assets/img/niveles-iniciales/high-school/IMG-20250506-WA0132.jpg" alt="Jornada institucional del Nivel Secundario" data-i18n-alt="highschool.slider.image3Alt">
+          </div>
         </div>
 
-        <div class="nivel-slide">
-          <img 
-            src="assets/img/niveles-iniciales/high-school/IMG-20250505-WA0074.jpg" 
-            alt="Espacios de aprendizaje del Nivel Secundario"
-            data-i18n-alt="highschool.slider.image2Alt"
-          >
-        </div>
+        <button class="slider-btn prev" id="prevBtn">&#10094;</button>
+        <button class="slider-btn next" id="nextBtn">&#10095;</button>
 
-        <div class="nivel-slide">
-          <img 
-            src="assets/img/niveles-iniciales/high-school/IMG-20250506-WA0132.jpg" 
-            alt="Jornada institucional del Nivel Secundario"
-            data-i18n-alt="highschool.slider.image3Alt"
-          >
+        <div class="slider-dots" id="sliderDots">
+          <button class="dot active" data-index="0"></button>
+          <button class="dot" data-index="1"></button>
+          <button class="dot" data-index="2"></button>
         </div>
       </div>
 
-      <button class="slider-btn prev" id="prevBtn" aria-label="Imagen anterior">&#10094;</button>
-      <button class="slider-btn next" id="nextBtn" aria-label="Imagen siguiente">&#10095;</button>
+      <aside class="highschool-info-card">
+        <span class="highschool-label" data-i18n="highschool.info.label">NIVEL</span>
 
-      <div class="slider-dots" id="sliderDots">
-        <button class="dot active" data-index="0" aria-label="Ir a imagen 1"></button>
-        <button class="dot" data-index="1" aria-label="Ir a imagen 2"></button>
-        <button class="dot" data-index="2" aria-label="Ir a imagen 3"></button>
+        <h1>
+          <img
+            src="assets/img/textos-png/high-school2.png"
+            data-i18n-src-es="assets/img/textos-png/high-school2.png"
+            data-i18n-src-en="assets/img/textos-png/high-school2-en.png"
+            alt="Nivel Secundario"
+          >
+        </h1>
+
+        <p class="highschool-intro" data-i18n="highschool.info.intro">
+          Formamos jóvenes capaces de vivir los valores del respeto, usar responsablemente su libertad, pensar rigurosamente y ser protagonistas de su futuro.
+        </p>
+
+        <div class="highschool-data-list">
+          <p data-i18n-html="highschool.info.stage"><span>🎓</span><strong>Etapa:</strong> Nivel Secundario (1° a 5° año)</p>
+          <p data-i18n-html="highschool.info.schedule"><span>🕖</span><strong>Horario:</strong> lunes a viernes de 7:45 a 15:30 hs</p>
+          <p data-i18n-html="highschool.info.tutoring"><span>📋</span><strong>Tutoría:</strong> espacio de acompañamiento hasta las 16:00 hs</p>
+          <p data-i18n-html="highschool.info.modality"><span>🌐</span><strong>Modalidad:</strong> formación académica integral, autonomía y proyecto personal</p>
+        </div>
+
+        <a href="contacto.html" class="highschool-main-btn">
+          <span data-i18n="highschool.info.button">SOLICITÁ TU ENTREVISTA</span> <span>›</span>
+        </a>
+      </aside>
+
+    </div>
+  </section>
+
+  <section class="highschool-proposal">
+    <div class="highschool-proposal-card">
+      <div class="highschool-proposal-text">
+        <span data-i18n="highschool.proposal.label">NUESTRA PROPUESTA</span>
+        <h2 data-i18n="highschool.proposal.title">Formarse para el futuro</h2>
+
+        <p data-i18n="highschool.proposal.text">
+          El Nivel Secundario del Instituto San Vicente funciona de 7:45 a 15:30 hs, con espacio de tutoría hasta las 16:00 hs, acompañando a los estudiantes en una etapa clave de crecimiento académico, personal y social.
+        </p>
+
+        <div class="proposal-points">
+          <p><i>🎓</i> <span data-i18n="highschool.proposal.point1">La propuesta busca que cada estudiante desarrolle sus múltiples inteligencias, dé lo mejor de sí desde su singularidad y utilice su libertad responsablemente, fortaleciendo su autonomía.</span></p>
+          <p><i>🧠</i> <span data-i18n="highschool.proposal.point2">Acompañamos una formación integral donde el alumno no solo aprende, sino que aprende a pensar cómo piensa y actúa, desarrollando su metacognición.</span></p>
+          <p><i>🌟</i> <span data-i18n="highschool.proposal.point3">Nuestra propuesta integra inglés, ciencias, arte, educación física y tecnología, preparando a cada joven para ser creador de su propio futuro.</span></p>
+        </div>
+      </div>
+
+      <div class="highschool-proposal-img">
+        <img src="assets/img/niveles-iniciales/high-school/IMG-20250506-WA0132.jpg" alt="Actividad educativa Nivel Secundario">
       </div>
     </div>
+  </section>
 
-    <div class="nivel-info">
-        <h2 class="inicios-titulo">
-        <img 
-          src="assets/img/textos-png/high-school2-en.png"
-          data-i18n-src-es="assets/img/textos-png/high-school2.png"
-          data-i18n-src-en="assets/img/textos-png/high-school2-en.png"
-          alt="Nuestros Inicios"
-          data-i18n-alt="home.beginnings.imageAlt"
-          class="inicios-titulo-img"
-        >
-      </h2>
+  <section class="highschool-experiences">
+    <h2 data-i18n="highschool.exp.title">Experiencias que los preparan para el futuro</h2>
 
-      <div class="nivel-datos">
-        <p data-i18n-html="highschool.main.stage"><strong>Etapa:</strong> Nivel Secundario</p>
-        <p data-i18n-html="highschool.main.schedule"><strong>Horario:</strong> de 7:45 a 15:30 hs</p>
-        <p data-i18n-html="highschool.main.tutoring"><strong>Tutoría:</strong> espacio de acompañamiento hasta las 16:00 hs</p>
-        <p data-i18n-html="highschool.main.modality"><strong>Modalidad:</strong> formación académica integral, autonomía y proyecto personal</p>
-      </div>
-
-      <blockquote data-i18n="highschool.main.quote">
-        Formamos jóvenes capaces de vivir los valores del respeto, usar responsablemente su libertad, pensar rigurosamente y ser protagonistas de su futuro.
-      </blockquote>
-
-      <a href="contacto.html" class="nivel-btn" data-i18n="highschool.main.button">
-        SOLICITÁ TU ENTREVISTA
-      </a>
+    <div class="experience-grid">
+      <article><span>🌎</span><h3 data-i18n="highschool.exp.english.title">Inglés</h3><p data-i18n="highschool.exp.english.text">Desarrollamos competencias comunicativas en inglés para el mundo actual y profesional.</p></article>
+      <article><span>🔬</span><h3 data-i18n="highschool.exp.science.title">Ciencias</h3><p data-i18n="highschool.exp.science.text">Fomentamos el pensamiento crítico y científico a través de experiencias y proyectos.</p></article>
+      <article><span>🎨</span><h3 data-i18n="highschool.exp.art.title">Arte</h3><p data-i18n="highschool.exp.art.text">Expresamos ideas, culturas y emociones a través de distintos lenguajes artísticos.</p></article>
+      <article><span>🏃</span><h3 data-i18n="highschool.exp.pe.title">Educación física</h3><p data-i18n="highschool.exp.pe.text">Promovemos el deporte, el trabajo en equipo y los hábitos saludables.</p></article>
+      <article><span>💻</span><h3 data-i18n="highschool.exp.tech.title">Tecnología</h3><p data-i18n="highschool.exp.tech.text">Desarrollamos competencias digitales y habilidades para el mundo del siglo XXI.</p></article>
+      <article><span>💛</span><h3 data-i18n="highschool.exp.values.title">Formación en valores</h3><p data-i18n="highschool.exp.values.text">Acompañamos el desarrollo personal, la ética y la responsabilidad social.</p></article>
     </div>
+  </section>
 
-  </div>
-</section>
-
-<section class="nivel-descripcion">
-  <div class="nivel-descripcion-contenedor">
-    <div class="descripcion-texto">
-      <span class="seccion-etiqueta" data-i18n="highschool.description.label">
-        PROPUESTA EDUCATIVA
-      </span>
-
-      <h3 data-i18n="highschool.description.title">
-        Autonomía, responsabilidad y futuro
-      </h3>
-
-      <p data-i18n="highschool.description.text1">
-        El Nivel Secundario del Instituto San Vicente funciona de 7:45 a 15:30 hs, con espacio de tutoría hasta las 16:00 hs, acompañando a los estudiantes en una etapa clave de crecimiento académico, personal y social.
-      </p>
-
-      <p data-i18n="highschool.description.text2">
-        La propuesta busca que cada estudiante desarrolle sus múltiples inteligencias, dé lo mejor de sí desde su singularidad y utilice su libertad responsablemente, fortaleciendo su autonomía.
-      </p>
-
-      <p data-i18n="highschool.description.text3">
-        Acompañamos una formación integral donde el alumno no solo aprende, sino que aprende a pensar cómo piensa y actúa, desarrollando su metacognición y su capacidad de sumar valor como creador de futuro.
-      </p>
+  <section class="highschool-final-cta">
+    <div>
+      <h2 data-i18n="highschool.cta.title">Sumate al Nivel Secundario</h2>
+      <p data-i18n="highschool.cta.text">Coordiná una entrevista con el equipo directivo y conocé de cerca nuestra propuesta educativa.</p>
+      <a href="contacto.html"><span data-i18n="highschool.cta.button">SOLICITAR ENTREVISTA</span> <span>›</span></a>
     </div>
-  </div>
-</section>
+  </section>
 
-<section class="inscripcion-cta">
-  <div class="inscripcion-overlay"></div>
-
-  <div class="inscripcion-contenedor">
-    <div class="inscripcion-texto">
-      <h2 data-i18n="highschool.enrollment.title">Inscripción: Ciclo Lectivo 2026</h2>
-
-      <p data-i18n="highschool.enrollment.text">
-        Solicitá una entrevista con nuestro equipo directivo y conocé
-        la propuesta educativa del Nivel Secundario.
-      </p>
-    </div>
-
-    <div class="inscripcion-boton">
-      <a href="contacto.html" class="btn-inscripcion" data-i18n="sharedEnrollment.button">
-        SOLICITAR ENTREVISTA
-      </a>
-    </div>
-  </div>
-</section>
+</main>
 
 <!-- =========================
      FOOTER
@@ -225,7 +213,7 @@
         © Copyright 2026 Instituto San Vicente. Todos los derechos reservados.
       </p>
 
-      <img 
+      <img
         src="assets/img/textos-png/hoja membretada logos varios.png"
         data-i18n-src-es="assets/img/textos-png/hoja membretada logos varios.png"
         data-i18n-src-en="assets/img/textos-png/hoja membretada logos varios-en.png"
@@ -236,7 +224,6 @@
     </div>
   </div>
 </footer>
-
 
 <script src="js/script.js"></script>
 <script src="js/loader.js"></script>

@@ -1,13 +1,13 @@
 /* =========================
-   KINDER NUEVO
+   PRIMARY
 ========================= */
 
-.kinder-page,
-.kinder-page * {
+.primary-page,
+.primary-page * {
   box-sizing: border-box;
 }
 
-.kinder-page {
+.primary-page {
   padding: 175px 0 60px;
   background: linear-gradient(180deg, #f7f9fc 0%, #eef3f8 100%);
   color: #12324a;
@@ -18,12 +18,12 @@
    HERO SUPERIOR
 ========================= */
 
-.kinder-showcase {
+.primary-showcase {
   width: 100%;
   padding: 40px 24px 28px;
 }
 
-.kinder-layout {
+.primary-layout {
   width: min(100%, 1280px);
   margin: 0 auto;
   display: grid;
@@ -32,11 +32,11 @@
   align-items: stretch;
 }
 
-.kinder-slider-card,
-.kinder-info-card,
-.kinder-proposal-card,
+.primary-slider-card,
+.primary-info-card,
+.primary-proposal-card,
 .experience-grid article,
-.kinder-final-cta {
+.primary-final-cta {
   background: #ffffff;
   border-radius: 22px;
   box-shadow: 0 14px 34px rgba(8, 54, 86, 0.10);
@@ -47,38 +47,38 @@
    SLIDER
 ========================= */
 
-.kinder-slider-card {
+.primary-slider-card {
   position: relative;
   height: 500px;
 }
 
-.kinder-slider-card .nivel-slider {
+.primary-slider-card .nivel-slider {
   position: relative;
   width: 100%;
   height: 100%;
   overflow: hidden;
 }
 
-.kinder-slider-card .nivel-slide {
+.primary-slider-card .nivel-slide {
   position: absolute;
   inset: 0;
   opacity: 0;
   transition: opacity 0.55s ease;
 }
 
-.kinder-slider-card .nivel-slide.active {
+.primary-slider-card .nivel-slide.active {
   opacity: 1;
   z-index: 1;
 }
 
-.kinder-slider-card .nivel-slide img {
+.primary-slider-card .nivel-slide img {
   width: 100%;
   height: 100%;
   display: block;
   object-fit: cover;
 }
 
-.kinder-slider-card .slider-btn {
+.primary-slider-card .slider-btn {
   position: absolute;
   top: 50%;
   z-index: 5;
@@ -95,17 +95,17 @@
   justify-content: center;
 }
 
-.kinder-slider-card .slider-btn.prev {
+.primary-slider-card .slider-btn.prev {
   left: 18px;
   transform: translateY(-50%);
 }
 
-.kinder-slider-card .slider-btn.next {
+.primary-slider-card .slider-btn.next {
   right: 18px;
   transform: translateY(-50%);
 }
 
-.kinder-slider-card .slider-dots {
+.primary-slider-card .slider-dots {
   position: absolute;
   left: 50%;
   bottom: 18px;
@@ -115,7 +115,7 @@
   gap: 9px;
 }
 
-.kinder-slider-card .dot {
+.primary-slider-card .dot {
   width: 11px;
   height: 11px;
   padding: 0;
@@ -125,7 +125,7 @@
   cursor: pointer;
 }
 
-.kinder-slider-card .dot.active {
+.primary-slider-card .dot.active {
   background: #083656;
 }
 
@@ -133,13 +133,13 @@
    CARD INFORMACIÓN
 ========================= */
 
-.kinder-info-card {
+.primary-info-card {
   padding: 34px 32px;
   display: flex;
   flex-direction: column;
 }
 
-.kinder-label {
+.primary-label {
   color: #ff2b1c;
   font-size: 0.72rem;
   font-weight: 900;
@@ -147,30 +147,30 @@
   margin-bottom: 8px;
 }
 
-.kinder-info-card h1 {
+.primary-info-card h1 {
   margin: 0 0 14px;
 }
 
-.kinder-info-card h1 img {
+.primary-info-card h1 img {
   width: 100%;
   max-width: 280px;
   display: block;
 }
 
-.kinder-intro {
+.primary-intro {
   color: #405b70;
   font-size: 0.95rem;
   line-height: 1.65;
   margin-bottom: 18px;
 }
 
-.kinder-data-list {
+.primary-data-list {
   display: flex;
   flex-direction: column;
   margin-top: 4px;
 }
 
-.kinder-data-list p {
+.primary-data-list p {
   display: flex;
   align-items: flex-start;
   gap: 13px;
@@ -181,7 +181,7 @@
   line-height: 1.55;
 }
 
-.kinder-data-list p > span {
+.primary-data-list p > span {
   flex: 0 0 28px;
   color: #ff2b1c;
   font-size: 1.18rem;
@@ -189,12 +189,12 @@
   text-align: center;
 }
 
-.kinder-data-list strong {
+.primary-data-list strong {
   color: #083656;
   font-weight: 800;
 }
 
-.kinder-main-btn {
+.primary-main-btn {
   margin-top: auto;
   min-height: 54px;
   padding: 0 22px;
@@ -211,7 +211,7 @@
   letter-spacing: 0.3px;
 }
 
-.kinder-main-btn span {
+.primary-main-btn span {
   font-size: 1.2rem;
 }
 
@@ -219,11 +219,11 @@
    PROPUESTA
 ========================= */
 
-.kinder-proposal {
+.primary-proposal {
   padding: 12px 24px 34px;
 }
 
-.kinder-proposal-card {
+.primary-proposal-card {
   width: min(100%, 1280px);
   margin: 0 auto;
   padding: 20px;
@@ -233,11 +233,11 @@
   align-items: center;
 }
 
-.kinder-proposal-text {
+.primary-proposal-text {
   padding: 30px 26px;
 }
 
-.kinder-proposal-text > span {
+.primary-proposal-text > span {
   display: block;
   color: #ff2b1c;
   font-size: 0.72rem;
@@ -246,14 +246,14 @@
   margin-bottom: 10px;
 }
 
-.kinder-proposal-text h2 {
+.primary-proposal-text h2 {
   color: #083656;
   font-size: clamp(2rem, 4vw, 3rem);
   line-height: 1;
   margin-bottom: 16px;
 }
 
-.kinder-proposal-text > p {
+.primary-proposal-text > p {
   color: #405b70;
   font-size: 0.95rem;
   line-height: 1.75;
@@ -282,8 +282,7 @@
   text-align: center;
 }
 
-/* IMAGEN PROPUESTA CONTROLADA */
-.kinder-proposal-img {
+.primary-proposal-img {
   width: 100%;
   height: 360px;
   max-height: 360px;
@@ -292,7 +291,7 @@
   align-self: center;
 }
 
-.kinder-proposal-img img {
+.primary-proposal-img img {
   width: 100%;
   height: 100%;
   max-height: 360px;
@@ -305,20 +304,20 @@
    EXPERIENCIAS
 ========================= */
 
-.kinder-experiences {
+.primary-experiences {
   width: min(100%, 1280px);
   margin: 0 auto;
   padding: 8px 24px 42px;
   text-align: center;
 }
 
-.kinder-experiences h2 {
+.primary-experiences h2 {
   color: #083656;
   font-size: clamp(1.4rem, 2.5vw, 1.9rem);
   margin-bottom: 28px;
 }
 
-.kinder-experiences h2::after {
+.primary-experiences h2::after {
   content: "";
   display: block;
   width: 44px;
@@ -361,36 +360,36 @@
    CTA
 ========================= */
 
-.kinder-final-cta {
+.primary-final-cta {
   width: min(calc(100% - 48px), 1280px);
   min-height: 230px;
   margin: 0 auto;
   padding: 42px 46px;
   background:
     linear-gradient(90deg, rgba(8, 54, 86, 0.96) 0%, rgba(8, 54, 86, 0.76) 42%, rgba(8, 54, 86, 0.18) 100%),
-    url("../assets/img/niveles-iniciales/kinder/IMG-20260319-WA0070.jpg") center/cover no-repeat;
+    url("../assets/img/niveles-iniciales/primary/foto-119.webp") center/cover no-repeat;
   display: flex;
   align-items: center;
 }
 
-.kinder-final-cta div {
+.primary-final-cta div {
   max-width: 560px;
   color: #ffffff;
 }
 
-.kinder-final-cta h2 {
+.primary-final-cta h2 {
   font-size: clamp(2rem, 4vw, 3rem);
   margin-bottom: 12px;
 }
 
-.kinder-final-cta p {
+.primary-final-cta p {
   color: rgba(255,255,255,0.9);
   font-size: 1rem;
   line-height: 1.7;
   margin-bottom: 24px;
 }
 
-.kinder-final-cta a {
+.primary-final-cta a {
   display: inline-flex;
   align-items: center;
   gap: 10px;
@@ -409,12 +408,12 @@
 ========================= */
 
 @media (max-width: 1100px) {
-  .kinder-layout,
-  .kinder-proposal-card {
+  .primary-layout,
+  .primary-proposal-card {
     grid-template-columns: 1fr;
   }
 
-  .kinder-slider-card {
+  .primary-slider-card {
     height: 430px;
   }
 
@@ -422,50 +421,50 @@
     grid-template-columns: repeat(3, 1fr);
   }
 
-  .kinder-proposal-img {
+  .primary-proposal-img {
     height: 330px;
     max-height: 330px;
   }
 
-  .kinder-proposal-img img {
+  .primary-proposal-img img {
     max-height: 330px;
   }
 }
 
 @media (max-width: 768px) {
-  .kinder-page {
+  .primary-page {
     padding-top: 125px;
   }
 
-  .kinder-showcase,
-  .kinder-proposal,
-  .kinder-experiences {
+  .primary-showcase,
+  .primary-proposal,
+  .primary-experiences {
     padding-left: 16px;
     padding-right: 16px;
   }
 
-  .kinder-slider-card {
+  .primary-slider-card {
     height: 320px;
   }
 
-  .kinder-info-card {
+  .primary-info-card {
     padding: 28px 24px;
   }
 
-  .kinder-proposal-card {
+  .primary-proposal-card {
     padding: 14px;
   }
 
-  .kinder-proposal-text {
+  .primary-proposal-text {
     padding: 24px 18px;
   }
 
-  .kinder-proposal-img {
+  .primary-proposal-img {
     height: 280px;
     max-height: 280px;
   }
 
-  .kinder-proposal-img img {
+  .primary-proposal-img img {
     max-height: 280px;
   }
 
@@ -473,32 +472,32 @@
     grid-template-columns: repeat(2, 1fr);
   }
 
-  .kinder-final-cta {
+  .primary-final-cta {
     width: calc(100% - 32px);
     padding: 34px 24px;
     background:
       linear-gradient(90deg, rgba(8, 54, 86, 0.94), rgba(8, 54, 86, 0.78)),
-      url("../assets/img/niveles-iniciales/kinder/IMG-20260319-WA0070.jpg") center/cover no-repeat;
+      url("../assets/img/niveles-iniciales/primary/foto-119.webp") center/cover no-repeat;
   }
 }
 
 @media (max-width: 480px) {
-  .kinder-slider-card {
+  .primary-slider-card {
     height: 260px;
   }
 
-  .kinder-slider-card .slider-btn {
+  .primary-slider-card .slider-btn {
     width: 38px;
     height: 38px;
     font-size: 1.15rem;
   }
 
-  .kinder-proposal-img {
+  .primary-proposal-img {
     height: 230px;
     max-height: 230px;
   }
 
-  .kinder-proposal-img img {
+  .primary-proposal-img img {
     max-height: 230px;
   }
 
@@ -506,8 +505,8 @@
     grid-template-columns: 1fr;
   }
 
-  .kinder-main-btn,
-  .kinder-final-cta a {
+  .primary-main-btn,
+  .primary-final-cta a {
     width: 100%;
   }
 }

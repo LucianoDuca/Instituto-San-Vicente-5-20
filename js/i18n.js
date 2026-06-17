@@ -355,7 +355,114 @@ const translations = {
 
     "club.cta.title": "Las puertas están abiertas",
     "club.cta.text": "Sumate a practicar, aprender y divertirte en cualquiera de nuestros talleres.",
-    "club.cta.button": "Consultar inscripción"
+    "club.cta.button": "Consultar inscripción",
+
+
+
+    // ======= KINDER – NUEVO DISEÑO =======
+    "kinder.info.label": "NIVEL",
+    "kinder.info.intro": "Un espacio de descubrimiento, juego y aprendizaje donde cada niño/a comienza a explorar el mundo con alegría, creatividad y confianza.",
+    "kinder.info.ages": "<span>👧</span><strong>Edades:</strong> de 1 a 5 años",
+    "kinder.info.schedule": "<span>🕘</span><strong>Horario:</strong> lunes a viernes de 9:00 a 12:30 hs",
+    "kinder.info.options": "<span>🗓️</span><strong>Opciones:</strong> pre y post hora, horario extendido hasta las 16:00 hs",
+    "kinder.info.workshops": "<span>🎨</span><strong>Espacio de talleres:</strong> de 13:30 a 16:00 hs",
+    "kinder.info.button": "Solicitá tu entrevista",
+
+    "kinder.proposal.label": "NUESTRA PROPUESTA",
+    "kinder.proposal.title": "Aprender jugando",
+    "kinder.proposal.text": "Acompañamos los primeros aprendizajes desde una propuesta que invita a descubrir, explorar y aprender a través del juego, en un entorno cálido, creativo y pensado para cada etapa del crecimiento.",
+    "kinder.proposal.point1": "El Nivel Inicial funciona de lunes a viernes de 9:00 a 12:30 hs, con opciones de pre y post hora y modalidad de horario extendido hasta las 16:00 hs.",
+    "kinder.proposal.point2": "El espacio de talleres ofrece un ambiente pensado para compartir, disfrutar y crecer.",
+    "kinder.proposal.point3": "Nuestra propuesta integra inglés, deportes, arte, educación emocional y cultura, promoviendo una formación integral desde los primeros años.",
+
+    "kinder.exp.title": "Experiencias que acompañan su crecimiento",
+    "kinder.exp.english.title": "Inglés",
+    "kinder.exp.english.text": "Aprendemos jugando y explorando un nuevo idioma desde pequeños.",
+    "kinder.exp.pe.title": "Educación física",
+    "kinder.exp.pe.text": "Nos movemos, jugamos y desarrollamos hábitos saludables.",
+    "kinder.exp.music.title": "Música",
+    "kinder.exp.music.text": "Exploramos sonidos, ritmos y canciones que despiertan emociones.",
+    "kinder.exp.yoga.title": "Yoga",
+    "kinder.exp.yoga.text": "Promovemos el bienestar, la concentración y la calma.",
+    "kinder.exp.art.title": "Arte y creatividad",
+    "kinder.exp.art.text": "Expresamos ideas, emociones y creatividad en cada actividad.",
+    "kinder.exp.emotional.title": "Educación emocional",
+    "kinder.exp.emotional.text": "Acompañamos el desarrollo emocional y las habilidades para convivir.",
+
+    "kinder.cta.title": "Sumate al Nivel Inicial",
+    "kinder.cta.text": "Coordiná una entrevista con el equipo directivo y conocé de cerca nuestra propuesta educativa.",
+    "kinder.cta.button": "Solicitar entrevista",
+
+
+
+    // ======= PRIMARY – NUEVO DISEÑO =======
+    "primary.info.label": "NIVEL",
+    "primary.info.intro": "Buscamos que cada estudiante incorpore experiencias, desarrolle sus múltiples inteligencias y crezca mediante desafíos y metas personales.",
+    "primary.info.stage": "<span>📚</span><strong>Etapa:</strong> Nivel Primario (1° a 6° grado)",
+    "primary.info.schedule": "<span>🕗</span><strong>Horario:</strong> lunes a viernes de 8:00 a 16:00 hs",
+    "primary.info.modality": "<span>🎨</span><strong>Modalidad:</strong> doble escolaridad con inglés, deportes, arte, educación emocional y cultura",
+    "primary.info.button": "Solicitá tu entrevista",
+
+    "primary.proposal.label": "NUESTRA PROPUESTA",
+    "primary.proposal.title": "Aprender y crecer",
+    "primary.proposal.text": "El Nivel Primario del Instituto San Vicente funciona de lunes a viernes de 8:00 a 16:00 hs, dentro de una propuesta educativa moderna y actualizada a los tiempos de hoy.",
+    "primary.proposal.point1": "La institución propone un recorrido donde los estudiantes puedan desarrollar actividades académicas, deportivas, artísticas, culturales y emocionales en un entorno agradable, pensado para disfrutar cada experiencia.",
+    "primary.proposal.point2": "Acompañamos la autonomía, la libertad responsable, el respeto, la apertura al encuentro con los demás y el pensamiento riguroso, fortaleciendo el desarrollo integral de cada alumno.",
+    "primary.proposal.point3": "Nuestra propuesta integra inglés, deportes, arte, educación emocional y cultura, promoviendo una formación integral desde los primeros años de escolaridad.",
+
+    "primary.exp.title": "Experiencias que enriquecen su formación",
+    "primary.exp.english.title": "Inglés",
+    "primary.exp.english.text": "Desarrollamos el idioma con metodología activa y comunicativa desde primer grado.",
+    "primary.exp.pe.title": "Educación física",
+    "primary.exp.pe.text": "Nos movemos, jugamos y desarrollamos hábitos saludables con propuestas variadas.",
+    "primary.exp.music.title": "Música",
+    "primary.exp.music.text": "Exploramos ritmos, canciones y expresión musical en un espacio creativo.",
+    "primary.exp.art.title": "Arte y creatividad",
+    "primary.exp.art.text": "Expresamos ideas y emociones a través del dibujo, la pintura y los talleres.",
+    "primary.exp.science.title": "Ciencias",
+    "primary.exp.science.text": "Fomentamos la curiosidad y el pensamiento científico mediante experiencias prácticas.",
+    "primary.exp.emotional.title": "Educación emocional",
+    "primary.exp.emotional.text": "Acompañamos el desarrollo emocional y las habilidades para la convivencia.",
+
+    "primary.cta.title": "Sumate al Nivel Primario",
+    "primary.cta.text": "Coordiná una entrevista con el equipo directivo y conocé de cerca nuestra propuesta educativa.",
+    "primary.cta.button": "Solicitar entrevista",
+
+
+
+    // ======= HIGH SCHOOL – NUEVO DISEÑO =======
+    "highschool.info.label": "NIVEL",
+    "highschool.info.intro": "Formamos jóvenes capaces de vivir los valores del respeto, usar responsablemente su libertad, pensar rigurosamente y ser protagonistas de su futuro.",
+    "highschool.info.stage": "<span>🎓</span><strong>Etapa:</strong> Nivel Secundario (1° a 5° año)",
+    "highschool.info.schedule": "<span>🕖</span><strong>Horario:</strong> lunes a viernes de 7:45 a 15:30 hs",
+    "highschool.info.tutoring": "<span>📋</span><strong>Tutoría:</strong> espacio de acompañamiento hasta las 16:00 hs",
+    "highschool.info.modality": "<span>🌐</span><strong>Modalidad:</strong> formación académica integral, autonomía y proyecto personal",
+    "highschool.info.button": "Solicitá tu entrevista",
+
+    "highschool.proposal.label": "NUESTRA PROPUESTA",
+    "highschool.proposal.title": "Formarse para el futuro",
+    "highschool.proposal.text": "El Nivel Secundario del Instituto San Vicente funciona de 7:45 a 15:30 hs, con espacio de tutoría hasta las 16:00 hs, acompañando a los estudiantes en una etapa clave de crecimiento académico, personal y social.",
+    "highschool.proposal.point1": "La propuesta busca que cada estudiante desarrolle sus múltiples inteligencias, dé lo mejor de sí desde su singularidad y utilice su libertad responsablemente, fortaleciendo su autonomía.",
+    "highschool.proposal.point2": "Acompañamos una formación integral donde el alumno no solo aprende, sino que aprende a pensar cómo piensa y actúa, desarrollando su metacognición.",
+    "highschool.proposal.point3": "Nuestra propuesta integra inglés, ciencias, arte, educación física y tecnología, preparando a cada joven para ser creador de su propio futuro.",
+
+    "highschool.exp.title": "Experiencias que los preparan para el futuro",
+    "highschool.exp.english.title": "Inglés",
+    "highschool.exp.english.text": "Desarrollamos competencias comunicativas en inglés para el mundo actual y profesional.",
+    "highschool.exp.science.title": "Ciencias",
+    "highschool.exp.science.text": "Fomentamos el pensamiento crítico y científico a través de experiencias y proyectos.",
+    "highschool.exp.art.title": "Arte",
+    "highschool.exp.art.text": "Expresamos ideas, culturas y emociones a través de distintos lenguajes artísticos.",
+    "highschool.exp.pe.title": "Educación física",
+    "highschool.exp.pe.text": "Promovemos el deporte, el trabajo en equipo y los hábitos saludables.",
+    "highschool.exp.tech.title": "Tecnología",
+    "highschool.exp.tech.text": "Desarrollamos competencias digitales y habilidades para el mundo del siglo XXI.",
+    "highschool.exp.values.title": "Formación en valores",
+    "highschool.exp.values.text": "Acompañamos el desarrollo personal, la ética y la responsabilidad social.",
+
+    "highschool.cta.title": "Sumate al Nivel Secundario",
+    "highschool.cta.text": "Coordiná una entrevista con el equipo directivo y conocé de cerca nuestra propuesta educativa.",
+    "highschool.cta.button": "Solicitar entrevista"
 
   },
 
@@ -712,7 +819,114 @@ const translations = {
 
     "club.cta.title": "The doors are open",
     "club.cta.text": "Join us to practice, learn and have fun in any of our workshops.",
-    "club.cta.button": "Enrollment inquiry"
+    "club.cta.button": "Enrollment inquiry",
+
+
+
+    // ======= KINDER – NEW DESIGN =======
+    "kinder.info.label": "LEVEL",
+    "kinder.info.intro": "A space of discovery, play and learning where every child begins to explore the world with joy, creativity and confidence.",
+    "kinder.info.ages": "<span>👧</span><strong>Ages:</strong> from 1 to 5 years old",
+    "kinder.info.schedule": "<span>🕘</span><strong>Schedule:</strong> Monday to Friday from 9:00 AM to 12:30 PM",
+    "kinder.info.options": "<span>🗓️</span><strong>Options:</strong> pre-hour and post-hour service, extended hours until 4:00 PM",
+    "kinder.info.workshops": "<span>🎨</span><strong>Workshop space:</strong> from 1:30 PM to 4:00 PM",
+    "kinder.info.button": "Request your interview",
+
+    "kinder.proposal.label": "OUR PROPOSAL",
+    "kinder.proposal.title": "Learning through play",
+    "kinder.proposal.text": "We support early learning through a proposal that invites children to discover, explore and learn through play, in a warm, creative environment designed for every stage of growth.",
+    "kinder.proposal.point1": "Kindergarten runs Monday to Friday from 9:00 AM to 12:30 PM, with pre-hour and post-hour options and extended hours until 4:00 PM.",
+    "kinder.proposal.point2": "The workshop space offers an environment designed for sharing, enjoying and growing together.",
+    "kinder.proposal.point3": "Our proposal integrates English, sports, arts, emotional education and culture, promoting comprehensive education from the earliest years.",
+
+    "kinder.exp.title": "Experiences that support their growth",
+    "kinder.exp.english.title": "English",
+    "kinder.exp.english.text": "We learn by playing and exploring a new language from an early age.",
+    "kinder.exp.pe.title": "Physical Education",
+    "kinder.exp.pe.text": "We move, play and develop healthy habits.",
+    "kinder.exp.music.title": "Music",
+    "kinder.exp.music.text": "We explore sounds, rhythms and songs that awaken emotions.",
+    "kinder.exp.yoga.title": "Yoga",
+    "kinder.exp.yoga.text": "We promote well-being, concentration and calm.",
+    "kinder.exp.art.title": "Art & Creativity",
+    "kinder.exp.art.text": "We express ideas, emotions and creativity in every activity.",
+    "kinder.exp.emotional.title": "Emotional Education",
+    "kinder.exp.emotional.text": "We support emotional development and skills for living together.",
+
+    "kinder.cta.title": "Join Kindergarten",
+    "kinder.cta.text": "Schedule an interview with our leadership team and get to know our educational proposal up close.",
+    "kinder.cta.button": "Request an interview",
+
+
+
+    // ======= PRIMARY – NEW DESIGN =======
+    "primary.info.label": "LEVEL",
+    "primary.info.intro": "We seek for every student to incorporate experiences, develop their multiple intelligences and grow through personal challenges and goals.",
+    "primary.info.stage": "<span>📚</span><strong>Stage:</strong> Primary Level (1st to 6th grade)",
+    "primary.info.schedule": "<span>🕗</span><strong>Schedule:</strong> Monday to Friday from 8:00 AM to 4:00 PM",
+    "primary.info.modality": "<span>🎨</span><strong>Modality:</strong> full-day schooling with English, sports, arts, emotional education and culture",
+    "primary.info.button": "Request your interview",
+
+    "primary.proposal.label": "OUR PROPOSAL",
+    "primary.proposal.title": "Learning and growing",
+    "primary.proposal.text": "The Primary Level at Instituto San Vicente runs Monday to Friday from 8:00 AM to 4:00 PM, within a modern educational proposal adapted to today's times.",
+    "primary.proposal.point1": "The institution offers a journey where students can develop academic, sports, artistic, cultural and emotional activities in a pleasant environment designed to enjoy every experience.",
+    "primary.proposal.point2": "We support autonomy, responsible freedom, respect, openness to meeting others and rigorous thinking, strengthening each student's comprehensive development.",
+    "primary.proposal.point3": "Our proposal integrates English, sports, arts, emotional education and culture, promoting comprehensive education from the earliest years of schooling.",
+
+    "primary.exp.title": "Experiences that enrich their education",
+    "primary.exp.english.title": "English",
+    "primary.exp.english.text": "We develop language skills with an active, communicative methodology from first grade.",
+    "primary.exp.pe.title": "Physical Education",
+    "primary.exp.pe.text": "We move, play and develop healthy habits through varied activities.",
+    "primary.exp.music.title": "Music",
+    "primary.exp.music.text": "We explore rhythms, songs and musical expression in a creative space.",
+    "primary.exp.art.title": "Art & Creativity",
+    "primary.exp.art.text": "We express ideas and emotions through drawing, painting and workshops.",
+    "primary.exp.science.title": "Science",
+    "primary.exp.science.text": "We foster curiosity and scientific thinking through hands-on experiences.",
+    "primary.exp.emotional.title": "Emotional Education",
+    "primary.exp.emotional.text": "We support emotional development and skills for living together.",
+
+    "primary.cta.title": "Join Primary School",
+    "primary.cta.text": "Schedule an interview with our leadership team and get to know our educational proposal up close.",
+    "primary.cta.button": "Request an interview",
+
+
+
+    // ======= HIGH SCHOOL – NEW DESIGN =======
+    "highschool.info.label": "LEVEL",
+    "highschool.info.intro": "We educate young people capable of living the values of respect, using their freedom responsibly, thinking rigorously and becoming protagonists of their future.",
+    "highschool.info.stage": "<span>🎓</span><strong>Stage:</strong> High School Level (1st to 5th year)",
+    "highschool.info.schedule": "<span>🕖</span><strong>Schedule:</strong> Monday to Friday from 7:45 AM to 3:30 PM",
+    "highschool.info.tutoring": "<span>📋</span><strong>Tutoring:</strong> support space until 4:00 PM",
+    "highschool.info.modality": "<span>🌐</span><strong>Modality:</strong> comprehensive academic education, autonomy and personal project development",
+    "highschool.info.button": "Request your interview",
+
+    "highschool.proposal.label": "OUR PROPOSAL",
+    "highschool.proposal.title": "Building the future",
+    "highschool.proposal.text": "The High School Level at Instituto San Vicente runs from 7:45 AM to 3:30 PM, with tutoring space until 4:00 PM, supporting students during a key stage of academic, personal and social growth.",
+    "highschool.proposal.point1": "The proposal seeks for each student to develop their multiple intelligences, give their best from their own uniqueness and use their freedom responsibly, strengthening their autonomy.",
+    "highschool.proposal.point2": "We support a comprehensive education where students not only learn, but also learn to think about how they think and act, developing metacognition.",
+    "highschool.proposal.point3": "Our proposal integrates English, sciences, arts, physical education and technology, preparing each young person to be a creator of their own future.",
+
+    "highschool.exp.title": "Experiences that prepare them for the future",
+    "highschool.exp.english.title": "English",
+    "highschool.exp.english.text": "We develop communicative skills in English for today's world and future careers.",
+    "highschool.exp.science.title": "Sciences",
+    "highschool.exp.science.text": "We foster critical and scientific thinking through experiences and projects.",
+    "highschool.exp.art.title": "Arts",
+    "highschool.exp.art.text": "We express ideas, cultures and emotions through different artistic languages.",
+    "highschool.exp.pe.title": "Physical Education",
+    "highschool.exp.pe.text": "We promote sports, teamwork and healthy habits.",
+    "highschool.exp.tech.title": "Technology",
+    "highschool.exp.tech.text": "We develop digital skills and competencies for the 21st century world.",
+    "highschool.exp.values.title": "Values Education",
+    "highschool.exp.values.text": "We support personal development, ethics and social responsibility.",
+
+    "highschool.cta.title": "Join High School",
+    "highschool.cta.text": "Schedule an interview with our leadership team and get to know our educational proposal up close.",
+    "highschool.cta.button": "Request an interview"
   }
 };
 
