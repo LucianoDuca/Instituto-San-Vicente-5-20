@@ -6,10 +6,14 @@
   <link rel="icon" href="assets/img/logo.png" type="image/png">
   <title>English | Instituto San Vicente</title>
 
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,800;1,700&display=swap">
   <link rel="stylesheet" href="css/index.css">
   <link rel="stylesheet" href="css/language.css">
   <link rel="stylesheet" href="css/loader.css">
   <link rel="stylesheet" href="css/english.css">
+  <link rel="stylesheet" href="css/button-preview.css">
 </head>
 <body>
 
@@ -17,295 +21,379 @@
   <button class="language-toggle" id="languageToggle" type="button" aria-label="Cambiar idioma">
     🌐 <span id="currentLanguageLabel">ES</span>
   </button>
-
   <div class="language-menu" id="languageMenu">
     <button type="button" data-lang="es">Spanish</button>
     <button type="button" data-lang="en">English</button>
   </div>
 </div>
 
-<!-- ENCABEZADO SUPERIOR -->
 <header class="top-header">
   <div class="header-inner">
     <div class="logo-superior">
-      <img 
-        src="assets/img/logo-texto-best-quality.png" 
-        alt="Instituto San Vicente"
-        data-i18n-alt="brand.logoAlt"
-      >
+      <img src="assets/img/logo-texto-best-quality.png" alt="Instituto San Vicente" data-i18n-alt="brand.logoAlt">
     </div>
-
     <button class="hamburger" id="hamburger" aria-label="Abrir menú">
-      <span></span>
-      <span></span>
-      <span></span>
+      <span></span><span></span><span></span>
     </button>
-
     <ul class="mobile-menu" id="nav-menu">
-      <li><a href="index.html" data-i18n="nav.ourSchool">OUR SCHOOL</a></li>
-      <li><a href="institution.html" data-i18n="nav.institution">INSTITUTION</a></li>
-      <li><a href="english.html" data-i18n="nav.english">ENGLISH</a></li>
+      <li><a href="index.html"           data-i18n="nav.ourSchool">OUR SCHOOL</a></li>
+      <li><a href="institution.html"     data-i18n="nav.institution">INSTITUTION</a></li>
+      <li><a href="english.html"         data-i18n="nav.english">ENGLISH</a></li>
       <li><a href="Academic-Levels.html" data-i18n="nav.academicLevels">ACADEMIC LEVELS</a></li>
-      <li><a href="club-sanvi.html" data-i18n="nav.clubSanvi">CLUB SANVI</a></li>
-      <li><a href="contacto.html" data-i18n="nav.contact">CONTACT</a></li>
-      <li><a href="login.html" data-i18n="nav.login">LOGIN</a></li>
+      <li><a href="club-sanvi.html"      data-i18n="nav.clubSanvi">CLUB SANVI</a></li>
+      <li><a href="contacto.html"        data-i18n="nav.contact">CONTACT</a></li>
+      <li><a href="login.html"           data-i18n="nav.login">LOGIN</a></li>
     </ul>
   </div>
 </header>
 
-<!-- BARRA DE NAVEGACIÓN DESKTOP -->
 <nav class="navbar">
   <ul class="nav-menu">
-    <li><a href="index.html" data-i18n="nav.ourSchool">OUR SCHOOL</a></li>
-    <li><a href="institution.html" data-i18n="nav.institution">INSTITUTION</a></li>
-    <li><a href="english.html" data-i18n="nav.english">ENGLISH</a></li>
-
+    <li><a href="index.html"           data-i18n="nav.ourSchool">OUR SCHOOL</a></li>
+    <li><a href="institution.html"     data-i18n="nav.institution">INSTITUTION</a></li>
+    <li><a href="english.html"         data-i18n="nav.english">ENGLISH</a></li>
     <li class="dropdown">
-      <a href="Academic-Levels.html" data-i18n="nav.academicLevels">ACADEMIC LEVELS</a>
+      <a href="Academic-Levels.html"   data-i18n="nav.academicLevels">ACADEMIC LEVELS</a>
       <ul class="submenu">
-        <li><a href="kinder.html" data-i18n="nav.kinder">KINDER</a></li>
-        <li><a href="Primary.html" data-i18n="nav.primary">PRIMARY</a></li>
-        <li><a href="highschool.html" data-i18n="nav.highschool">HIGH SCHOOL</a></li>
+        <li><a href="kinder.html"      data-i18n="nav.kinder">KINDER</a></li>
+        <li><a href="Primary.html"     data-i18n="nav.primary">PRIMARY</a></li>
+        <li><a href="highschool.html"  data-i18n="nav.highschool">HIGH SCHOOL</a></li>
       </ul>
     </li>
-
-    <li><a href="club-sanvi.html" data-i18n="nav.clubSanvi">CLUB SANVI</a></li>
-    <li><a href="contacto.html" data-i18n="nav.contact">CONTACT</a></li>
-    <li><a href="login.html" data-i18n="nav.login">LOGIN</a></li>
+    <li><a href="club-sanvi.html"      data-i18n="nav.clubSanvi">CLUB SANVI</a></li>
+    <li><a href="contacto.html"        data-i18n="nav.contact">CONTACT</a></li>
+    <li><a href="login.html"           data-i18n="nav.login">LOGIN</a></li>
   </ul>
 </nav>
 
 <main class="english-page">
 
-  <!-- HERO -->
-  <section class="english-hero">
-    <div class="english-hero-overlay"></div>
+  <!-- =====================================================
+       BLOQUE 1 — HERO
+  ====================================================== -->
+  <section class="en-showcase">
+    <div class="en-layout">
 
-    <div class="english-hero-content">
-      <span data-i18n="englishPage.hero.label">English Program</span>
+      <div class="en-slider-card">
+        <div class="nivel-slider" id="enSlider">
+          <div class="nivel-slide active">
+            <img src="assets/img/nuevas fotos sanvi nico/foto-285.JPG" alt="Estudiantes en clase de inglés" data-i18n-alt="englishPage.slider.image1Alt">
+          </div>
+          <div class="nivel-slide">
+            <img src="assets/img/niveles-iniciales/high-school/IMG-20260311-WA0060.jpg" alt="Clase de inglés Instituto San Vicente" data-i18n-alt="englishPage.slider.image2Alt">
+          </div>
+          <div class="nivel-slide">
+            <img src="assets/img/niveles-iniciales/high-school/IMG-20260311-WA0058.jpg" alt="Actividad educativa en inglés" data-i18n-alt="englishPage.slider.image3Alt">
+          </div>
+        </div>
 
-      <h1 data-i18n="englishPage.hero.title">
-        Intensive English for a global future
-      </h1>
+        <button class="slider-btn prev" id="enPrevBtn">&#10094;</button>
+        <button class="slider-btn next" id="enNextBtn">&#10095;</button>
 
-      <p data-i18n="englishPage.hero.text">
-        Una propuesta de enseñanza intensiva de inglés orientada a la comunicación,
-        la confianza, la preparación internacional y nuevas oportunidades para cada estudiante.
-      </p>
+        <div class="slider-dots" id="enSliderDots">
+          <button class="dot active" data-index="0"></button>
+          <button class="dot" data-index="1"></button>
+          <button class="dot" data-index="2"></button>
+        </div>
+      </div>
 
-      <div class="english-hero-actions">
-        <a href="#english-program" class="english-btn-primary" data-i18n="englishPage.hero.primaryButton">
-          Conocer propuesta
+      <aside class="en-info-card">
+        <span class="en-label" data-i18n="englishPage.hero.label">ÁREA DE INGLÉS</span>
+
+        <h1 data-i18n="englishPage.hero.title">
+          Inglés para comunicar, descubrir y crecer
+        </h1>
+
+        <p class="en-intro" data-i18n="englishPage.hero.text">
+          Desarrollamos las habilidades lingüísticas de nuestros estudiantes desde Nivel Inicial hasta Secundaria, acompañando cada etapa con propuestas dinámicas, certificaciones internacionales y experiencias de inmersión cultural.
+        </p>
+
+        <div class="en-feature-list">
+          <p data-i18n-html="englishPage.hero.feature1">
+            <span class="dli"><img src="assets/img/icons/progress.svg" alt=""></span>
+            <span><strong>Aprendizaje progresivo</strong> — acompañamos cada etapa de crecimiento.</span>
+          </p>
+          <p data-i18n-html="englishPage.hero.feature2">
+            <span class="dli"><img src="assets/img/icons/certificate.svg" alt=""></span>
+            <span><strong>Certificaciones internacionales</strong> — Cambridge English y Trinity College London.</span>
+          </p>
+          <p data-i18n-html="englishPage.hero.feature3">
+            <span class="dli"><img src="assets/img/icons/airplane.svg" alt=""></span>
+            <span><strong>Programa de inmersión en Inglaterra</strong> — una experiencia única.</span>
+          </p>
+        </div>
+
+        <a href="contacto.html" class="en-main-btn">
+          <span data-i18n="englishPage.hero.primaryButton">CONOCÉ NUESTRA PROPUESTA</span> <span>›</span>
         </a>
+      </aside>
 
-        <a href="contacto.html" class="english-btn-secondary" data-i18n="englishPage.hero.secondaryButton">
-          Solicitar información
-        </a>
+    </div>
+  </section>
+
+  <!-- =====================================================
+       BLOQUE 2 — RECORRIDO
+  ====================================================== -->
+  <section class="en-proposal">
+    <div class="en-proposal-card">
+
+      <div class="en-proposal-text">
+        <span data-i18n="englishPage.intro.label">NUESTRA PROPUESTA</span>
+        <h2 data-i18n="englishPage.intro.title">Un recorrido que crece junto a cada estudiante</h2>
+
+        <p data-i18n="englishPage.intro.text">
+          Desde los primeros años promovemos la comprensión y la comunicación oral en inglés, incorporando gradualmente la lectura, la escritura y el desarrollo de competencias lingüísticas cada vez más complejas.
+        </p>
+
+        <div class="proposal-points">
+          <p>
+            <span class="pill-icon"><img src="assets/img/icons/person.svg" alt=""></span>
+            <span data-i18n="englishPage.intro.point1">Propuestas adaptadas a cada edad y nivel, con docentes especializadas y materiales actualizados.</span>
+          </p>
+          <p>
+            <span class="pill-icon"><img src="assets/img/icons/target.svg" alt=""></span>
+            <span data-i18n="englishPage.intro.point2">Objetivos progresivos que motivan y guían el aprendizaje desde el Nivel Inicial hasta Secundario.</span>
+          </p>
+          <p>
+            <span class="pill-icon"><img src="assets/img/icons/chat.svg" alt=""></span>
+            <span data-i18n="englishPage.intro.point3">Desarrollamos estudiantes seguros, autónomos y capaces de comunicarse con confianza.</span>
+          </p>
+        </div>
+      </div>
+
+      <div class="en-proposal-img">
+        <img src="assets/img/niveles-iniciales/high-school/IMG-20260311-WA0084.jpg" alt="Alumnos trabajando en actividades de inglés">
+      </div>
+
+    </div>
+  </section>
+
+  <!-- =====================================================
+       BLOQUE 3 — PROGRAMA
+  ====================================================== -->
+  <section class="en-experiences">
+    <h2 data-i18n="englishPage.program.title">Nuestro programa de Inglés</h2>
+
+    <div class="experience-grid">
+
+      <article>
+        <span class="exp-icon"><img src="assets/img/icons/listening.svg" alt=""></span>
+        <h3 data-i18n="englishPage.program.listening.title">Listening</h3>
+        <p data-i18n="englishPage.program.listening.text">Desarrollamos la comprensión auditiva mediante propuestas dinámicas y situaciones reales de comunicación.</p>
+      </article>
+
+      <article>
+        <span class="exp-icon"><img src="assets/img/icons/speaking.svg" alt=""></span>
+        <h3 data-i18n="englishPage.program.speaking.title">Speaking</h3>
+        <p data-i18n="englishPage.program.speaking.text">Fortalecemos la expresión oral para que los estudiantes hablen con confianza y naturalidad.</p>
+      </article>
+
+      <article>
+        <span class="exp-icon"><img src="assets/img/icons/reading.svg" alt=""></span>
+        <h3 data-i18n="englishPage.program.reading.title">Reading</h3>
+        <p data-i18n="englishPage.program.reading.text">Promovemos la comprensión lectora a través de textos adaptados y literatura en inglés.</p>
+      </article>
+
+      <article>
+        <span class="exp-icon"><img src="assets/img/icons/writing.svg" alt=""></span>
+        <h3 data-i18n="englishPage.program.writing.title">Writing</h3>
+        <p data-i18n="englishPage.program.writing.text">Desarrollamos la producción escrita para comunicar ideas con claridad y precisión.</p>
+      </article>
+
+      <article>
+        <span class="exp-icon"><img src="assets/img/icons/literature.svg" alt=""></span>
+        <h3 data-i18n="englishPage.program.literature.title">Literature</h3>
+        <p data-i18n="englishPage.program.literature.text">Lectura, teatro, proyectos creativos y actividades colaborativas que enriquecen el aprendizaje.</p>
+      </article>
+
+      <article>
+        <span class="exp-icon"><img src="assets/img/icons/interculturalidad.svg" alt=""></span>
+        <h3 data-i18n="englishPage.program.culture.title">Interculturalidad</h3>
+        <p data-i18n="englishPage.program.culture.text">Aprender inglés también implica comprender otras culturas y ampliar horizontes.</p>
+      </article>
+
+    </div>
+  </section>
+
+  <!-- =====================================================
+       BLOQUE 4 — CERTIFICACIONES
+  ====================================================== -->
+  <section class="en-certs">
+    <div class="en-certs-inner">
+
+      <div class="en-certs-head">
+        <span class="en-label" data-i18n="englishPage.certs.label">AVALES INTERNACIONALES</span>
+        <h2 data-i18n="englishPage.certs.title">Certificaciones Internacionales</h2>
+        <p data-i18n="englishPage.certs.subtitle">Preparamos a nuestros estudiantes para rendir exámenes reconocidos a nivel mundial desde los primeros años de escolaridad.</p>
+      </div>
+
+      <div class="en-cert-logos-row">
+        <div class="en-cert-logo-card">
+          <img src="assets/img/cambridge/trinity-logo.jpg" alt="Trinity College London">
+        </div>
+        <div class="en-cert-logo-card">
+          <img src="assets/img/cambridge/cambridge-logo.jpg" alt="Cambridge English Qualifications">
+        </div>
+      </div>
+
+      <!-- Paneles Trinity + Cambridge -->
+      <div class="en-certs-grid">
+
+        <div class="en-cert-panel">
+          <p class="en-cert-panel-title">TRINITY COLLEGE LONDON</p>
+          <p class="en-cert-subtitle" data-i18n="englishPage.certs.trinity.grade">2.° y 3.° grado</p>
+
+          <div class="en-gese-row">
+            <div class="en-gese-item">
+              <div class="en-gese-icon"><img src="assets/img/icons/certificate.svg" alt=""></div>
+              <strong>GESE<br>Level 1</strong>
+            </div>
+            <div class="en-gese-item">
+              <div class="en-gese-icon"><img src="assets/img/icons/certificate.svg" alt=""></div>
+              <strong>GESE<br>Level 2</strong>
+            </div>
+            <div class="en-gese-item">
+              <div class="en-gese-icon"><img src="assets/img/icons/certificate.svg" alt=""></div>
+              <strong>GESE<br>Level 3</strong>
+            </div>
+          </div>
+
+          <p class="en-cert-note" data-i18n="englishPage.certs.trinity.note">Evaluaciones centradas en la comunicación oral con examinadores nativos.</p>
+        </div>
+
+        <div class="en-cert-panel">
+          <p class="en-cambridge-prep" data-i18n="englishPage.certs.cambridge.prep">We prepare for</p>
+          <span class="en-cambridge-badge">Cambridge English Qualifications</span>
+
+          <table class="en-cambridge-table">
+            <thead>
+              <tr>
+                <th data-i18n="englishPage.certs.cambridge.primary">Primaria</th>
+                <th></th>
+                <th data-i18n="englishPage.certs.cambridge.secondary">Secundaria</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td data-i18n="englishPage.certs.cambridge.grade4">4.° grado</td>
+                <td><span class="en-tag en-tag-yellow">Starters</span></td>
+                <td><div class="en-cambridge-dot">A2 Key (KET)</div></td>
+              </tr>
+              <tr>
+                <td data-i18n="englishPage.certs.cambridge.grade5">5.° grado</td>
+                <td><span class="en-tag en-tag-green">Movers</span></td>
+                <td><div class="en-cambridge-dot">B1 Preliminary (PET)</div></td>
+              </tr>
+              <tr>
+                <td data-i18n="englishPage.certs.cambridge.grade6">6.° grado</td>
+                <td><span class="en-tag en-tag-blue">Flyers</span></td>
+                <td><div class="en-cambridge-dot en-dot-dark">B2 First (FCE)</div></td>
+              </tr>
+              <tr>
+                <td></td>
+                <td></td>
+                <td><div class="en-cambridge-dot en-dot-dark">C1 Advanced (CAE)</div></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
       </div>
     </div>
   </section>
 
-  <!-- INTRO -->
-  <section class="english-intro" id="english-program">
-    <div class="english-intro-text">
-      <span class="english-label" data-i18n="englishPage.intro.label">
-        Instituto San Vicente
-      </span>
+  <!-- =====================================================
+       BLOQUE 5 — INMERSIÓN EN INGLATERRA
+  ====================================================== -->
+  <section class="en-inmersion">
 
-      <h2 data-i18n="englishPage.intro.title">
-        Inglés intensivo como herramienta para abrirse al mundo
-      </h2>
+    <div class="en-inmersion-gallery">
+      <div class="nivel-slider" id="inmersionSlider">
+        <div class="nivel-slide active">
+          <img src="assets/img/nuevas fotos sanvi nico/foto-379.JPG" alt="Programa de inmersión en Inglaterra">
+        </div>
+        <div class="nivel-slide">
+          <img src="assets/img/niveles-iniciales/high-school/IMG-20260311-WA0058.jpg" alt="Estudiantes en Inglaterra">
+        </div>
+        <div class="nivel-slide">
+          <img src="assets/img/niveles-iniciales/high-school/IMG-20260311-WA0060.jpg" alt="Clases de inglés en Inglaterra">
+        </div>
+        <div class="nivel-slide">
+          <img src="assets/img/niveles-iniciales/high-school/IMG-20260311-WA0076.jpg" alt="Intercambio cultural en Londres">
+        </div>
+        <div class="nivel-slide">
+          <img src="assets/img/niveles-iniciales/high-school/IMG-20260311-WA0084.jpg" alt="Visitas culturales en Londres">
+        </div>
+      </div>
 
-      <p data-i18n="englishPage.intro.text">
-        En el Instituto San Vicente, el aprendizaje del idioma inglés forma parte de una
-        propuesta educativa integral que busca brindar herramientas reales para el futuro.
-        La enseñanza intensiva permite que los estudiantes desarrollen habilidades de
-        comunicación, comprensión, expresión oral y escrita.
-      </p>
+      <div class="slider-dots" id="inmersionDots">
+        <button class="dot active" data-index="0"></button>
+        <button class="dot" data-index="1"></button>
+        <button class="dot" data-index="2"></button>
+        <button class="dot" data-index="3"></button>
+        <button class="dot" data-index="4"></button>
+      </div>
     </div>
 
-    <div class="english-intro-card">
-      <h3 data-i18n="englishPage.intro.cardTitle">Preparación First</h3>
+    <div class="en-inmersion-content">
+      <span class="en-label" data-i18n="englishPage.immersion.label">PROGRAMA INTERNACIONAL</span>
 
-      <p data-i18n="englishPage.intro.cardText">
-        La propuesta acompaña el desarrollo de competencias lingüísticas sólidas,
-        orientadas a instancias de preparación internacional como First Certificate.
-      </p>
-    </div>
-  </section>
+      <h2 data-i18n="englishPage.immersion.title">Programa de Inmersión en Inglaterra</h2>
 
-  <!-- CARDS -->
-  <section class="english-pillars">
-    <div class="english-section-heading">
-      <span class="english-label" data-i18n="englishPage.pillars.label">
-        Learning experience
-      </span>
-
-      <h2 data-i18n="englishPage.pillars.title">
-        Una forma activa de aprender inglés
-      </h2>
-    </div>
-
-    <div class="english-pillars-grid">
-      <article class="english-pillar-card">
-        <span>01</span>
-        <h3 data-i18n="englishPage.pillars.card1.title">Speaking & Communication</h3>
-        <p data-i18n="englishPage.pillars.card1.text">
-          Actividades pensadas para que los estudiantes ganen fluidez, seguridad y
-          confianza al expresarse en inglés.
-        </p>
-      </article>
-
-      <article class="english-pillar-card">
-        <span>02</span>
-        <h3 data-i18n="englishPage.pillars.card2.title">Interactive Learning</h3>
-        <p data-i18n="englishPage.pillars.card2.text">
-          Propuestas dinámicas, participación activa, trabajo colaborativo y situaciones
-          reales de comunicación.
-        </p>
-      </article>
-
-      <article class="english-pillar-card">
-        <span>03</span>
-        <h3 data-i18n="englishPage.pillars.card3.title">International Preparation</h3>
-        <p data-i18n="englishPage.pillars.card3.text">
-          Desarrollo progresivo de habilidades vinculadas a certificaciones internacionales
-          y estándares de aprendizaje del idioma.
-        </p>
-      </article>
-
-      <article class="english-pillar-card">
-        <span>04</span>
-        <h3 data-i18n="englishPage.pillars.card4.title">Digital Resources</h3>
-        <p data-i18n="englishPage.pillars.card4.text">
-          Uso de recursos actuales para enriquecer la comprensión, la práctica y la
-          producción del idioma.
-        </p>
-      </article>
-    </div>
-  </section>
-
-  <!-- METHOD -->
-  <section class="english-method">
-    <div class="english-method-content">
-      <span class="english-label" data-i18n="englishPage.method.label">
-        Methodology
-      </span>
-
-      <h2 data-i18n="englishPage.method.title">
-        Aprender inglés haciendo, hablando y creando
-      </h2>
-
-      <p data-i18n="englishPage.method.text1">
-        El aprendizaje del idioma se fortalece mediante proyectos, presentaciones,
-        actividades orales, producción escrita, lectura comprensiva y experiencias
-        que conectan el inglés con la vida cotidiana.
+      <p data-i18n="englishPage.immersion.text">
+        Durante dos semanas los estudiantes participan de clases junto a jóvenes de distintos países, fortaleciendo sus habilidades comunicativas en un entorno internacional real.
       </p>
 
-      <p data-i18n="englishPage.method.text2">
-        La propuesta no se limita al estudio de estructuras gramaticales: busca que cada
-        estudiante pueda usar el idioma como una herramienta de comunicación real.
-      </p>
+      <ul class="en-inmersion-checks">
+        <li data-i18n="englishPage.immersion.check1">Clases de inglés en contextos reales y significativos.</li>
+        <li data-i18n="englishPage.immersion.check2">Intercambio cultural con estudiantes de todo el mundo.</li>
+        <li data-i18n="englishPage.immersion.check3">Experiencias internacionales y proyectos globales.</li>
+        <li data-i18n="englishPage.immersion.check4">Visitas culturales e históricas a Londres y alrededores.</li>
+      </ul>
     </div>
 
-    <div class="english-method-box">
-      <h3 data-i18n="englishPage.method.boxText">
-        English connects students with new cultures, new opportunities and a wider world.
-      </h3>
-    </div>
   </section>
 
-  <!-- LEVELS -->
-  <section class="english-levels">
-    <div class="english-section-heading">
-      <span class="english-label" data-i18n="englishPage.levels.label">
-        Academic journey
-      </span>
-
-      <h2 data-i18n="englishPage.levels.title">
-        Inglés en cada etapa escolar
-      </h2>
-    </div>
-
-    <div class="english-levels-grid">
-      <article class="english-level-card">
-        <h3 data-i18n="englishPage.levels.card1.title">Kinder English</h3>
-        <p data-i18n="englishPage.levels.card1.text">
-          Primer acercamiento al idioma mediante canciones, juegos, rutinas, imágenes
-          y experiencias lúdicas.
-        </p>
-      </article>
-
-      <article class="english-level-card">
-        <h3 data-i18n="englishPage.levels.card2.title">Primary English</h3>
-        <p data-i18n="englishPage.levels.card2.text">
-          Construcción de vocabulario, comprensión, comunicación oral y bases sólidas
-          para el desarrollo del idioma.
-        </p>
-      </article>
-
-      <article class="english-level-card">
-        <h3 data-i18n="englishPage.levels.card3.title">High School English</h3>
-        <p data-i18n="englishPage.levels.card3.text">
-          Profundización del idioma, producción más compleja, preparación académica
-          y orientación hacia certificaciones.
-        </p>
-      </article>
-    </div>
-  </section>
-
-  <!-- CTA -->
-  <section class="english-cta">
-    <div class="english-cta-content">
-      <h2 data-i18n="englishPage.cta.title">English opens doors to the world</h2>
-
+  <!-- =====================================================
+       BLOQUE FINAL — CTA
+  ====================================================== -->
+  <section class="en-final-cta">
+    <div>
+      <h2 data-i18n="englishPage.cta.title">Abrí nuevas oportunidades a través del inglés</h2>
       <p data-i18n="englishPage.cta.text">
-        Una propuesta pensada para formar estudiantes preparados, seguros y capaces
-        de comunicarse en un mundo cada vez más conectado.
+        Buscamos que cada estudiante desarrolle las herramientas necesarias para comunicarse con confianza en un mundo cada vez más global.
       </p>
-
-      <a href="contacto.html" data-i18n="englishPage.cta.button">
-        Solicitar entrevista
+      <a href="contacto.html">
+        <span data-i18n="englishPage.cta.button">SOLICITÁ UNA ENTREVISTA</span> <span>›</span>
       </a>
     </div>
   </section>
 
 </main>
 
-<!-- =========================
-     FOOTER
-========================= -->
 <footer class="footer-sanvicente">
   <div class="footer-contenedor">
-
     <div class="footer-grid">
       <div class="footer-col">
         <h3 data-i18n="footer.address.title">Dirección</h3>
         <p data-i18n="footer.address.line1">Av. del Viento Chorrillero 2570</p>
-        <p data-i18n="footer.address.line2">Juana Koslay,San Luis, Argentina</p>
+        <p data-i18n="footer.address.line2">Juana Koslay, San Luis, Argentina</p>
       </div>
-
       <div class="footer-col">
         <h3 data-i18n="footer.hours.title">Horario de Atención</h3>
         <p data-i18n="footer.hours.line1">Lunes a Viernes</p>
         <p data-i18n="footer.hours.line2">de 8:00 a 16:00 hs</p>
       </div>
-
       <div class="footer-col">
         <h3 data-i18n="footer.contact.title">Contáctenos</h3>
         <p data-i18n="footer.contact.phone">266 4214497</p>
         <p data-i18n="footer.contact.email">envíos@institutosanvicente.com</p>
       </div>
     </div>
-
     <div class="footer-linea"></div>
-
     <div class="footer-bottom">
-      <p data-i18n="footer.copy">
-        © Copyright 2026 Instituto San Vicente. Todos los derechos reservados.
-      </p>
-
-      <img 
+      <p data-i18n="footer.copy">© Copyright 2026 Instituto San Vicente. Todos los derechos reservados.</p>
+      <img
         src="assets/img/textos-png/hoja membretada logos varios.png"
         data-i18n-src-es="assets/img/textos-png/hoja membretada logos varios.png"
         data-i18n-src-en="assets/img/textos-png/hoja membretada logos varios-en.png"
@@ -317,17 +405,14 @@
   </div>
 </footer>
 
-<!-- BOTÓN WHATSAPP -->
 <a href="https://api.whatsapp.com/send?phone=542664214497" class="whatsapp-btn" aria-label="WhatsApp">
-  <img 
-    src="assets/img/whatsapp.png" 
-    alt="WhatsApp"
-    data-i18n-alt="whatsapp.alt"
-  >
+  <img src="assets/img/whatsapp.png" alt="WhatsApp" data-i18n-alt="whatsapp.alt">
 </a>
 
 <script src="js/script.js"></script>
 <script src="js/loader.js"></script>
 <script src="js/i18n.js"></script>
+<script src="js/english.js"></script>
+<script src="js/button-preview.js"></script>
 </body>
 </html>

@@ -280,6 +280,18 @@ const translations = {
     "contact.map.title": "Nuestra ubicación",
     "contact.map.iframeTitle": "Mapa Instituto San Vicente",
 
+    "contact.hero.imgAlt": "Comunidad Instituto San Vicente",
+    "contact.faq.kicker": "PREGUNTAS FRECUENTES",
+    "contact.faq.title": "Lo que más nos consultan",
+    "contact.faq.q1": "¿En qué horarios está abierta la institución para hablar con personal directivo?",
+    "contact.faq.a1": "Atendemos consultas de lunes a viernes de 8:00 a 16:00 hs. En ese horario podés acercarte personalmente o comunicarte por teléfono para hablar con el equipo directivo.",
+    "contact.faq.q2": "¿Dónde está ubicado el Instituto San Vicente?",
+    "contact.faq.a2": "Nos encontramos en Av. del Viento Chorrillero 2570, Juana Koslay, San Luis, Argentina. Podés ver la ubicación exacta en el mapa de esta página.",
+    "contact.faq.q3": "¿Cómo puedo solicitar una entrevista con el equipo directivo?",
+    "contact.faq.a3": "Podés completar el formulario de contacto en esta misma página, escribirnos por WhatsApp al 266 4214497 o enviarnos un correo a Admsanvicentejk@gmail.com. Nos pondremos en contacto a la brevedad.",
+    "contact.faq.q4": "¿Cómo puedo comunicarme con la institución?",
+    "contact.faq.a4": "Podés llamarnos al 266 4214497, escribirnos por correo a Admsanvicentejk@gmail.com o contactarnos a través de nuestras redes sociales en Instagram y Facebook.",
+
 
 
 
@@ -321,22 +333,22 @@ const translations = {
     "club.activities.label": "Propuestas",
     "club.activities.title": "Actividades del club",
 
-    "club.activities.football.title": "⚽ Fútbol",
+    "club.activities.football.title": "Fútbol",
     "club.activities.football.text": "Entrenamientos para aprender técnica, juego en equipo y disciplina deportiva.",
 
-    "club.activities.hockey.title": "🏑 Hockey",
+    "club.activities.hockey.title": "Hockey",
     "club.activities.hockey.text": "Espacio para categorías formativas, hockey mamis y crecimiento deportivo.",
 
-    "club.activities.handball.title": "🤾 Handball",
+    "club.activities.handball.title": "Handball",
     "club.activities.handball.text": "Una actividad dinámica para desarrollar coordinación, velocidad y compañerismo.",
 
-    "club.activities.gym.title": "🤸 Gimnasia",
+    "club.activities.gym.title": "Gimnasia",
     "club.activities.gym.text": "Introducción al movimiento, equilibrio, fuerza y expresión corporal.",
 
-    "club.activities.taekwondo.title": "🥋 Taekwondo",
+    "club.activities.taekwondo.title": "Taekwondo",
     "club.activities.taekwondo.text": "Disciplina, respeto, autocontrol y entrenamiento físico.",
 
-    "club.activities.music.title": "🎵 Música",
+    "club.activities.music.title": "Música",
     "club.activities.music.text": "Un espacio creativo para desarrollar expresión, ritmo y sensibilidad artística.",
 
     "club.gallery.label": "Momentos Sanvi",
@@ -362,10 +374,10 @@ const translations = {
     // ======= KINDER – NUEVO DISEÑO =======
     "kinder.info.label": "NIVEL",
     "kinder.info.intro": "Un espacio de descubrimiento, juego y aprendizaje donde cada niño/a comienza a explorar el mundo con alegría, creatividad y confianza.",
-    "kinder.info.ages": "<span>👧</span><strong>Edades:</strong> de 1 a 5 años",
-    "kinder.info.schedule": "<span>🕘</span><strong>Horario:</strong> lunes a viernes de 9:00 a 12:30 hs",
-    "kinder.info.options": "<span>🗓️</span><strong>Opciones:</strong> pre y post hora, horario extendido hasta las 16:00 hs",
-    "kinder.info.workshops": "<span>🎨</span><strong>Espacio de talleres:</strong> de 13:30 a 16:00 hs",
+    "kinder.info.ages": "<span class='dli'><img src='assets/img/icons/person.svg' alt=''></span><strong>Edades:</strong> de 1 a 5 años",
+    "kinder.info.schedule": "<span class='dli'><img src='assets/img/icons/clock.svg' alt=''></span><strong>Horario:</strong> lunes a viernes de 9:00 a 12:30 hs",
+    "kinder.info.options": "<span class='dli'><img src='assets/img/icons/calendar.svg' alt=''></span><strong>Opciones:</strong> pre y post hora, horario extendido hasta las 16:00 hs",
+    "kinder.info.workshops": "<span class='dli'><img src='assets/img/icons/palette.svg' alt=''></span><strong>Espacio de talleres:</strong> de 13:30 a 16:00 hs",
     "kinder.info.button": "Solicitá tu entrevista",
 
     "kinder.proposal.label": "NUESTRA PROPUESTA",
@@ -398,9 +410,9 @@ const translations = {
     // ======= PRIMARY – NUEVO DISEÑO =======
     "primary.info.label": "NIVEL",
     "primary.info.intro": "Buscamos que cada estudiante incorpore experiencias, desarrolle sus múltiples inteligencias y crezca mediante desafíos y metas personales.",
-    "primary.info.stage": "<span>📚</span><strong>Etapa:</strong> Nivel Primario (1° a 6° grado)",
-    "primary.info.schedule": "<span>🕗</span><strong>Horario:</strong> lunes a viernes de 8:00 a 16:00 hs",
-    "primary.info.modality": "<span>🎨</span><strong>Modalidad:</strong> doble escolaridad con inglés, deportes, arte, educación emocional y cultura",
+    "primary.info.stage": "<span class='dli'><img src='assets/img/icons/literature.svg' alt=''></span><strong>Etapa:</strong> Nivel Primario (1° a 6° grado)",
+    "primary.info.schedule": "<span class='dli'><img src='assets/img/icons/clock.svg' alt=''></span><strong>Horario:</strong> lunes a viernes de 8:00 a 16:00 hs",
+    "primary.info.modality": "<span class='dli'><img src='assets/img/icons/palette.svg' alt=''></span><strong>Modalidad:</strong> doble escolaridad con inglés, deportes, arte, educación emocional y cultura",
     "primary.info.button": "Solicitá tu entrevista",
 
     "primary.proposal.label": "NUESTRA PROPUESTA",
@@ -433,10 +445,10 @@ const translations = {
     // ======= HIGH SCHOOL – NUEVO DISEÑO =======
     "highschool.info.label": "NIVEL",
     "highschool.info.intro": "Formamos jóvenes capaces de vivir los valores del respeto, usar responsablemente su libertad, pensar rigurosamente y ser protagonistas de su futuro.",
-    "highschool.info.stage": "<span>🎓</span><strong>Etapa:</strong> Nivel Secundario (1° a 5° año)",
-    "highschool.info.schedule": "<span>🕖</span><strong>Horario:</strong> lunes a viernes de 7:45 a 15:30 hs",
-    "highschool.info.tutoring": "<span>📋</span><strong>Tutoría:</strong> espacio de acompañamiento hasta las 16:00 hs",
-    "highschool.info.modality": "<span>🌐</span><strong>Modalidad:</strong> formación académica integral, autonomía y proyecto personal",
+    "highschool.info.stage": "<span class='dli'><img src='assets/img/icons/graduation.svg' alt=''></span><strong>Etapa:</strong> Nivel Secundario (1° a 5° año)",
+    "highschool.info.schedule": "<span class='dli'><img src='assets/img/icons/clock.svg' alt=''></span><strong>Horario:</strong> lunes a viernes de 7:45 a 15:30 hs",
+    "highschool.info.tutoring": "<span class='dli'><img src='assets/img/icons/clipboard.svg' alt=''></span><strong>Tutoría:</strong> espacio de acompañamiento hasta las 16:00 hs",
+    "highschool.info.modality": "<span class='dli'><img src='assets/img/icons/interculturalidad.svg' alt=''></span><strong>Modalidad:</strong> formación académica integral, autonomía y proyecto personal",
     "highschool.info.button": "Solicitá tu entrevista",
 
     "highschool.proposal.label": "NUESTRA PROPUESTA",
@@ -741,6 +753,18 @@ const translations = {
     "contact.map.title": "Our location",
     "contact.map.iframeTitle": "Instituto San Vicente map",
 
+    "contact.hero.imgAlt": "Instituto San Vicente community",
+    "contact.faq.kicker": "FREQUENTLY ASKED QUESTIONS",
+    "contact.faq.title": "What people ask us most",
+    "contact.faq.q1": "What are the institution's office hours to speak with management?",
+    "contact.faq.a1": "We attend inquiries Monday through Friday from 8:00 AM to 4:00 PM. During those hours you can visit us in person or call to speak with the management team.",
+    "contact.faq.q2": "Where is Instituto San Vicente located?",
+    "contact.faq.a2": "We are located at Av. del Viento Chorrillero 2570, Juana Koslay, San Luis, Argentina. You can find our exact location on the map on this page.",
+    "contact.faq.q3": "How can I request a meeting with the management team?",
+    "contact.faq.a3": "You can fill out the contact form on this page, message us on WhatsApp at 266 4214497, or send us an email to Admsanvicentejk@gmail.com. We will get back to you shortly.",
+    "contact.faq.q4": "How can I contact the institution?",
+    "contact.faq.a4": "You can call us at 266 4214497, email us at Admsanvicentejk@gmail.com, or reach us through our social media on Instagram and Facebook.",
+
 
 
 
@@ -785,22 +809,22 @@ const translations = {
     "club.activities.label": "Programs",
     "club.activities.title": "Club activities",
 
-    "club.activities.football.title": "⚽ Football",
+    "club.activities.football.title": "Football",
     "club.activities.football.text": "Training sessions to learn technique, teamwork and sports discipline.",
 
-    "club.activities.hockey.title": "🏑 Hockey",
+    "club.activities.hockey.title": "Hockey",
     "club.activities.hockey.text": "A space for youth categories, moms hockey and sports growth.",
 
-    "club.activities.handball.title": "🤾 Handball",
+    "club.activities.handball.title": "Handball",
     "club.activities.handball.text": "A dynamic activity to develop coordination, speed and teamwork.",
 
-    "club.activities.gym.title": "🤸 Gymnastics",
+    "club.activities.gym.title": "Gymnastics",
     "club.activities.gym.text": "Introduction to movement, balance, strength and body expression.",
 
-    "club.activities.taekwondo.title": "🥋 Taekwondo",
+    "club.activities.taekwondo.title": "Taekwondo",
     "club.activities.taekwondo.text": "Discipline, respect, self-control and physical training.",
 
-    "club.activities.music.title": "🎵 Music",
+    "club.activities.music.title": "Music",
     "club.activities.music.text": "A creative space to develop expression, rhythm and artistic sensitivity.",
 
     "club.gallery.label": "Sanvi moments",
@@ -826,10 +850,10 @@ const translations = {
     // ======= KINDER – NEW DESIGN =======
     "kinder.info.label": "LEVEL",
     "kinder.info.intro": "A space of discovery, play and learning where every child begins to explore the world with joy, creativity and confidence.",
-    "kinder.info.ages": "<span>👧</span><strong>Ages:</strong> from 1 to 5 years old",
-    "kinder.info.schedule": "<span>🕘</span><strong>Schedule:</strong> Monday to Friday from 9:00 AM to 12:30 PM",
-    "kinder.info.options": "<span>🗓️</span><strong>Options:</strong> pre-hour and post-hour service, extended hours until 4:00 PM",
-    "kinder.info.workshops": "<span>🎨</span><strong>Workshop space:</strong> from 1:30 PM to 4:00 PM",
+    "kinder.info.ages": "<span class='dli'><img src='assets/img/icons/person.svg' alt=''></span><strong>Ages:</strong> from 1 to 5 years old",
+    "kinder.info.schedule": "<span class='dli'><img src='assets/img/icons/clock.svg' alt=''></span><strong>Schedule:</strong> Monday to Friday from 9:00 AM to 12:30 PM",
+    "kinder.info.options": "<span class='dli'><img src='assets/img/icons/calendar.svg' alt=''></span><strong>Options:</strong> pre-hour and post-hour service, extended hours until 4:00 PM",
+    "kinder.info.workshops": "<span class='dli'><img src='assets/img/icons/palette.svg' alt=''></span><strong>Workshop space:</strong> from 1:30 PM to 4:00 PM",
     "kinder.info.button": "Request your interview",
 
     "kinder.proposal.label": "OUR PROPOSAL",
@@ -862,9 +886,9 @@ const translations = {
     // ======= PRIMARY – NEW DESIGN =======
     "primary.info.label": "LEVEL",
     "primary.info.intro": "We seek for every student to incorporate experiences, develop their multiple intelligences and grow through personal challenges and goals.",
-    "primary.info.stage": "<span>📚</span><strong>Stage:</strong> Primary Level (1st to 6th grade)",
-    "primary.info.schedule": "<span>🕗</span><strong>Schedule:</strong> Monday to Friday from 8:00 AM to 4:00 PM",
-    "primary.info.modality": "<span>🎨</span><strong>Modality:</strong> full-day schooling with English, sports, arts, emotional education and culture",
+    "primary.info.stage": "<span class='dli'><img src='assets/img/icons/literature.svg' alt=''></span><strong>Stage:</strong> Primary Level (1st to 6th grade)",
+    "primary.info.schedule": "<span class='dli'><img src='assets/img/icons/clock.svg' alt=''></span><strong>Schedule:</strong> Monday to Friday from 8:00 AM to 4:00 PM",
+    "primary.info.modality": "<span class='dli'><img src='assets/img/icons/palette.svg' alt=''></span><strong>Modality:</strong> full-day schooling with English, sports, arts, emotional education and culture",
     "primary.info.button": "Request your interview",
 
     "primary.proposal.label": "OUR PROPOSAL",
@@ -897,10 +921,10 @@ const translations = {
     // ======= HIGH SCHOOL – NEW DESIGN =======
     "highschool.info.label": "LEVEL",
     "highschool.info.intro": "We educate young people capable of living the values of respect, using their freedom responsibly, thinking rigorously and becoming protagonists of their future.",
-    "highschool.info.stage": "<span>🎓</span><strong>Stage:</strong> High School Level (1st to 5th year)",
-    "highschool.info.schedule": "<span>🕖</span><strong>Schedule:</strong> Monday to Friday from 7:45 AM to 3:30 PM",
-    "highschool.info.tutoring": "<span>📋</span><strong>Tutoring:</strong> support space until 4:00 PM",
-    "highschool.info.modality": "<span>🌐</span><strong>Modality:</strong> comprehensive academic education, autonomy and personal project development",
+    "highschool.info.stage": "<span class='dli'><img src='assets/img/icons/graduation.svg' alt=''></span><strong>Stage:</strong> High School Level (1st to 5th year)",
+    "highschool.info.schedule": "<span class='dli'><img src='assets/img/icons/clock.svg' alt=''></span><strong>Schedule:</strong> Monday to Friday from 7:45 AM to 3:30 PM",
+    "highschool.info.tutoring": "<span class='dli'><img src='assets/img/icons/clipboard.svg' alt=''></span><strong>Tutoring:</strong> support space until 4:00 PM",
+    "highschool.info.modality": "<span class='dli'><img src='assets/img/icons/interculturalidad.svg' alt=''></span><strong>Modality:</strong> comprehensive academic education, autonomy and personal project development",
     "highschool.info.button": "Request your interview",
 
     "highschool.proposal.label": "OUR PROPOSAL",

@@ -6,6 +6,9 @@
   <link rel="icon" href="assets/img/logo.png" type="image/png">
   <title>Contacto | Instituto San Vicente</title>
 
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,800;1,700&family=Cormorant+Garamond:wght@600;700&display=swap">
   <link rel="stylesheet" href="css/contacto.css">
   <link rel="stylesheet" href="css/index.css">
   <link rel="stylesheet" href="css/language.css">
@@ -80,16 +83,17 @@
     <div class="contact-container">
 
       <div class="contact-header-box">
-        <span class="contact-kicker" data-i18n="contact.kicker">CONTACTO</span>
+        <div class="contact-header-content">
+          <span class="contact-kicker" data-i18n="contact.kicker">CONTACTO</span>
 
-        <h1 data-i18n="contact.hero.title">Vías de comunicación institucional</h1>
+          <h1 data-i18n="contact.hero.title">Vías de comunicación institucional</h1>
 
-        <p data-i18n="contact.hero.text">
-          San Vicente es una escuela abierta al diálogo constante con la familia.
-          Estos son nuestros canales oficiales de comunicación institucional.
-        </p>
+          <p data-i18n="contact.hero.text">
+            San Vicente es una escuela abierta al diálogo constante con la familia.
+            Estos son nuestros canales oficiales de comunicación institucional.
+          </p>
 
-        <div class="contact-top-info">
+          <div class="contact-top-info">
           <div class="contact-top-item">
             <h3 data-i18n="contact.info.addressTitle">Dirección</h3>
             <p data-i18n="contact.info.addressText">Juana Koslay, San Luis</p>
@@ -122,6 +126,15 @@
               </a>
             </div>
           </div>
+        </div>
+        </div><!-- /.contact-header-content -->
+
+        <div class="contact-header-img">
+          <img
+            src="assets/img/niveles-iniciales/high-school/ChatGPT Image 18 jun 2026, 01_10_53 a.m.png"
+            alt="Comunidad Instituto San Vicente"
+            data-i18n-alt="contact.hero.imgAlt"
+          >
         </div>
       </div>
 
@@ -227,6 +240,40 @@
         </div>
       </div>
 
+    </div>
+  </section>
+
+  <section class="contact-faq">
+    <div class="faq-inner">
+
+      <div class="faq-head">
+        <span class="contact-kicker" data-i18n="contact.faq.kicker">PREGUNTAS FRECUENTES</span>
+        <h2 data-i18n="contact.faq.title">Lo que más nos consultan</h2>
+      </div>
+
+      <div class="faq-list">
+
+        <details class="faq-item">
+          <summary><span data-i18n="contact.faq.q1">¿En qué horarios está abierta la institución para hablar con personal directivo?</span></summary>
+          <p data-i18n="contact.faq.a1">Atendemos consultas de lunes a viernes de 8:00 a 16:00 hs. En ese horario podés acercarte personalmente o comunicarte por teléfono para hablar con el equipo directivo.</p>
+        </details>
+
+        <details class="faq-item">
+          <summary><span data-i18n="contact.faq.q2">¿Dónde está ubicado el Instituto San Vicente?</span></summary>
+          <p data-i18n="contact.faq.a2">Nos encontramos en Av. del Viento Chorrillero 2570, Juana Koslay, San Luis, Argentina. Podés ver la ubicación exacta en el mapa de esta página.</p>
+        </details>
+
+        <details class="faq-item">
+          <summary><span data-i18n="contact.faq.q3">¿Cómo puedo solicitar una entrevista con el equipo directivo?</span></summary>
+          <p data-i18n="contact.faq.a3">Podés completar el formulario de contacto en esta misma página, escribirnos por WhatsApp al 266 4214497 o enviarnos un correo a Admsanvicentejk@gmail.com. Nos pondremos en contacto a la brevedad.</p>
+        </details>
+
+        <details class="faq-item">
+          <summary><span data-i18n="contact.faq.q4">¿Cómo puedo comunicarme con la institución?</span></summary>
+          <p data-i18n="contact.faq.a4">Podés llamarnos al 266 4214497, escribirnos por correo a Admsanvicentejk@gmail.com o contactarnos a través de nuestras redes sociales en Instagram y Facebook.</p>
+        </details>
+
+      </div>
     </div>
   </section>
 </main>

@@ -511,3 +511,58 @@
     width: 100%;
   }
 }
+
+/* =========================
+   SVG ICON CONTAINERS
+========================= */
+.kinder-data-list .dli {
+  flex: 0 0 34px;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: #083656;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.kinder-data-list .dli img {
+  width: 18px;
+  height: 18px;
+  display: block;
+  filter: brightness(0) invert(1);
+}
+.proposal-points .pill-icon {
+  flex: 0 0 34px;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: #083656;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.proposal-points .pill-icon img {
+  width: 18px;
+  height: 18px;
+  display: block;
+  filter: brightness(0) invert(1);
+}
+.experience-grid .exp-icon {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: #083656;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 14px;
+  font-size: 0;
+}
+.experience-grid .exp-icon img {
+  width: 26px;
+  height: 26px;
+  display: block;
+  filter: brightness(0) invert(1);
+}
