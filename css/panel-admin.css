@@ -8,6 +8,7 @@ body{margin:0;font-family:Segoe UI,Arial,sans-serif;background:#eef3f7;color:#12
 .side-nav{display:grid;gap:10px}
 .nav-btn,.logout-btn,.admin-topbar a,.admin-form button,.card-head button{border:0;border-radius:14px;padding:13px 16px;font-weight:800;cursor:pointer}
 .nav-btn{background:transparent;color:#c8d7e4;text-align:left}.nav-btn.active,.nav-btn:hover{background:#123d61;color:#fff}
+.nav-btn--gallery{background:rgba(21,128,61,.18)!important;color:#86efac!important;border-left:3px solid #16a34a}.nav-btn--gallery.active,.nav-btn--gallery:hover{background:#15803d!important;color:#fff!important}
 .logout-btn{margin-top:auto;background:#c1121f;color:#fff}
 .admin-main{padding:30px;overflow:hidden}
 .admin-topbar{display:flex;justify-content:space-between;gap:20px;align-items:center;margin-bottom:24px}
@@ -133,6 +134,13 @@ body{margin:0;font-family:Segoe UI,Arial,sans-serif;background:#eef3f7;color:#12
   .cs-disc-photo{max-width:120px}
   .cs-gallery-grid{grid-template-columns:repeat(auto-fill,minmax(80px,1fr))}
 }
+
+/* Edición Galería — tabs principales */
+.eg-tabs{display:flex;gap:10px;margin-bottom:22px}
+.eg-tab{border:0;border-radius:16px;padding:12px 24px;font-weight:900;cursor:pointer;background:#e8eef3;color:#0b3558;font-size:.9rem;transition:background .2s}
+.eg-tab.active{background:#15803d;color:#fff}
+.eg-tab:hover:not(.active){background:#d1fae5;color:#14532d}
+.eg-panel{display:none}.eg-panel.active{display:block}
 
 /* =============================================
    SAN VICENTE PANEL

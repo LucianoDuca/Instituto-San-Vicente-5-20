@@ -748,10 +748,31 @@ async function cargarDisciplinasAdmin() {
   });
 })();
 
-/* Cargar Club Sanvi al activar la sección */
-document.querySelector('[data-section="club-sanvi"]')?.addEventListener("click", function () {
-  cargarGaleria();
-  cargarDisciplinasAdmin();
+/* Tabs principales Edición Galería */
+document.querySelectorAll(".eg-tab").forEach(function (btn) {
+  btn.addEventListener("click", function () {
+    document.querySelectorAll(".eg-tab").forEach(function (b) { b.classList.remove("active"); });
+    document.querySelectorAll(".eg-panel").forEach(function (p) { p.classList.remove("active"); });
+    btn.classList.add("active");
+    document.getElementById("eg-panel-" + btn.dataset.egTab).classList.add("active");
+    if (btn.dataset.egTab === "club-sanvi") {
+      cargarGaleria();
+      cargarDisciplinasAdmin();
+    } else {
+      cargarSvSeccion(svSeccionActiva);
+    }
+  });
+});
+
+/* Cargar Edición Galería al activar la sección */
+document.querySelector('[data-section="edicion-galeria"]')?.addEventListener("click", function () {
+  var activo = document.querySelector(".eg-tab.active")?.dataset.egTab;
+  if (!activo || activo === "club-sanvi") {
+    cargarGaleria();
+    cargarDisciplinasAdmin();
+  } else {
+    cargarSvSeccion(svSeccionActiva);
+  }
 });
 
 /* =============================================
@@ -851,9 +872,6 @@ async function svReemplazarImagen(seccion, slot, file, card) {
   }
 }
 
-document.querySelector("[data-section='san-vicente']")?.addEventListener("click", function () {
-  cargarSvSeccion(svSeccionActiva);
-});
 
 /* Verificar rol admin */
 
