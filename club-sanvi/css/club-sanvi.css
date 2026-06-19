@@ -225,6 +225,7 @@
   object-fit: cover;
   object-position: center;
   display: block;
+  will-change: transform;
   transition: transform 0.6s ease;
 }
 
@@ -341,6 +342,7 @@
   object-fit: cover;
   object-position: center;
   display: block;
+  will-change: transform;
   transition: transform 0.65s ease;
 }
 
@@ -403,6 +405,51 @@
   font-size: 0.95rem;
   line-height: 1.75;
   max-width: 400px;
+}
+
+/* =============================================
+   ÍCONOS DE SECCIÓN (patrón .dli de English)
+============================================= */
+
+.ca-feature {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  margin-top: 0;
+}
+
+.ca-feature + .ca-feature {
+  margin-top: 14px;
+}
+
+.ca-feature p {
+  flex: 1;
+  margin: 0;
+  max-width: none;
+}
+
+.club-about-text .ca-feature {
+  max-width: 500px;
+}
+
+.cs-dli {
+  flex: 0 0 32px;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--cs-red);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-top: 3px;
+}
+
+.cs-dli img {
+  width: 16px;
+  height: 16px;
+  display: block;
+  filter: brightness(0) invert(1);
 }
 
 /* =============================================
@@ -564,6 +611,7 @@
   overflow: hidden;
   cursor: zoom-in;
   background: var(--cs-blue);
+  contain: layout style;
 }
 
 .cg-item img {
@@ -571,6 +619,7 @@
   height: 100%;
   object-fit: cover;
   display: block;
+  will-change: transform;
   transition: transform 0.55s ease;
 }
 
@@ -857,6 +906,11 @@
     flex-direction: column;
   }
 
+  .club-reveal--left,
+  .club-reveal--right {
+    transform: translateY(28px);
+  }
+
   .ca-photo {
     flex: none;
     height: 340px;
@@ -928,13 +982,27 @@
 
 .club-reveal {
   opacity: 0;
-  transform: translateY(28px);
-  transition: opacity 0.55s ease, transform 0.55s ease;
+  transform: translateY(32px);
+  will-change: transform, opacity;
+  transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+              transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.club-reveal--left {
+  transform: translateX(-56px);
+}
+
+.club-reveal--right {
+  transform: translateX(56px);
+}
+
+.club-reveal--scale {
+  transform: scale(0.91) translateY(20px);
 }
 
 .club-reveal.active {
   opacity: 1;
-  transform: translateY(0);
+  transform: none;
 }
 
 /* =============================================

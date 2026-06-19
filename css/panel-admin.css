@@ -71,3 +71,54 @@ body{margin:0;font-family:Segoe UI,Arial,sans-serif;background:#eef3f7;color:#12
 /* Fecha y contador */
 .item-date{font-size:.74rem;color:#8fa0b0;margin-top:6px;margin-bottom:0}
 .list-counter{font-size:.8rem;color:#66798b;font-weight:700;margin-bottom:8px}
+
+/* =============================================
+   CLUB SANVI PANEL
+============================================= */
+.cs-tabs{display:flex;gap:8px;margin-bottom:20px}
+.cs-tab{border:0;border-radius:14px;padding:10px 20px;font-weight:800;cursor:pointer;background:#e8eef3;color:#0b3558;font-size:.85rem;transition:background .2s}
+.cs-tab.active{background:#0b4a78;color:#fff}
+.cs-panel{display:none}.cs-panel.active{display:block}
+
+/* Upload zone */
+.cs-upload-zone{border:2px dashed rgba(11,53,88,.25);border-radius:14px;padding:18px;text-align:center;cursor:pointer;position:relative;transition:border-color .2s}
+.cs-upload-zone:hover{border-color:#0b4a78}
+.cs-file-input{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
+.cs-upload-label{display:block;color:#0b4a78;font-weight:800;cursor:pointer;font-size:.9rem}
+
+/* Filter bar */
+.cs-filter-bar{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0 14px}
+.cs-filter-btn{border:0;border-radius:999px;padding:5px 14px;font-size:.74rem;font-weight:800;cursor:pointer;background:#eaf0f5;color:#30485f;transition:background .18s}
+.cs-filter-btn.active{background:#0b4a78;color:#fff}
+
+/* Gallery grid */
+.cs-gallery-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:10px;margin-top:8px;max-height:480px;overflow-y:auto;padding:2px}
+.cs-gallery-item{position:relative;aspect-ratio:4/3;border-radius:10px;overflow:hidden;background:#0b3558}
+.cs-gallery-item img{width:100%;height:100%;object-fit:cover;display:block}
+.cs-gallery-badge{position:absolute;bottom:5px;left:5px;background:rgba(0,0,0,.65);color:#fff;font-size:.6rem;font-weight:800;padding:2px 8px;border-radius:999px;text-transform:uppercase;letter-spacing:1px}
+.cs-delete-btn{position:absolute;top:5px;right:5px;background:rgba(193,18,31,.9);color:#fff;border:0;border-radius:7px;width:24px;height:24px;font-size:15px;cursor:pointer;display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .18s;line-height:1}
+.cs-gallery-item:hover .cs-delete-btn{opacity:1}
+.cs-skel{height:96px!important;border-radius:10px!important}
+
+/* Discipline cards */
+.cs-disc-list{display:grid;gap:16px;margin-top:10px}
+.cs-disc-card{display:grid;grid-template-columns:120px 1fr;gap:16px;align-items:start;border:1px solid rgba(11,53,88,.1);border-radius:18px;padding:18px;background:#f8fbfd}
+.cs-disc-photo{aspect-ratio:4/3;border-radius:10px;overflow:hidden;background:#071f34;position:relative}
+.cs-disc-photo img{width:100%;height:100%;object-fit:cover;display:block}
+.cs-disc-photo-overlay{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.45);color:#fff;font-size:1.3rem;cursor:pointer;opacity:0;transition:opacity .18s}
+.cs-disc-photo:hover .cs-disc-photo-overlay{opacity:1}
+.cs-disc-photo-overlay input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
+.cs-disc-form-inner{display:grid;gap:10px}
+.cs-disc-label{font-weight:900;color:#0b3558;font-size:1rem}
+.cs-disc-form-inner input,.cs-disc-form-inner textarea{width:100%;border:1px solid rgba(11,53,88,.16);border-radius:12px;padding:10px 13px;font:inherit;background:#fff;outline:none}
+.cs-disc-form-inner input:focus,.cs-disc-form-inner textarea:focus{border-color:#0b4a78;box-shadow:0 0 0 3px rgba(11,74,120,.1)}
+.cs-disc-form-inner textarea{min-height:72px;resize:vertical}
+.cs-disc-save{border:0;border-radius:12px;padding:10px 18px;background:#0b4a78;color:#fff;font-weight:800;cursor:pointer;transition:background .18s}
+.cs-disc-save:hover{background:#083a5e}
+.cs-disc-save:disabled{opacity:.55;cursor:default}
+
+@media(max-width:640px){
+  .cs-disc-card{grid-template-columns:1fr}
+  .cs-disc-photo{max-width:120px}
+  .cs-gallery-grid{grid-template-columns:repeat(auto-fill,minmax(80px,1fr))}
+}

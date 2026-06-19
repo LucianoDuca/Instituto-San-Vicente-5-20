@@ -6,8 +6,13 @@
 var revealObserver = new IntersectionObserver(function (entries) {
   entries.forEach(function (entry) {
     if (entry.isIntersecting) {
+      var delay = entry.target.getAttribute('data-delay');
+      if (delay) entry.target.style.transitionDelay = delay + 'ms';
       entry.target.classList.add('active');
       revealObserver.unobserve(entry.target);
+      entry.target.addEventListener('transitionend', function () {
+        entry.target.style.willChange = 'auto';
+      }, { once: true });
     }
   });
 }, { threshold: 0, rootMargin: '0px 0px -40px 0px' });
@@ -84,10 +89,14 @@ var openLightbox = null;
 
 /* =============================================
    SUB-NAVBAR — scroll spy + smooth scroll
+   Tops cacheados para evitar forced reflow en scroll.
+   rAF throttle: updateActive corre max 1x por frame.
 ============================================= */
 (function () {
   var links    = document.querySelectorAll('.club-subnav-link');
   var sections = [];
+  var tops     = [];
+  var rafPending = false;
 
   links.forEach(function (link) {
     var id = link.getAttribute('data-section');
@@ -105,63 +114,137 @@ var openLightbox = null;
     });
   });
 
+  function cacheTops() {
+    tops = sections.map(function (s) {
+      return s.el.getBoundingClientRect().top + window.pageYOffset;
+    });
+  }
+
   function updateActive() {
     var scrollY = window.pageYOffset;
     var active  = null;
-    sections.forEach(function (s) {
-      if (scrollY >= s.el.offsetTop - 200) active = s;
-    });
-    links.forEach(function (l) { l.classList.remove('active'); });
-    if (active) active.link.classList.add('active');
+    for (var i = 0; i < sections.length; i++) {
+      if (scrollY >= tops[i] - 200) active = sections[i];
+    }
+    for (var j = 0; j < links.length; j++) {
+      links[j].classList.toggle('active', sections[j] === active);
+    }
   }
 
-  window.addEventListener('scroll', updateActive, { passive: true });
+  cacheTops();
+  window.addEventListener('resize', cacheTops, { passive: true });
+
+  window.addEventListener('scroll', function () {
+    if (!rafPending) {
+      rafPending = true;
+      requestAnimationFrame(function () {
+        updateActive();
+        rafPending = false;
+      });
+    }
+  }, { passive: true });
+
   updateActive();
 })();
 
 /* =============================================
    GALERÍA MASONRY — filtros + lightbox
+   La galería se carga desde /api/club-sanvi/galeria.
+   Si la API devuelve items, reemplaza el HTML estático.
+   Si falla o devuelve vacío, usa los items estáticos como fallback.
 ============================================= */
 (function () {
   var filters  = document.querySelectorAll('.cg-filter');
   var masonry  = document.getElementById('cgMasonry');
   if (!masonry) return;
 
-  var items    = masonry.querySelectorAll('.cg-item');
   var currentFilter = 'all';
 
-  /* Filtro por disciplina */
+  function getItems() {
+    return masonry.querySelectorAll('.cg-item');
+  }
+
+  function aplicarFiltro() {
+    masonry.classList.add('cg-fading');
+    setTimeout(function () {
+      getItems().forEach(function (item) {
+        var disc = item.getAttribute('data-disc');
+        item.style.display = (currentFilter === 'all' || disc === currentFilter) ? '' : 'none';
+      });
+      masonry.classList.remove('cg-fading');
+    }, 260);
+  }
+
+  function bindLightbox(items) {
+    items.forEach(function (item) {
+      item.addEventListener('click', function () {
+        var visible = Array.from(getItems()).filter(function (i) {
+          return i.style.display !== 'none';
+        });
+        var images = visible.map(function (i) { return i.querySelector('img').src; });
+        var idx    = visible.indexOf(this);
+        if (openLightbox) openLightbox(images, idx);
+      });
+    });
+  }
+
+  /* Filtro */
   filters.forEach(function (btn) {
     btn.addEventListener('click', function () {
       currentFilter = this.getAttribute('data-filter');
-
       filters.forEach(function (b) { b.classList.remove('active'); });
       this.classList.add('active');
-
-      /* Fade out → reordenar → fade in */
-      masonry.classList.add('cg-fading');
-      setTimeout(function () {
-        items.forEach(function (item) {
-          var disc = item.getAttribute('data-disc');
-          var show = currentFilter === 'all' || disc === currentFilter;
-          item.style.display = show ? '' : 'none';
-        });
-        masonry.classList.remove('cg-fading');
-      }, 260);
+      aplicarFiltro();
     });
   });
 
-  /* Lightbox — abre con todas las fotos visibles y navega entre ellas */
-  items.forEach(function (item) {
-    item.addEventListener('click', function () {
-      var visible = Array.from(items).filter(function (i) {
-        return i.style.display !== 'none';
-      });
-      var images = visible.map(function (i) {
-        return i.querySelector('img').src;
-      });
-      var idx = visible.indexOf(this);
-      if (openLightbox) openLightbox(images, idx);
+  /* Cargar galería desde API */
+  fetch('/api/club-sanvi/galeria')
+    .then(function (r) { return r.json(); })
+    .then(function (data) {
+      if (!Array.isArray(data) || !data.length) {
+        bindLightbox(getItems());
+        return;
+      }
+      masonry.innerHTML = data.map(function (item) {
+        var badge = item.disciplina.charAt(0).toUpperCase() + item.disciplina.slice(1);
+        return '<div class="cg-item" data-disc="' + item.disciplina + '">' +
+          '<img src="' + item.url + '" alt="' + (item.alt || 'Club Sanvi') + '" loading="lazy" decoding="async">' +
+          '<div class="cg-overlay"><span class="cg-badge">' + badge + '</span></div>' +
+          '</div>';
+      }).join('');
+      bindLightbox(getItems());
+    })
+    .catch(function () {
+      bindLightbox(getItems());
     });
-  });
+})();
+
+/* =============================================
+   DISCIPLINAS — actualizar foto y texto desde API
+   Usa los estáticos como fallback si la API no responde.
+============================================= */
+(function () {
+  fetch('/api/club-sanvi/disciplinas')
+    .then(function (r) { return r.json(); })
+    .then(function (data) {
+      if (!Array.isArray(data)) return;
+      data.forEach(function (disc) {
+        var row = document.querySelector('[data-disciplina="' + disc.slug + '"]');
+        if (!row) return;
+        if (disc.foto_url) {
+          var img = row.querySelector('.ca-photo img');
+          if (img) img.src = disc.foto_url;
+        }
+        if (disc.nombre) {
+          var h3 = row.querySelector('.ca-content h3');
+          if (h3 && !h3.hasAttribute('data-i18n')) h3.textContent = disc.nombre;
+        }
+        if (disc.descripcion) {
+          var p = row.querySelector('.ca-feature p');
+          if (p && !p.hasAttribute('data-i18n')) p.textContent = disc.descripcion;
+        }
+      });
+    })
+    .catch(function () {});
 })();

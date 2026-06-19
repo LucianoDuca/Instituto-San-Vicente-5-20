@@ -863,6 +863,106 @@ app.patch("/api/change-password", usuarioLogueado, async (req, res) => {
   }
 });
 
+/* =============================================
+   CLUB SANVI — GALERÍA
+============================================= */
+
+app.get("/api/club-sanvi/galeria", async (req, res) => {
+  try {
+    const { data, error } = await supabaseAdmin
+      .from("club_galeria")
+      .select("*")
+      .order("orden", { ascending: true });
+    if (error) return res.status(500).json({ error: error.message });
+    return res.json(data);
+  } catch (e) {
+    return res.status(500).json({ error: e.message });
+  }
+});
+
+app.post("/api/admin/club-sanvi/galeria", soloAdmin, async (req, res) => {
+  try {
+    const url       = limpiarTexto(req.body.url);
+    const alt       = limpiarTexto(req.body.alt) || "Club Sanvi";
+    const disciplina = limpiarTexto(req.body.disciplina);
+
+    if (!url || !disciplina) {
+      return res.status(400).json({ error: "url y disciplina son obligatorios" });
+    }
+
+    const { data: existing } = await supabaseAdmin
+      .from("club_galeria")
+      .select("orden")
+      .order("orden", { ascending: false })
+      .limit(1);
+    const orden = (existing?.[0]?.orden ?? 0) + 1;
+
+    const { data, error } = await supabaseAdmin
+      .from("club_galeria")
+      .insert({ url, alt, disciplina, orden })
+      .select()
+      .single();
+
+    if (error) return res.status(500).json({ error: error.message });
+    return res.json({ ok: true, item: data });
+  } catch (e) {
+    return res.status(500).json({ error: e.message });
+  }
+});
+
+app.delete("/api/admin/club-sanvi/galeria/:id", soloAdmin, async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { error } = await supabaseAdmin
+      .from("club_galeria")
+      .delete()
+      .eq("id", id);
+    if (error) return res.status(500).json({ error: error.message });
+    return res.json({ ok: true });
+  } catch (e) {
+    return res.status(500).json({ error: e.message });
+  }
+});
+
+/* =============================================
+   CLUB SANVI — DISCIPLINAS
+============================================= */
+
+app.get("/api/club-sanvi/disciplinas", async (req, res) => {
+  try {
+    const { data, error } = await supabaseAdmin
+      .from("club_disciplinas")
+      .select("*")
+      .order("orden", { ascending: true });
+    if (error) return res.status(500).json({ error: error.message });
+    return res.json(data);
+  } catch (e) {
+    return res.status(500).json({ error: e.message });
+  }
+});
+
+app.put("/api/admin/club-sanvi/disciplinas/:slug", soloAdmin, async (req, res) => {
+  try {
+    const { slug } = req.params;
+    const updates = {};
+    if (req.body.nombre    !== undefined) updates.nombre    = limpiarTexto(req.body.nombre);
+    if (req.body.descripcion !== undefined) updates.descripcion = limpiarTexto(req.body.descripcion);
+    if (req.body.foto_url  !== undefined) updates.foto_url  = limpiarTexto(req.body.foto_url);
+
+    const { data, error } = await supabaseAdmin
+      .from("club_disciplinas")
+      .update(updates)
+      .eq("slug", slug)
+      .select()
+      .single();
+
+    if (error) return res.status(500).json({ error: error.message });
+    return res.json({ ok: true, disciplina: data });
+  } catch (e) {
+    return res.status(500).json({ error: e.message });
+  }
+});
+
 app.listen(PORT, () => {
   console.log(`Servidor funcionando en http://localhost:${PORT}`);
 });

@@ -472,6 +472,244 @@ createAnnouncementForm.addEventListener("submit", async (event) => {
 
 reloadAnnouncementsBtn.addEventListener("click", cargarComunicados);
 
+/* =============================================
+   CLUB SANVI — Galería
+============================================= */
+
+/* Sub-tabs */
+document.querySelectorAll(".cs-tab").forEach(function (btn) {
+  btn.addEventListener("click", function () {
+    document.querySelectorAll(".cs-tab").forEach((b) => b.classList.remove("active"));
+    document.querySelectorAll(".cs-panel").forEach((p) => p.classList.remove("active"));
+    btn.classList.add("active");
+    document.getElementById("cs-panel-" + btn.dataset.tab).classList.add("active");
+  });
+});
+
+/* Filter bar */
+document.getElementById("csFilterBar")?.querySelectorAll(".cs-filter-btn").forEach(function (btn) {
+  btn.addEventListener("click", function () {
+    document.querySelectorAll(".cs-filter-btn").forEach((b) => b.classList.remove("active"));
+    btn.classList.add("active");
+    const disc = btn.dataset.disc;
+    document.querySelectorAll(".cs-gallery-item").forEach(function (item) {
+      item.style.display = (disc === "all" || item.dataset.disc === disc) ? "" : "none";
+    });
+  });
+});
+
+/* File picker label */
+document.getElementById("csImageInput")?.addEventListener("change", function () {
+  document.getElementById("csUploadText").textContent = this.files[0]?.name || "📷 Elegir imagen";
+});
+
+async function subirImagenStorage(file, carpeta) {
+  const ext  = file.name.split(".").pop();
+  const path = `${carpeta}/${Date.now()}.${ext}`;
+  const { error } = await window.supabaseClient.storage
+    .from("club-sanvi")
+    .upload(path, file, { cacheControl: "3600", upsert: false });
+  if (error) throw new Error("Storage: " + error.message);
+  const { data } = window.supabaseClient.storage.from("club-sanvi").getPublicUrl(path);
+  return data.publicUrl;
+}
+
+async function cargarGaleria() {
+  const grid  = document.getElementById("csGaleriaGrid");
+  const count = document.getElementById("csGaleriaCount");
+  if (!grid) return;
+  grid.innerHTML = skeletonCards(4).replace(/skeleton-card/g, "skeleton cs-skel");
+
+  try {
+    const response = await fetchAuth("/api/club-sanvi/galeria");
+    if (!response) return;
+    const data = await response.json();
+    if (!response.ok) throw new Error(data.error);
+
+    count.textContent = `(${data.length})`;
+    renderGaleriaGrid(data);
+  } catch (e) {
+    grid.innerHTML = `<p class="status error">${e.message}</p>`;
+  }
+}
+
+function renderGaleriaGrid(items) {
+  const grid = document.getElementById("csGaleriaGrid");
+  const disc = document.querySelector(".cs-filter-btn.active")?.dataset.disc || "all";
+
+  if (!items.length) {
+    grid.innerHTML = "<p class='muted'>No hay fotos en la galería todavía. Subí la primera arriba.</p>";
+    return;
+  }
+
+  grid.innerHTML = "";
+  items.forEach(function (item) {
+    const el = document.createElement("div");
+    el.className = "cs-gallery-item";
+    el.dataset.disc = item.disciplina;
+    if (disc !== "all" && item.disciplina !== disc) el.style.display = "none";
+    el.innerHTML = `
+      <img src="${escaparHTML(item.url)}" alt="${escaparHTML(item.alt)}" loading="lazy">
+      <span class="cs-gallery-badge">${escaparHTML(item.disciplina)}</span>
+      <button class="cs-delete-btn" data-id="${escaparHTML(item.id)}" title="Eliminar">×</button>
+    `;
+    el.querySelector(".cs-delete-btn").addEventListener("click", async function () {
+      await eliminarFotoGaleria(item.id);
+    });
+    grid.appendChild(el);
+  });
+}
+
+async function eliminarFotoGaleria(id) {
+  if (!confirm("¿Eliminar esta foto de la galería?")) return;
+  try {
+    const response = await fetchAuth(`/api/admin/club-sanvi/galeria/${id}`, { method: "DELETE" });
+    const result   = await response.json();
+    if (!response.ok) throw new Error(result.error);
+    await cargarGaleria();
+  } catch (e) {
+    alert(e.message);
+  }
+}
+
+document.getElementById("csGaleriaForm")?.addEventListener("submit", async function (e) {
+  e.preventDefault();
+  const btn      = document.getElementById("csGaleriaBtn");
+  const status   = document.getElementById("csGaleriaStatus");
+  const file      = document.getElementById("csImageInput").files[0];
+  const form      = new FormData(this);
+  const disciplina = form.get("disciplina");
+  const alt       = form.get("alt") || disciplina;
+
+  if (!file)      return setStatus(status, "Seleccioná una imagen primero.", "error");
+  if (!disciplina) return setStatus(status, "Seleccioná una disciplina.", "error");
+
+  try {
+    btn.disabled = true;
+    btn.textContent = "Subiendo...";
+    setStatus(status, "");
+
+    const url = await subirImagenStorage(file, "galeria/" + disciplina);
+    const response = await fetchAuth("/api/admin/club-sanvi/galeria", {
+      method: "POST",
+      body: JSON.stringify({ url, alt, disciplina })
+    });
+    const result = await response.json();
+    if (!response.ok) throw new Error(result.error);
+
+    setStatus(status, "¡Foto agregada a la galería!", "success");
+    this.reset();
+    document.getElementById("csUploadText").textContent = "📷 Elegir imagen";
+    await cargarGaleria();
+  } catch (e) {
+    setStatus(status, e.message, "error");
+  } finally {
+    btn.disabled = false;
+    btn.textContent = "Subir foto";
+  }
+});
+
+document.getElementById("csReloadGaleriaBtn")?.addEventListener("click", cargarGaleria);
+
+/* =============================================
+   CLUB SANVI — Disciplinas
+============================================= */
+
+async function cargarDisciplinasAdmin() {
+  const container = document.getElementById("csDisciplinasContainer");
+  if (!container) return;
+  container.innerHTML = skeletonCards(4).replace(/skeleton-card/g, "skeleton cs-skel");
+
+  try {
+    const response = await fetchAuth("/api/club-sanvi/disciplinas");
+    const data     = await response.json();
+    if (!response.ok) throw new Error(data.error);
+
+    if (!data.length) {
+      container.innerHTML = "<p class='muted'>No hay disciplinas cargadas en la base de datos.</p>";
+      return;
+    }
+
+    container.innerHTML = "";
+    data.forEach(function (disc) {
+      const card = document.createElement("div");
+      card.className = "cs-disc-card";
+      card.innerHTML = `
+        <div class="cs-disc-photo">
+          <img src="${escaparHTML(disc.foto_url || "")}" alt="${escaparHTML(disc.nombre)}"
+               style="${disc.foto_url ? "" : "display:none"}">
+          <label class="cs-disc-photo-overlay">
+            📷
+            <input type="file" accept="image/*" class="cs-disc-file" data-slug="${escaparHTML(disc.slug)}">
+          </label>
+        </div>
+        <div class="cs-disc-form-inner">
+          <span class="cs-disc-label">${escaparHTML(disc.nombre)}</span>
+          <input type="text" class="cs-disc-nombre" placeholder="Nombre de la disciplina"
+                 value="${escaparHTML(disc.nombre)}">
+          <textarea class="cs-disc-desc" placeholder="Descripción">${escaparHTML(disc.descripcion || "")}</textarea>
+          <p class="status cs-disc-status"></p>
+          <button class="cs-disc-save" data-slug="${escaparHTML(disc.slug)}">Guardar cambios</button>
+        </div>
+      `;
+
+      const img       = card.querySelector(".cs-disc-photo img");
+      const fileInput = card.querySelector(".cs-disc-file");
+      const saveBtn   = card.querySelector(".cs-disc-save");
+      const statusEl  = card.querySelector(".cs-disc-status");
+
+      fileInput.addEventListener("change", function () {
+        if (!this.files[0]) return;
+        const reader = new FileReader();
+        reader.onload = (ev) => { img.src = ev.target.result; img.style.display = ""; };
+        reader.readAsDataURL(this.files[0]);
+      });
+
+      saveBtn.addEventListener("click", async function () {
+        const slug       = this.dataset.slug;
+        const nombre     = card.querySelector(".cs-disc-nombre").value.trim();
+        const descripcion = card.querySelector(".cs-disc-desc").value.trim();
+        const file       = fileInput.files[0];
+
+        if (!nombre) return setStatus(statusEl, "El nombre no puede estar vacío.", "error");
+
+        try {
+          saveBtn.disabled = true;
+          saveBtn.textContent = "Guardando...";
+          setStatus(statusEl, "");
+
+          const updates = { nombre, descripcion };
+          if (file) updates.foto_url = await subirImagenStorage(file, "disciplinas/" + slug);
+
+          const response = await fetchAuth(`/api/admin/club-sanvi/disciplinas/${slug}`, {
+            method: "PUT",
+            body: JSON.stringify(updates)
+          });
+          const result = await response.json();
+          if (!response.ok) throw new Error(result.error);
+
+          setStatus(statusEl, "Guardado correctamente.", "success");
+        } catch (e) {
+          setStatus(statusEl, e.message, "error");
+        } finally {
+          saveBtn.disabled = false;
+          saveBtn.textContent = "Guardar cambios";
+        }
+      });
+
+      container.appendChild(card);
+    });
+  } catch (e) {
+    container.innerHTML = `<p class="status error">${e.message}</p>`;
+  }
+}
+
+/* Cargar Club Sanvi al activar la sección */
+document.querySelector('[data-section="club-sanvi"]')?.addEventListener("click", function () {
+  cargarGaleria();
+  cargarDisciplinasAdmin();
+});
+
 /* Verificar rol admin */
 
 async function verificarAdmin() {

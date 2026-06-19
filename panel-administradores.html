@@ -25,6 +25,7 @@
       <button class="nav-btn" data-section="usuarios">Usuarios</button>
       <button class="nav-btn" data-section="biblioteca">Biblioteca</button>
       <button class="nav-btn" data-section="comunicados">Comunicados</button>
+      <button class="nav-btn" data-section="club-sanvi">Club Sanvi</button>
     </nav>
 
     <button id="logoutBtn" class="logout-btn">Cerrar sesión</button>
@@ -204,6 +205,69 @@
           <div id="announcementsContainer" class="list-container"></div>
         </div>
       </div>
+    </section>
+
+    <section id="club-sanvi" class="admin-section">
+
+      <div class="cs-tabs">
+        <button class="cs-tab active" data-tab="galeria">Galería</button>
+        <button class="cs-tab" data-tab="disciplinas">Disciplinas</button>
+      </div>
+
+      <!-- GALERÍA -->
+      <div class="cs-panel active" id="cs-panel-galeria">
+        <div class="two-columns">
+
+          <div class="admin-card">
+            <h2>Agregar foto</h2>
+            <form id="csGaleriaForm" class="admin-form">
+              <select name="disciplina" required>
+                <option value="">— Disciplina —</option>
+                <option value="futbol">Fútbol</option>
+                <option value="hockey">Hockey</option>
+                <option value="rugby">Rugby</option>
+                <option value="taekwondo">Taekwondo</option>
+              </select>
+              <input type="text" name="alt" placeholder="Descripción de la foto (opcional)" />
+              <div class="cs-upload-zone">
+                <input type="file" id="csImageInput" accept="image/*" class="cs-file-input" />
+                <label for="csImageInput" class="cs-upload-label">
+                  <span id="csUploadText">📷 Elegir imagen</span>
+                </label>
+              </div>
+              <p id="csGaleriaStatus" class="status"></p>
+              <button id="csGaleriaBtn" type="submit">Subir foto</button>
+            </form>
+          </div>
+
+          <div class="admin-card">
+            <div class="card-head">
+              <h2>Fotos actuales <span id="csGaleriaCount" class="list-counter"></span></h2>
+              <button id="csReloadGaleriaBtn">Actualizar</button>
+            </div>
+            <div class="cs-filter-bar" id="csFilterBar">
+              <button class="cs-filter-btn active" data-disc="all">Todos</button>
+              <button class="cs-filter-btn" data-disc="futbol">Fútbol</button>
+              <button class="cs-filter-btn" data-disc="hockey">Hockey</button>
+              <button class="cs-filter-btn" data-disc="rugby">Rugby</button>
+              <button class="cs-filter-btn" data-disc="taekwondo">Taekwondo</button>
+            </div>
+            <div id="csGaleriaGrid" class="cs-gallery-grid"></div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- DISCIPLINAS -->
+      <div class="cs-panel" id="cs-panel-disciplinas">
+        <div class="admin-card">
+          <h2>Editar disciplinas</h2>
+          <p class="muted" style="margin-bottom:16px">Modificá el nombre, la descripción y la foto principal de cada disciplina. Los cambios se reflejan en la página de Club Sanvi.</p>
+          <p id="csDisciplinasStatus" class="status"></p>
+          <div id="csDisciplinasContainer" class="cs-disc-list"></div>
+        </div>
+      </div>
+
     </section>
 
   </section>

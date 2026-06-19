@@ -100,7 +100,7 @@
 <!-- HERO: foto full-bleed + overlay + contenido en la base -->
 <section class="club-hero" id="inicio">
   <div class="club-hero-bg">
-    <img src="../assets/img/club sanvi/20260602_122055.webp" alt="Club Sanvi">
+    <img src="../assets/img/club sanvi/20260602_122055.webp" alt="Club Sanvi" fetchpriority="high" decoding="async">
   </div>
   <div class="club-hero-overlay"></div>
   <div class="club-hero-content club-reveal">
@@ -143,15 +143,15 @@
 <!-- STATS: marcador oscuro -->
 <section class="club-stats-wrap">
   <div class="club-stats">
-    <div class="club-reveal">
+    <div class="club-reveal club-reveal--scale" data-delay="0">
       <strong>+8</strong>
       <span data-i18n="club.stats.activities">actividades</span>
     </div>
-    <div class="club-reveal">
+    <div class="club-reveal club-reveal--scale" data-delay="130">
       <strong>JK</strong>
       <span data-i18n="club.stats.location">Juana Koslay</span>
     </div>
-    <div class="club-reveal">
+    <div class="club-reveal club-reveal--scale" data-delay="260">
       <strong>100%</strong>
       <span data-i18n="club.stats.community">comunidad</span>
     </div>
@@ -161,7 +161,7 @@
 <section class="club-activities" id="actividades">
   <div class="club-activities-inner">
 
-    <div class="club-section-head club-reveal">
+    <div class="club-section-head club-reveal club-reveal--scale">
       <p data-i18n="club.activities.label">Propuestas</p>
         <h2 class="inicios-titulo">
         <img
@@ -175,47 +175,59 @@
       </h2>
     </div>
 
-    <article class="ca-row club-reveal">
-      <div class="ca-photo">
-        <img src="assets/img/disciplinas/futbol/foto-19.webp" alt="Fútbol Club Sanvi" loading="lazy">
+    <article class="ca-row" data-disciplina="futbol">
+      <div class="ca-photo club-reveal club-reveal--right">
+        <img src="assets/img/disciplinas/futbol/foto-19.webp" alt="Fútbol Club Sanvi" loading="lazy" decoding="async">
       </div>
-      <div class="ca-content">
+      <div class="ca-content club-reveal club-reveal--left">
         <span class="club-kicker" data-i18n="club.activities.label">Propuestas</span>
         <h3 data-i18n="club.activities.football.title">Fútbol</h3>
-        <p data-i18n="club.activities.football.text">Entrenamientos para aprender técnica, juego en equipo y disciplina deportiva.</p>
+        <div class="ca-feature">
+          <span class="cs-dli"><img src="../assets/img/icons/sports.svg" alt=""></span>
+          <p data-i18n="club.activities.football.text">Entrenamientos para aprender técnica, juego en equipo y disciplina deportiva.</p>
+        </div>
       </div>
     </article>
 
-    <article class="ca-row club-reveal">
-      <div class="ca-photo">
-        <img src="assets/img/disciplinas/hockey/DSC_4684.webp" alt="Hockey Club Sanvi" loading="lazy">
+    <article class="ca-row" data-disciplina="hockey">
+      <div class="ca-photo club-reveal club-reveal--left">
+        <img src="assets/img/disciplinas/hockey/DSC_4684.webp" alt="Hockey Club Sanvi" loading="lazy" decoding="async">
       </div>
-      <div class="ca-content">
+      <div class="ca-content club-reveal club-reveal--right">
         <span class="club-kicker" data-i18n="club.activities.label">Propuestas</span>
         <h3 data-i18n="club.activities.hockey.title">Hockey</h3>
-        <p data-i18n="club.activities.hockey.text">Espacio para categorías formativas, hockey mamis y crecimiento deportivo.</p>
+        <div class="ca-feature">
+          <span class="cs-dli"><img src="../assets/img/icons/sports.svg" alt=""></span>
+          <p data-i18n="club.activities.hockey.text">Espacio para categorías formativas, hockey mamis y crecimiento deportivo.</p>
+        </div>
       </div>
     </article>
 
-    <article class="ca-row club-reveal">
-      <div class="ca-photo">
-        <img src="assets/img/disciplinas/rugby/DSC_3546.webp" alt="Rugby Club Sanvi" loading="lazy">
+    <article class="ca-row" data-disciplina="rugby">
+      <div class="ca-photo club-reveal club-reveal--right">
+        <img src="assets/img/disciplinas/rugby/DSC_3546.webp" alt="Rugby Club Sanvi" loading="lazy" decoding="async">
       </div>
-      <div class="ca-content">
+      <div class="ca-content club-reveal club-reveal--left">
         <span class="club-kicker" data-i18n="club.activities.label">Propuestas</span>
         <h3>Rugby</h3>
-        <p>Trabajo en equipo, contacto y superación en un deporte que forma carácter.</p>
+        <div class="ca-feature">
+          <span class="cs-dli"><img src="../assets/img/icons/sports.svg" alt=""></span>
+          <p>Trabajo en equipo, contacto y superación en un deporte que forma carácter.</p>
+        </div>
       </div>
     </article>
 
-    <article class="ca-row club-reveal">
-      <div class="ca-photo">
-        <img src="assets/img/disciplinas/taekwondo/foto-21.webp" alt="Taekwondo Club Sanvi" loading="lazy">
+    <article class="ca-row" data-disciplina="taekwondo">
+      <div class="ca-photo club-reveal club-reveal--left">
+        <img src="assets/img/disciplinas/taekwondo/foto-21.webp" alt="Taekwondo Club Sanvi" loading="lazy" decoding="async">
       </div>
-      <div class="ca-content">
+      <div class="ca-content club-reveal club-reveal--right">
         <span class="club-kicker" data-i18n="club.activities.label">Propuestas</span>
         <h3 data-i18n="club.activities.taekwondo.title">Taekwondo</h3>
-        <p data-i18n="club.activities.taekwondo.text">Disciplina, respeto, autocontrol y entrenamiento físico.</p>
+        <div class="ca-feature">
+          <span class="cs-dli"><img src="../assets/img/icons/wellness.svg" alt=""></span>
+          <p data-i18n="club.activities.taekwondo.text">Disciplina, respeto, autocontrol y entrenamiento físico.</p>
+        </div>
       </div>
     </article>
   </div>
@@ -224,7 +236,7 @@
 <!-- GALERÍA: masonry con filtros por disciplina -->
 <section class="club-gallery-section" id="galeria">
 
-  <div class="cg-intro club-reveal">
+  <div class="cg-intro club-reveal club-reveal--scale">
     <span class="club-kicker">Momentos Sanvi</span>
     <h2>La vida en el Club</h2>
     <p>Cada entrenamiento, cada partido y cada encuentro forman parte de una experiencia que trasciende lo deportivo y construye comunidad.</p>
@@ -242,121 +254,121 @@
 
     <!-- FÚTBOL (9 fotos) -->
     <div class="cg-item" data-disc="futbol">
-      <img src="assets/img/disciplinas/futbol/foto-1.webp" alt="Fútbol Club Sanvi" loading="lazy">
+      <img src="assets/img/disciplinas/futbol/foto-1.webp" alt="Fútbol Club Sanvi" loading="lazy" decoding="async">
       <div class="cg-overlay"><span class="cg-badge">Fútbol</span></div>
     </div>
     <div class="cg-item" data-disc="futbol">
-      <img src="assets/img/disciplinas/futbol/foto-6.webp" alt="Fútbol Club Sanvi" loading="lazy">
+      <img src="assets/img/disciplinas/futbol/foto-6.webp" alt="Fútbol Club Sanvi" loading="lazy" decoding="async">
       <div class="cg-overlay"><span class="cg-badge">Fútbol</span></div>
     </div>
     <div class="cg-item" data-disc="futbol">
-      <img src="assets/img/disciplinas/futbol/foto-7.webp" alt="Fútbol Club Sanvi" loading="lazy">
+      <img src="assets/img/disciplinas/futbol/foto-7.webp" alt="Fútbol Club Sanvi" loading="lazy" decoding="async">
       <div class="cg-overlay"><span class="cg-badge">Fútbol</span></div>
     </div>
     <div class="cg-item" data-disc="futbol">
-      <img src="assets/img/disciplinas/futbol/foto-14.webp" alt="Fútbol Club Sanvi" loading="lazy">
+      <img src="assets/img/disciplinas/futbol/foto-14.webp" alt="Fútbol Club Sanvi" loading="lazy" decoding="async">
       <div class="cg-overlay"><span class="cg-badge">Fútbol</span></div>
     </div>
     <div class="cg-item" data-disc="futbol">
-      <img src="assets/img/disciplinas/futbol/foto-19.webp" alt="Fútbol Club Sanvi" loading="lazy">
+      <img src="assets/img/disciplinas/futbol/foto-19.webp" alt="Fútbol Club Sanvi" loading="lazy" decoding="async">
       <div class="cg-overlay"><span class="cg-badge">Fútbol</span></div>
     </div>
     <div class="cg-item" data-disc="futbol">
-      <img src="assets/img/disciplinas/futbol/foto-22.webp" alt="Fútbol Club Sanvi" loading="lazy">
+      <img src="assets/img/disciplinas/futbol/foto-22.webp" alt="Fútbol Club Sanvi" loading="lazy" decoding="async">
       <div class="cg-overlay"><span class="cg-badge">Fútbol</span></div>
     </div>
     <div class="cg-item" data-disc="futbol">
-      <img src="assets/img/disciplinas/futbol/foto-25.webp" alt="Fútbol Club Sanvi" loading="lazy">
+      <img src="assets/img/disciplinas/futbol/foto-25.webp" alt="Fútbol Club Sanvi" loading="lazy" decoding="async">
       <div class="cg-overlay"><span class="cg-badge">Fútbol</span></div>
     </div>
     <div class="cg-item" data-disc="futbol">
-      <img src="assets/img/disciplinas/futbol/foto-45.webp" alt="Fútbol Club Sanvi" loading="lazy">
+      <img src="assets/img/disciplinas/futbol/foto-45.webp" alt="Fútbol Club Sanvi" loading="lazy" decoding="async">
       <div class="cg-overlay"><span class="cg-badge">Fútbol</span></div>
     </div>
 
     <!-- HOCKEY (8 fotos) -->
     <div class="cg-item" data-disc="hockey">
-      <img src="assets/img/disciplinas/hockey/DSC_0586.webp" alt="Hockey Club Sanvi" loading="lazy">
+      <img src="assets/img/disciplinas/hockey/DSC_0586.webp" alt="Hockey Club Sanvi" loading="lazy" decoding="async">
       <div class="cg-overlay"><span class="cg-badge">Hockey</span></div>
     </div>
     <div class="cg-item" data-disc="hockey">
-      <img src="assets/img/disciplinas/hockey/DSC_0594.webp" alt="Hockey Club Sanvi" loading="lazy">
+      <img src="assets/img/disciplinas/hockey/DSC_0594.webp" alt="Hockey Club Sanvi" loading="lazy" decoding="async">
       <div class="cg-overlay"><span class="cg-badge">Hockey</span></div>
     </div>
     <div class="cg-item" data-disc="hockey">
-      <img src="assets/img/disciplinas/hockey/DSC_4672.webp" alt="Hockey Club Sanvi" loading="lazy">
+      <img src="assets/img/disciplinas/hockey/DSC_4672.webp" alt="Hockey Club Sanvi" loading="lazy" decoding="async">
       <div class="cg-overlay"><span class="cg-badge">Hockey</span></div>
     </div>
     <div class="cg-item" data-disc="hockey">
-      <img src="assets/img/disciplinas/hockey/DSC_4684.webp" alt="Hockey Club Sanvi" loading="lazy">
+      <img src="assets/img/disciplinas/hockey/DSC_4684.webp" alt="Hockey Club Sanvi" loading="lazy" decoding="async">
       <div class="cg-overlay"><span class="cg-badge">Hockey</span></div>
     </div>
     <div class="cg-item" data-disc="hockey">
-      <img src="assets/img/disciplinas/hockey/DSC_4693.webp" alt="Hockey Club Sanvi" loading="lazy">
+      <img src="assets/img/disciplinas/hockey/DSC_4693.webp" alt="Hockey Club Sanvi" loading="lazy" decoding="async">
       <div class="cg-overlay"><span class="cg-badge">Hockey</span></div>
     </div>
     <div class="cg-item" data-disc="hockey">
-      <img src="assets/img/disciplinas/hockey/DSC_4696.webp" alt="Hockey Club Sanvi" loading="lazy">
+      <img src="assets/img/disciplinas/hockey/DSC_4696.webp" alt="Hockey Club Sanvi" loading="lazy" decoding="async">
       <div class="cg-overlay"><span class="cg-badge">Hockey</span></div>
     </div>
     <div class="cg-item" data-disc="hockey">
-      <img src="assets/img/disciplinas/hockey/DSC_4704.webp" alt="Hockey Club Sanvi" loading="lazy">
+      <img src="assets/img/disciplinas/hockey/DSC_4704.webp" alt="Hockey Club Sanvi" loading="lazy" decoding="async">
       <div class="cg-overlay"><span class="cg-badge">Hockey</span></div>
     </div>
     <div class="cg-item" data-disc="hockey">
-      <img src="assets/img/disciplinas/hockey/WhatsApp Image 2025-05-04 at 6.36.50 PM.webp" alt="Hockey Club Sanvi" loading="lazy">
+      <img src="assets/img/disciplinas/hockey/WhatsApp Image 2025-05-04 at 6.36.50 PM.webp" alt="Hockey Club Sanvi" loading="lazy" decoding="async">
       <div class="cg-overlay"><span class="cg-badge">Hockey</span></div>
     </div>
 
     <!-- RUGBY (6 fotos) -->
     <div class="cg-item" data-disc="rugby">
-      <img src="assets/img/disciplinas/rugby/DSC_3527.webp" alt="Rugby Club Sanvi" loading="lazy">
+      <img src="assets/img/disciplinas/rugby/DSC_3527.webp" alt="Rugby Club Sanvi" loading="lazy" decoding="async">
       <div class="cg-overlay"><span class="cg-badge">Rugby</span></div>
     </div>
     <div class="cg-item" data-disc="rugby">
-      <img src="assets/img/disciplinas/rugby/DSC_3530.webp" alt="Rugby Club Sanvi" loading="lazy">
+      <img src="assets/img/disciplinas/rugby/DSC_3530.webp" alt="Rugby Club Sanvi" loading="lazy" decoding="async">
       <div class="cg-overlay"><span class="cg-badge">Rugby</span></div>
     </div>
     <div class="cg-item" data-disc="rugby">
-      <img src="assets/img/disciplinas/rugby/DSC_3546.webp" alt="Rugby Club Sanvi" loading="lazy">
+      <img src="assets/img/disciplinas/rugby/DSC_3546.webp" alt="Rugby Club Sanvi" loading="lazy" decoding="async">
       <div class="cg-overlay"><span class="cg-badge">Rugby</span></div>
     </div>
     <div class="cg-item" data-disc="rugby">
-      <img src="assets/img/disciplinas/rugby/DSC_3566.webp" alt="Rugby Club Sanvi" loading="lazy">
+      <img src="assets/img/disciplinas/rugby/DSC_3566.webp" alt="Rugby Club Sanvi" loading="lazy" decoding="async">
       <div class="cg-overlay"><span class="cg-badge">Rugby</span></div>
     </div>
     <div class="cg-item" data-disc="rugby">
-      <img src="assets/img/disciplinas/rugby/DSC_3596.webp" alt="Rugby Club Sanvi" loading="lazy">
+      <img src="assets/img/disciplinas/rugby/DSC_3596.webp" alt="Rugby Club Sanvi" loading="lazy" decoding="async">
       <div class="cg-overlay"><span class="cg-badge">Rugby</span></div>
     </div>
     <div class="cg-item" data-disc="rugby">
-      <img src="assets/img/disciplinas/rugby/DSC_3638.webp" alt="Rugby Club Sanvi" loading="lazy">
+      <img src="assets/img/disciplinas/rugby/DSC_3638.webp" alt="Rugby Club Sanvi" loading="lazy" decoding="async">
       <div class="cg-overlay"><span class="cg-badge">Rugby</span></div>
     </div>
 
     <!-- TAEKWONDO (6 fotos) -->
     <div class="cg-item" data-disc="taekwondo">
-      <img src="assets/img/disciplinas/taekwondo/foto-1.webp" alt="Taekwondo Club Sanvi" loading="lazy">
+      <img src="assets/img/disciplinas/taekwondo/foto-1.webp" alt="Taekwondo Club Sanvi" loading="lazy" decoding="async">
       <div class="cg-overlay"><span class="cg-badge">Taekwondo</span></div>
     </div>
     <div class="cg-item" data-disc="taekwondo">
-      <img src="assets/img/disciplinas/taekwondo/foto-4.webp" alt="Taekwondo Club Sanvi" loading="lazy">
+      <img src="assets/img/disciplinas/taekwondo/foto-4.webp" alt="Taekwondo Club Sanvi" loading="lazy" decoding="async">
       <div class="cg-overlay"><span class="cg-badge">Taekwondo</span></div>
     </div>
     <div class="cg-item" data-disc="taekwondo">
-      <img src="assets/img/disciplinas/taekwondo/foto-13.webp" alt="Taekwondo Club Sanvi" loading="lazy">
+      <img src="assets/img/disciplinas/taekwondo/foto-13.webp" alt="Taekwondo Club Sanvi" loading="lazy" decoding="async">
       <div class="cg-overlay"><span class="cg-badge">Taekwondo</span></div>
     </div>
     <div class="cg-item" data-disc="taekwondo">
-      <img src="assets/img/disciplinas/taekwondo/foto-17.webp" alt="Taekwondo Club Sanvi" loading="lazy">
+      <img src="assets/img/disciplinas/taekwondo/foto-17.webp" alt="Taekwondo Club Sanvi" loading="lazy" decoding="async">
       <div class="cg-overlay"><span class="cg-badge">Taekwondo</span></div>
     </div>
     <div class="cg-item" data-disc="taekwondo">
-      <img src="assets/img/disciplinas/taekwondo/foto-21.webp" alt="Taekwondo Club Sanvi" loading="lazy">
+      <img src="assets/img/disciplinas/taekwondo/foto-21.webp" alt="Taekwondo Club Sanvi" loading="lazy" decoding="async">
       <div class="cg-overlay"><span class="cg-badge">Taekwondo</span></div>
     </div>
     <div class="cg-item" data-disc="taekwondo">
-      <img src="assets/img/disciplinas/taekwondo/foto-47.webp" alt="Taekwondo Club Sanvi" loading="lazy">
+      <img src="assets/img/disciplinas/taekwondo/foto-47.webp" alt="Taekwondo Club Sanvi" loading="lazy" decoding="async">
       <div class="cg-overlay"><span class="cg-badge">Taekwondo</span></div>
     </div>
 
@@ -365,20 +377,24 @@
 
 <!-- INFO DEL CLUB: split foto | texto -->
 <section class="club-about" id="info">
-  <div class="club-about-photo">
+  <div class="club-about-photo club-reveal club-reveal--left">
     <img src="../assets/img/club sanvi/foto-3.webp" alt="Club Sanvi - deporte y comunidad">
   </div>
-  <div class="club-about-text">
+  <div class="club-about-text club-reveal club-reveal--right">
     <span class="club-kicker">Más que un club deportivo</span>
     <h2 data-i18n="club.intro.title">Un club con identidad Sanvi</h2>
-    <p data-i18n="club.intro.text">
-      Club Sanvi funciona dentro de las instalaciones del Instituto San Vicente, en Juana Koslay. Es un espacio deportivo, recreativo y social que acompaña la visión institucional de aprender, compartir y crecer en un entorno agradable.
-    </p>
-    <p>Promovemos el respeto, el esfuerzo, la perseverancia y la vida saludable en un entorno que acompaña el crecimiento personal y colectivo.</p>
+    <div class="ca-feature">
+      <span class="cs-dli"><img src="../assets/img/icons/heart.svg" alt=""></span>
+      <p data-i18n="club.intro.text">Club Sanvi funciona dentro de las instalaciones del Instituto San Vicente, en Juana Koslay. Es un espacio deportivo, recreativo y social que acompaña la visión institucional de aprender, compartir y crecer en un entorno agradable.</p>
+    </div>
+    <div class="ca-feature">
+      <span class="cs-dli"><img src="../assets/img/icons/target.svg" alt=""></span>
+      <p>Promovemos el respeto, el esfuerzo, la perseverancia y la vida saludable en un entorno que acompaña el crecimiento personal y colectivo.</p>
+    </div>
   </div>
 </section>
 
-<section class="club-cta club-reveal" id="sumate">
+<section class="club-cta club-reveal club-reveal--scale" id="sumate">
                 <h2 class="inicios-titulo">
         <img
           src="../assets/img/textos-png/las-p-e-a.webp"
