@@ -553,7 +553,11 @@ function renderGaleriaGrid(items) {
       <span class="cs-gallery-badge">${escaparHTML(item.disciplina)}</span>
       <button class="cs-delete-btn" data-id="${escaparHTML(item.id)}" title="Eliminar">×</button>
     `;
-    el.querySelector(".cs-delete-btn").addEventListener("click", async function () {
+    el.querySelector("img").addEventListener("click", function () {
+      if (window.openCsPreview) window.openCsPreview(item);
+    });
+    el.querySelector(".cs-delete-btn").addEventListener("click", async function (e) {
+      e.stopPropagation();
       await eliminarFotoGaleria(item.id);
     });
     grid.appendChild(el);
@@ -703,6 +707,46 @@ async function cargarDisciplinasAdmin() {
     container.innerHTML = `<p class="status error">${e.message}</p>`;
   }
 }
+
+/* Preview modal Club Sanvi */
+(function () {
+  var modal = document.createElement("div");
+  modal.id = "csPrevModal";
+  modal.className = "cs-prev-modal";
+  modal.innerHTML = `
+    <div class="cs-prev-inner">
+      <button class="cs-prev-close" id="csPrevClose">×</button>
+      <img id="csPrevImg" src="" alt="">
+      <div class="cs-prev-footer">
+        <span class="cs-prev-disc" id="csPrevDisc"></span>
+        <button class="cs-prev-del" id="csPrevDel">Eliminar foto</button>
+      </div>
+    </div>
+  `;
+  document.body.appendChild(modal);
+
+  var csPrevCurrentId = null;
+
+  window.openCsPreview = function (item) {
+    document.getElementById("csPrevImg").src = item.url;
+    document.getElementById("csPrevImg").alt = item.alt || "";
+    document.getElementById("csPrevDisc").textContent = item.disciplina;
+    csPrevCurrentId = item.id;
+    modal.classList.add("open");
+  };
+
+  function closePrev() { modal.classList.remove("open"); }
+
+  document.getElementById("csPrevClose").addEventListener("click", closePrev);
+  modal.addEventListener("click", function (e) { if (e.target === modal) closePrev(); });
+  document.addEventListener("keydown", function (e) { if (e.key === "Escape") closePrev(); });
+
+  document.getElementById("csPrevDel").addEventListener("click", async function () {
+    if (!csPrevCurrentId) return;
+    closePrev();
+    await eliminarFotoGaleria(csPrevCurrentId);
+  });
+})();
 
 /* Cargar Club Sanvi al activar la sección */
 document.querySelector('[data-section="club-sanvi"]')?.addEventListener("click", function () {
