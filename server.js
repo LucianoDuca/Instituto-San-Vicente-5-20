@@ -963,6 +963,47 @@ app.put("/api/admin/club-sanvi/disciplinas/:slug", soloAdmin, async (req, res) =
   }
 });
 
+/* =============================================
+   SAN VICENTE — IMÁGENES DINÁMICAS
+============================================= */
+
+app.get("/api/sv/imagenes/:seccion", async (req, res) => {
+  try {
+    const { seccion } = req.params;
+    const { data, error } = await supabaseAdmin
+      .from("sv_imagenes")
+      .select("*")
+      .eq("seccion", seccion)
+      .order("slot", { ascending: true });
+    if (error) return res.status(500).json({ error: error.message });
+    return res.json(data);
+  } catch (e) {
+    return res.status(500).json({ error: e.message });
+  }
+});
+
+app.put("/api/admin/sv/imagenes/:seccion/:slot", soloAdmin, async (req, res) => {
+  try {
+    const { seccion } = req.params;
+    const slot = parseInt(req.params.slot);
+    const url = limpiarTexto(req.body.url);
+    const alt = limpiarTexto(req.body.alt) || "";
+
+    if (!url) return res.status(400).json({ error: "url es obligatorio" });
+
+    const { data, error } = await supabaseAdmin
+      .from("sv_imagenes")
+      .upsert({ seccion, slot, url, alt }, { onConflict: "seccion,slot" })
+      .select()
+      .single();
+
+    if (error) return res.status(500).json({ error: error.message });
+    return res.json({ ok: true, item: data });
+  } catch (e) {
+    return res.status(500).json({ error: e.message });
+  }
+});
+
 app.listen(PORT, () => {
   console.log(`Servidor funcionando en http://localhost:${PORT}`);
 });

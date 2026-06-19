@@ -754,6 +754,107 @@ document.querySelector('[data-section="club-sanvi"]')?.addEventListener("click",
   cargarDisciplinasAdmin();
 });
 
+/* =============================================
+   SAN VICENTE — IMÁGENES ADMIN
+============================================= */
+
+var SV_SECCIONES = {
+  hero:          { label: "Hero (Inicio)",  slots: 4 },
+  instalaciones: { label: "Instalaciones", slots: 5 },
+  inicios:       { label: "Inicios 2014",  slots: 4 },
+  edificios:     { label: "Edificios",     slots: 9 },
+  kinder:        { label: "Kinder",        slots: 5 },
+  primario:      { label: "Primario",      slots: 5 },
+  secundario:    { label: "Secundario",    slots: 4 }
+};
+
+var svSeccionActiva = "hero";
+
+document.getElementById("svTabs")?.querySelectorAll(".sv-tab").forEach(function (btn) {
+  btn.addEventListener("click", function () {
+    document.querySelectorAll(".sv-tab").forEach(function (b) { b.classList.remove("active"); });
+    btn.classList.add("active");
+    svSeccionActiva = btn.dataset.svTab;
+    cargarSvSeccion(svSeccionActiva);
+  });
+});
+
+async function cargarSvSeccion(seccion) {
+  var container = document.getElementById("svGaleriaContainer");
+  if (!container) return;
+  container.innerHTML = skeletonCards(4).replace(/skeleton-card/g, "skeleton sv-skel");
+  try {
+    var response = await fetchAuth("/api/sv/imagenes/" + seccion);
+    if (!response) return;
+    var data = await response.json();
+    if (!response.ok) throw new Error(data.error);
+    renderSvGrid(seccion, data);
+  } catch (e) {
+    container.innerHTML = "<p class='status error'>" + e.message + "</p>";
+  }
+}
+
+function renderSvGrid(seccion, items) {
+  var container = document.getElementById("svGaleriaContainer");
+  var config = SV_SECCIONES[seccion];
+  var bySlot = {};
+  items.forEach(function (item) { bySlot[item.slot] = item; });
+
+  var html = "<div class='sv-slots-grid'>";
+  for (var s = 1; s <= config.slots; s++) {
+    var item = bySlot[s];
+    var imgSrc = item ? escaparHTML(item.url) : "";
+    html += "<div class='sv-slot-card' data-seccion='" + seccion + "' data-slot='" + s + "'>" +
+      "<div class='sv-slot-img'>" +
+      (imgSrc ? "<img src='" + imgSrc + "' alt='Slot " + s + "'>" : "<div class='sv-slot-empty'>Sin imagen</div>") +
+      "</div>" +
+      "<div class='sv-slot-footer'>" +
+      "<span class='sv-slot-label'>Slot " + s + "</span>" +
+      "<label class='sv-slot-btn'>Cambiar<input type='file' accept='image/*' class='sv-file-input' data-seccion='" + seccion + "' data-slot='" + s + "'></label>" +
+      "</div>" +
+      "<p class='sv-slot-status status'></p>" +
+      "</div>";
+  }
+  html += "</div>";
+  container.innerHTML = html;
+
+  container.querySelectorAll(".sv-file-input").forEach(function (input) {
+    input.addEventListener("change", async function () {
+      if (!this.files[0]) return;
+      await svReemplazarImagen(this.dataset.seccion, parseInt(this.dataset.slot), this.files[0], this.closest(".sv-slot-card"));
+    });
+  });
+}
+
+async function svReemplazarImagen(seccion, slot, file, card) {
+  var status = card.querySelector(".sv-slot-status");
+  setStatus(status, "Subiendo...", "");
+  try {
+    var url = await subirImagenStorage(file, "sv/" + seccion);
+    if (!url) throw new Error("No se pudo subir la imagen");
+    var response = await fetchAuth("/api/admin/sv/imagenes/" + seccion + "/" + slot, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ url: url, alt: file.name })
+    });
+    var result = await response.json();
+    if (!response.ok) throw new Error(result.error);
+    setStatus(status, "Imagen actualizada", "success");
+    var img = card.querySelector("img");
+    if (img) {
+      img.src = url;
+    } else {
+      card.querySelector(".sv-slot-img").innerHTML = "<img src='" + escaparHTML(url) + "' alt='Slot " + slot + "'>";
+    }
+  } catch (e) {
+    setStatus(status, e.message, "error");
+  }
+}
+
+document.querySelector("[data-section='san-vicente']")?.addEventListener("click", function () {
+  cargarSvSeccion(svSeccionActiva);
+});
+
 /* Verificar rol admin */
 
 async function verificarAdmin() {
