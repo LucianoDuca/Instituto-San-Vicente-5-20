@@ -26,7 +26,7 @@
 .club-hero {
   position: relative;
   min-height: 100vh;
-  margin-top: 125px;
+  margin-top: 175px;
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
@@ -52,13 +52,15 @@
   position: absolute;
   inset: 0;
   z-index: 1;
-  background: linear-gradient(
-    180deg,
-    rgba(6, 21, 34, 0.10) 0%,
-    rgba(6, 21, 34, 0.38) 38%,
-    rgba(6, 21, 34, 0.88) 78%,
-    rgba(6, 21, 34, 0.97) 100%
-  );
+  background:
+    radial-gradient(ellipse 60% 50% at 90% 80%, rgba(196, 18, 48, 0.18) 0%, transparent 65%),
+    linear-gradient(
+      180deg,
+      rgba(6, 21, 34, 0.10) 0%,
+      rgba(6, 21, 34, 0.38) 38%,
+      rgba(6, 21, 34, 0.88) 78%,
+      rgba(6, 21, 34, 0.97) 100%
+    );
 }
 
 .club-hero-content {
@@ -155,6 +157,16 @@
   pointer-events: none;
 }
 
+.club-stats-wrap::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 5px;
+  background: linear-gradient(90deg, var(--cs-red) 0%, var(--cs-blue) 100%);
+}
+
 .club-stats {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -176,10 +188,11 @@
   display: block;
   font-size: clamp(2.8rem, 5.5vw, 4.5rem);
   font-weight: 900;
-  color: var(--cs-red);
+  color: var(--cs-white);
   line-height: 1;
   margin-bottom: 10px;
   font-family: Arial, Helvetica, sans-serif;
+  text-shadow: none;
 }
 
 .club-stats span {
@@ -199,7 +212,7 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
   min-height: 540px;
-  background: var(--cs-white);
+  background: var(--cs-blue-dark);
 }
 
 .club-about-photo {
@@ -224,6 +237,7 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
+  border-left: 4px solid var(--cs-red);
 }
 
 .club-kicker {
@@ -250,7 +264,7 @@
   font-family: 'Playfair Display', Georgia, serif;
   font-size: clamp(1.8rem, 3vw, 2.8rem);
   font-weight: 800;
-  color: var(--cs-blue);
+  color: var(--cs-white);
   line-height: 1.15;
   margin-bottom: 22px;
 }
@@ -258,7 +272,7 @@
 .club-about-text p {
   font-size: 0.95rem;
   line-height: 1.8;
-  color: #4a6075;
+  color: rgba(255, 255, 255, 0.68);
   margin-bottom: 14px;
   max-width: 500px;
 }
@@ -268,18 +282,24 @@
 ============================================= */
 
 .club-activities {
-  padding: 90px 5%;
-  background: var(--cs-light);
+  padding-top: 90px;
+  background: var(--cs-white);
+  overflow: hidden;
+  position: relative;
 }
 
 .club-activities-inner {
-  max-width: 1200px;
-  margin: 0 auto;
+  max-width: none;
+  margin: 0;
+  position: relative;
+  z-index: 1;
 }
 
 .club-section-head {
+  max-width: 1200px;
+  margin: 0 auto 60px;
+  padding: 0 5%;
   text-align: center;
-  margin-bottom: 50px;
 }
 
 .club-section-head p {
@@ -298,198 +318,326 @@
   color: var(--cs-blue);
 }
 
-.club-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 20px;
+/* ---- Filas full-width ---- */
+.ca-row {
+  display: flex;
+  min-height: 520px;
+  width: 100%;
 }
 
-.club-activity-card {
-  position: relative;
-  aspect-ratio: 3 / 4;
-  border-radius: 18px;
+.ca-row:nth-child(even) {
+  flex-direction: row-reverse;
+}
+
+.ca-photo {
+  flex: 0 0 58%;
   overflow: hidden;
-  cursor: pointer;
-  background: var(--cs-blue-dark);
+  position: relative;
 }
 
-.club-card-photo {
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-}
-
-.club-card-photo img {
+.ca-photo img {
   width: 100%;
   height: 100%;
   object-fit: cover;
   object-position: center;
   display: block;
-  transition: transform 0.55s ease;
+  transition: transform 0.65s ease;
 }
 
-.club-activity-card:hover .club-card-photo img {
-  transform: scale(1.07);
+.ca-row:hover .ca-photo img {
+  transform: scale(1.04);
 }
 
-.club-act-icon {
-  position: absolute;
-  top: 16px;
-  left: 16px;
-  z-index: 3;
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  background: var(--cs-red);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 4px 14px rgba(196, 18, 48, 0.45);
-}
-
-.club-act-icon img {
-  width: 20px;
-  height: 20px;
-  filter: brightness(0) invert(1);
-  display: block;
-}
-
-.club-card-body {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  z-index: 2;
-  background: linear-gradient(
-    to top,
-    rgba(6, 21, 34, 0.97) 0%,
-    rgba(6, 21, 34, 0.72) 50%,
-    transparent 100%
-  );
-  padding: 60px 22px 26px;
-}
-
-.club-activity-card h3 {
-  font-family: 'Playfair Display', Georgia, serif;
-  font-size: 1.25rem;
-  font-weight: 700;
-  color: var(--cs-white);
-  margin-bottom: 7px;
-  line-height: 1.2;
-}
-
-.club-activity-card p {
-  color: rgba(255, 255, 255, 0.72);
-  font-size: 0.82rem;
-  line-height: 1.55;
-  margin: 0;
-}
-
-/* =============================================
-   GALERÍA — dark split texto | mosaico
-============================================= */
-
-.club-life-section {
-  display: grid;
-  grid-template-columns: 360px 1fr;
-  background: var(--cs-blue-dark);
-  position: relative;
-  overflow: hidden;
-}
-
-.club-life-section::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background-image: radial-gradient(circle, rgba(255,255,255,0.02) 1px, transparent 1px);
-  background-size: 24px 24px;
-  pointer-events: none;
-}
-
-.club-life-text {
-  padding: 80px 52px;
+.ca-content {
+  flex: 1;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  border-right: 1px solid rgba(255,255,255,0.07);
+  padding: 60px 72px;
+  background: var(--cs-blue-dark);
+  color: var(--cs-white);
   position: relative;
-  z-index: 1;
 }
 
-.club-life-kicker {
-  display: block;
-  font-size: 0.64rem;
-  font-weight: 800;
-  letter-spacing: 3px;
+.ca-content::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 100%;
+  background: var(--cs-red);
+}
+
+.ca-row:nth-child(even) .ca-content::before {
+  left: auto;
+  right: 0;
+}
+
+.ca-content .club-kicker {
+  margin-bottom: 18px;
+  font-family: "Apricot", 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+  font-style: normal;
+  font-weight: 700;
+  font-size: 0.88rem;
+  color: rgba(255, 255, 255, 0.75);
   text-transform: uppercase;
-  color: var(--cs-muted);
-  margin-bottom: 16px;
+  letter-spacing: 3px;
 }
 
-.club-life-text h2 {
+.ca-content .club-kicker::before {
+  background: rgba(255, 255, 255, 0.35);
+}
+
+.ca-content h3 {
   font-family: 'Playfair Display', Georgia, serif;
-  font-size: clamp(1.8rem, 2.8vw, 2.6rem);
+  font-size: clamp(2rem, 3vw, 2.8rem);
   font-weight: 800;
   color: var(--cs-white);
-  line-height: 1.15;
-  margin-bottom: 20px;
+  margin-bottom: 18px;
+  line-height: 1.1;
 }
 
-.club-life-text > p {
-  color: rgba(255,255,255,0.70);
-  font-size: 0.93rem;
-  line-height: 1.78;
-  margin-bottom: 30px;
-  max-width: 340px;
+.ca-content p {
+  color: rgba(255, 255, 255, 0.68);
+  font-size: 0.95rem;
+  line-height: 1.75;
+  max-width: 400px;
 }
 
-.club-gallery-link {
-  display: inline-flex;
+/* =============================================
+   SUB-NAVBAR CLUB SANVI
+============================================= */
+
+.club-subnav {
+  position: fixed;
+  top: 125px;
+  left: 0;
+  right: 0;
+  z-index: 98;
+  background: var(--cs-blue-dark);
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  box-shadow: 0 3px 18px rgba(6, 21, 34, 0.40);
+}
+
+.club-subnav-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 40px;
+}
+
+.club-subnav-list {
+  list-style: none;
+  display: flex;
   align-items: center;
-  gap: 6px;
-  font-size: 0.68rem;
-  font-weight: 900;
+  justify-content: center;
+  margin: 0;
+  padding: 0;
+}
+
+.club-subnav-link {
+  display: block;
+  padding: 14px 24px;
+  font-size: 0.67rem;
+  font-weight: 800;
   letter-spacing: 2px;
   text-transform: uppercase;
-  color: var(--cs-white);
+  color: rgba(255,255,255,0.52);
   text-decoration: none;
-  padding-bottom: 4px;
-  border-bottom: 2px solid rgba(196, 18, 48, 0.6);
-  align-self: flex-start;
-  transition: border-color 0.2s ease;
+  border-bottom: 3px solid transparent;
+  transition: color 0.22s ease, border-color 0.22s ease;
 }
 
-.club-gallery-link:hover {
-  border-color: var(--cs-red);
+.club-subnav-link:hover,
+.club-subnav-link.active {
+  color: var(--cs-white);
+  border-bottom-color: var(--cs-red);
 }
 
-/* grid 2×2 uniforme — 4 imágenes */
-.club-gallery {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  grid-template-rows: 265px 265px;
-  gap: 12px;
-  padding: 28px 28px 28px 14px;
+/* =============================================
+   GALERÍA — masonry con filtros
+============================================= */
+
+.club-gallery-section {
+  background: var(--cs-blue-dark);
+  padding: 100px 5% 100px;
+  position: relative;
+  overflow: hidden;
+  border-top: 4px solid var(--cs-red);
+}
+
+.club-gallery-section::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image:
+    radial-gradient(ellipse 70% 40% at 50% 0%, rgba(196, 18, 48, 0.08) 0%, transparent 60%),
+    radial-gradient(circle, rgba(255,255,255,0.022) 1px, transparent 1px);
+  background-size: 100% 100%, 24px 24px;
+  pointer-events: none;
+}
+
+/* Intro */
+.cg-intro {
+  max-width: 640px;
+  margin: 0 auto 52px;
+  text-align: center;
   position: relative;
   z-index: 1;
-  align-self: center;
 }
 
-.club-gallery img {
+.cg-intro .club-kicker {
+  justify-content: center;
+}
+
+.cg-intro h2 {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: clamp(2rem, 3.5vw, 3rem);
+  font-weight: 800;
+  color: var(--cs-white);
+  margin-bottom: 14px;
+}
+
+.cg-intro p {
+  color: rgba(255,255,255,0.62);
+  font-size: 0.96rem;
+  line-height: 1.75;
+}
+
+/* Pills de filtro */
+.cg-filters {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-bottom: 40px;
+  position: relative;
+  z-index: 1;
+}
+
+.cg-filter {
+  background: transparent;
+  border: 1px solid rgba(255,255,255,0.18);
+  color: rgba(255,255,255,0.58);
+  padding: 9px 22px;
+  border-radius: 999px;
+  font-size: 0.67rem;
+  font-weight: 800;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: color 0.22s ease, border-color 0.22s ease,
+              background 0.22s ease, box-shadow 0.22s ease;
+}
+
+.cg-filter:hover {
+  color: var(--cs-white);
+  border-color: rgba(255,255,255,0.42);
+}
+
+.cg-filter.active {
+  background: var(--cs-red);
+  border-color: var(--cs-red);
+  color: var(--cs-white);
+  box-shadow: 0 6px 24px rgba(196, 18, 48, 0.42);
+}
+
+/* Grid uniforme */
+.cg-masonry {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  position: relative;
+  z-index: 1;
+  transition: opacity 0.28s ease;
+}
+
+.cg-masonry.cg-fading {
+  opacity: 0;
+}
+
+/* Ítem de galería */
+.cg-item {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  border-radius: 12px;
+  overflow: hidden;
+  cursor: zoom-in;
+  background: var(--cs-blue);
+}
+
+.cg-item img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  border-radius: 14px;
   display: block;
-  cursor: zoom-in;
-  transition: transform 0.35s ease, filter 0.35s ease;
-  filter: brightness(0.85) saturate(1.1);
+  transition: transform 0.55s ease;
 }
 
-.club-gallery img:hover {
-  transform: scale(1.02);
-  filter: brightness(1) saturate(1.15);
+.cg-item:hover img {
+  transform: scale(1.05);
 }
+
+/* Overlay oscuro con badge */
+.cg-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to top,
+    rgba(6, 21, 34, 0.88) 0%,
+    rgba(6, 21, 34, 0.28) 36%,
+    transparent 62%
+  );
+  opacity: 0;
+  transition: opacity 0.28s ease;
+  display: flex;
+  align-items: flex-end;
+  padding: 14px;
+}
+
+.cg-item:hover .cg-overlay {
+  opacity: 1;
+}
+
+.cg-badge {
+  display: inline-block;
+  background: var(--cs-red);
+  color: var(--cs-white);
+  font-size: 0.60rem;
+  font-weight: 900;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  padding: 5px 13px;
+  border-radius: 999px;
+}
+
+/* Lightbox navegación */
+.lightbox-arr {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(255,255,255,0.10);
+  border: 1px solid rgba(255,255,255,0.22);
+  color: #ffffff;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 1.8rem;
+  line-height: 1;
+  z-index: 10;
+  transition: background 0.2s ease;
+}
+
+.lightbox-arr:hover {
+  background: rgba(255,255,255,0.22);
+}
+
+.lightbox-prev { left: 28px; }
+.lightbox-next { right: 28px; }
 
 /* =============================================
    CTA — fondo ROJO (diferenciador)
@@ -502,14 +650,29 @@
   color: var(--cs-white);
   position: relative;
   overflow: hidden;
+  border-top: 4px solid rgba(255,255,255,0.25);
 }
 
 .club-cta::before {
   content: "";
   position: absolute;
   inset: 0;
-  background-image: radial-gradient(circle, rgba(255,255,255,0.07) 1px, transparent 1px);
-  background-size: 28px 28px;
+  background-image:
+    radial-gradient(ellipse 80% 60% at 50% 110%, rgba(6, 21, 34, 0.35) 0%, transparent 70%),
+    radial-gradient(circle, rgba(255,255,255,0.07) 1px, transparent 1px);
+  background-size: 100% 100%, 28px 28px;
+  pointer-events: none;
+}
+
+.club-cta::after {
+  content: "";
+  position: absolute;
+  top: -80px;
+  right: -80px;
+  width: 320px;
+  height: 320px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.05);
   pointer-events: none;
 }
 
@@ -568,20 +731,16 @@
   .club-about-text {
     padding: 60px 44px;
   }
-
-  .club-life-section {
-    grid-template-columns: 320px 1fr;
-  }
-
-  .club-life-text {
-    padding: 60px 36px;
-  }
 }
 
 @media (max-width: 900px) {
   .club-hero {
     min-height: 90vh;
-    margin-top: 120px;
+    margin-top: 170px;
+  }
+
+  .club-subnav {
+    top: 120px;
   }
 
   .club-hero-content {
@@ -610,32 +769,40 @@
 
   .club-about-text {
     padding: 52px 28px;
+    border-left: none;
+    border-top: 4px solid var(--cs-red);
   }
 
-  .club-grid {
-    grid-template-columns: repeat(2, 1fr);
+  .ca-row {
+    min-height: 420px;
   }
 
-  .club-life-section {
-    grid-template-columns: 1fr;
+  .ca-content {
+    padding: 48px 44px;
   }
 
-  .club-life-text {
-    padding: 56px 28px;
-    border-right: none;
-    border-bottom: 1px solid rgba(255,255,255,0.07);
-  }
-
-  .club-gallery {
-    padding: 20px 24px 32px;
-    grid-template-columns: 1fr 1fr;
-    grid-template-rows: 200px 200px;
+  .cg-masonry {
+    grid-template-columns: repeat(3, 1fr);
   }
 }
 
 @media (max-width: 768px) {
   .club-hero {
-    margin-top: 108px;
+    margin-top: 158px;
+  }
+
+  .club-subnav {
+    top: 108px;
+  }
+
+  .club-subnav-inner {
+    padding: 0 16px;
+  }
+
+  .club-subnav-link {
+    padding: 12px 14px;
+    font-size: 0.62rem;
+    letter-spacing: 1.5px;
   }
 
   .club-hero-content {
@@ -681,22 +848,48 @@
     border-bottom: none;
   }
 
-  .club-grid {
-    grid-template-columns: 1fr;
+  .ca-row {
+    flex-direction: column;
+    min-height: auto;
   }
 
-  .club-activity-card {
-    aspect-ratio: 4 / 3;
+  .ca-row:nth-child(even) {
+    flex-direction: column;
+  }
+
+  .ca-photo {
+    flex: none;
+    height: 340px;
+  }
+
+  .ca-content {
+    padding: 44px 28px;
+  }
+
+  .ca-content::before,
+  .ca-row:nth-child(even) .ca-content::before {
+    width: 100%;
+    height: 4px;
+    top: 0;
+    left: 0;
+    right: auto;
   }
 
   .club-activities {
-    padding: 65px 18px;
+    padding-top: 65px;
   }
 
-  .club-gallery {
-    grid-template-columns: 1fr 1fr;
-    grid-template-rows: 170px 170px;
-    padding: 16px 18px 28px;
+  .club-gallery-section {
+    padding: 65px 18px 80px;
+  }
+
+  .cg-masonry {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .cg-filter {
+    padding: 8px 16px;
+    font-size: 0.62rem;
   }
 
   .club-cta {
@@ -706,21 +899,26 @@
 
 @media (max-width: 480px) {
   .club-hero {
-    margin-top: 102px;
+    margin-top: 152px;
     min-height: 80vh;
+  }
+
+  .club-subnav {
+    top: 102px;
   }
 
   .club-about-photo {
     height: 260px;
   }
 
-  .club-gallery {
-    grid-template-columns: 1fr;
-    padding: 16px 18px 36px;
+  .cg-masonry {
+    grid-template-columns: repeat(2, 1fr);
   }
 
-  .club-gallery img {
-    height: 220px;
+  .cg-filter {
+    padding: 7px 12px;
+    font-size: 0.60rem;
+    letter-spacing: 1.5px;
   }
 }
 

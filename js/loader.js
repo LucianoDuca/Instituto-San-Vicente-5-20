@@ -1,12 +1,16 @@
 const LOADER_DURATION = 3000;
 
+const _loaderBase = document.currentScript
+  ? document.currentScript.src.replace(/js\/loader\.js[^/]*$/, '')
+  : '';
+
 const loaderMarkup = `
   <div class="route-loader" id="routeLoader" aria-hidden="true" style="--loader-duration: ${LOADER_DURATION}ms;">
     <div class="route-loader__content">
       <div class="route-loader__logo-wrap">
         <div class="route-loader__glow"></div>
         <img
-          src="assets/img/logo.png"
+          src="${_loaderBase}assets/img/logo.webp"
           alt="Instituto San Vicente"
           class="route-loader__logo"
         >
