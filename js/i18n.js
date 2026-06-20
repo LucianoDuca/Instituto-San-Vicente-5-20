@@ -267,17 +267,17 @@ const translations = {
 
     "contact.kicker": "CONTACTO",
     "contact.hero.title": "Vías de comunicación institucional",
-    "contact.hero.text": "San Vicente es una escuela abierta al diálogo constante con la familia. Estos son nuestros canales oficiales de comunicación institucional.",
+    "contact.hero.text": "San Vicente es una escuela abierta al diálogo constante con la familia. Estos son nuestros canales oficiales.",
 
     "contact.info.addressTitle": "Dirección",
-    "contact.info.addressText": "Juana Koslay, San Luis",
+    "contact.info.addressText": "Av. del Viento Chorrillero 2570",
     "contact.info.phoneTitle": "Teléfono",
     "contact.info.phoneText": "266 4214497",
     "contact.info.emailTitle": "Email",
     "contact.info.emailText": "Admsanvicentejk@gmail.com",
     "contact.info.socialTitle": "Redes",
 
-    "contact.form.title": "Consulta institucional",
+    "contact.form.title": "Consulta",
     "contact.form.firstNameLabel": "Nombre",
     "contact.form.firstNamePlaceholder": "Tu nombre",
     "contact.form.lastNameLabel": "Apellido",
@@ -292,14 +292,14 @@ const translations = {
     "contact.form.messagePlaceholder": "Escribe aquí tu consulta...",
     "contact.form.button": "ENVIAR MENSAJE",
 
-    "contact.map.title": "Nuestra ubicación",
+    "contact.map.title": "Ubicación",
     "contact.map.iframeTitle": "Mapa Instituto San Vicente",
 
     "contact.hero.imgAlt": "Comunidad Instituto San Vicente",
     "contact.faq.kicker": "PREGUNTAS FRECUENTES",
     "contact.faq.title": "Lo que más nos consultan",
     "contact.faq.q1": "¿En qué horarios está abierta la institución para hablar con personal directivo?",
-    "contact.faq.a1": "Atendemos consultas de lunes a viernes de 8:00 a 16:00 hs. En ese horario podés acercarte personalmente o comunicarte por teléfono para hablar con el equipo directivo.",
+    "contact.faq.a1": "Atendemos consultas de lunes a viernes de 8:00 a 16:00 hs. En ese horario podés acercarte personalmente o comunicarte por teléfono para hablar con el area de administracion.",
     "contact.faq.q2": "¿Dónde está ubicado el Instituto San Vicente?",
     "contact.faq.a2": "Nos encontramos en Av. del Viento Chorrillero 2570, Juana Koslay, San Luis, Argentina. Podés ver la ubicación exacta en el mapa de esta página.",
     "contact.faq.q3": "¿Cómo puedo solicitar una entrevista con el equipo directivo?",
@@ -392,7 +392,7 @@ const translations = {
     // ======= KINDER – NUEVO DISEÑO =======
     "kinder.info.label": "NIVEL",
     "kinder.info.intro": "Un espacio de descubrimiento, juego y aprendizaje donde cada niño/a comienza a explorar el mundo con alegría, creatividad y confianza.",
-    "kinder.info.ages": "<span class='dli'><img src='assets/img/icons/person.svg' alt=''></span><strong>Edades:</strong> de 1 a 5 años",
+    "kinder.info.ages": "<span class='dli'><img src='assets/img/icons/person.svg' alt=''></span><strong>Edades:</strong> de 2 a 5 años",
     "kinder.info.schedule": "<span class='dli'><img src='assets/img/icons/clock.svg' alt=''></span><strong>Horario:</strong> lunes a viernes de 9:00 a 12:30 hs",
     "kinder.info.options": "<span class='dli'><img src='assets/img/icons/calendar.svg' alt=''></span><strong>Opciones:</strong> pre y post hora, horario extendido hasta las 16:00 hs",
     "kinder.info.workshops": "<span class='dli'><img src='assets/img/icons/palette.svg' alt=''></span><strong>Espacio de talleres:</strong> de 13:30 a 16:00 hs",
@@ -687,7 +687,7 @@ const translations = {
     "kinder.slider.image4Alt": "Play and exploration activities",
 
     "kinder.main.title": "Kindergarten Level",
-    "kinder.main.ages": "<strong>Ages:</strong> from 1 to 5 years old",
+    "kinder.main.ages": "<strong>Ages:</strong> from 2 to 5 years old",
     "kinder.main.schedule": "<strong>Schedule:</strong> Monday to Friday from 9:00 AM to 12:30 PM",
     "kinder.main.options": "<strong>Options:</strong> pre-hour and post-hour service, with extended hours until 4:00 PM",
     "kinder.main.playSpace": "<strong>Play space:</strong> from 1:00 PM to 4:00 PM for children aged 2 and 3",
