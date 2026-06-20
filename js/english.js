@@ -67,7 +67,5 @@
   /* Hero slider (con botones prev/next) */
   initSlider('enSlider', 'enSliderDots', 'enPrevBtn', 'enNextBtn', 3500);
 
-  /* Slider de inmersión en Inglaterra (solo dots, sin botones) */
-  initSlider('inmersionSlider', 'inmersionDots', null, null, 4000);
 
 })();

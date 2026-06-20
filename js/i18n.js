@@ -363,6 +363,9 @@ const translations = {
     "club.activities.taekwondo.title": "Taekwondo",
     "club.activities.taekwondo.text": "Disciplina, respeto, autocontrol y entrenamiento físico.",
 
+    "club.activities.basketball.title": "Basketball",
+    "club.activities.basketball.text": "Dinámica colectiva, visión de juego y trabajo en equipo en cada entrenamiento.",
+
     "club.activities.music.title": "Música",
     "club.activities.music.text": "Un espacio creativo para desarrollar expresión, ritmo y sensibilidad artística.",
 
@@ -378,9 +381,9 @@ const translations = {
 
     "club.activities.imageAlt": "Actividades del Club",
     "club.gallery.imageAlt": "Galería",
-    "club.cta.imageAlt": "Las puertas están abiertas",
+    "club.cta.imageAlt": "Abierto al publico en general",
 
-    "club.cta.title": "Las puertas están abiertas",
+    "club.cta.title": "Abierto al publico en general",
     "club.cta.text": "Sumate a practicar, aprender y divertirte en cualquiera de nuestros talleres.",
     "club.cta.button": "Consultar inscripción",
 
@@ -853,6 +856,9 @@ const translations = {
 
     "club.activities.taekwondo.title": "Taekwondo",
     "club.activities.taekwondo.text": "Discipline, respect, self-control and physical training.",
+
+    "club.activities.basketball.title": "Basketball",
+    "club.activities.basketball.text": "Collective dynamics, game vision and teamwork in every training session.",
 
     "club.activities.music.title": "Music",
     "club.activities.music.text": "A creative space to develop expression, rhythm and artistic sensitivity.",
