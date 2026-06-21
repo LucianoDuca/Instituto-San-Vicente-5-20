@@ -780,13 +780,14 @@ document.querySelector('[data-section="edicion-galeria"]')?.addEventListener("cl
 ============================================= */
 
 var SV_SECCIONES = {
-  hero:          { label: "Hero (Inicio)",  slots: 4 },
-  instalaciones: { label: "Instalaciones", slots: 5 },
-  inicios:       { label: "Inicios 2014",  slots: 4 },
-  edificios:     { label: "Edificios",     slots: 9 },
-  kinder:        { label: "Kinder",        slots: 5 },
-  primario:      { label: "Primario",      slots: 5 },
-  secundario:    { label: "Secundario",    slots: 4 }
+  hero:          { label: "Hero (Inicio)",  slots: 4  },
+  instalaciones: { label: "Instalaciones", slots: 5  },
+  inicios:       { label: "Inicios 2014",  slots: 4  },
+  edificios:     { label: "Edificios",     slots: 10 },
+  kinder:        { label: "Kinder",        slots: 5  },
+  primario:      { label: "Primario",      slots: 5  },
+  secundario:    { label: "Secundario",    slots: 4  },
+  academic:      { label: "Academic Levels", slots: 3 }
 };
 
 var svSeccionActiva = "hero";
