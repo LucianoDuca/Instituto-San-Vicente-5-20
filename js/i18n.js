@@ -139,7 +139,7 @@ const translations = {
     "englishPage.program.culture.title": "Interculturalidad",
     "englishPage.program.culture.text": "Aprender inglés también implica comprender otras culturas y ampliar horizontes.",
 
-    "englishPage.certs.label": "AVALES INTERNACIONALES",
+    "englishPage.certs.label": "AVALES",
     "englishPage.certs.title": "Certificaciones Internacionales",
     "englishPage.certs.subtitle": "Preparamos a nuestros estudiantes para rendir exámenes reconocidos a nivel mundial desde los primeros años de escolaridad.",
     "englishPage.certs.trinity.grade": "2.° y 3.° grado",
@@ -429,8 +429,8 @@ const translations = {
     "primary.info.label": "NIVEL",
     "primary.info.intro": "Buscamos que cada estudiante incorpore experiencias, desarrolle sus múltiples inteligencias y crezca mediante desafíos y metas personales.",
     "primary.info.stage": "<span class='dli'><img src='assets/img/icons/literature.svg' alt=''></span><strong>Etapa:</strong> Nivel Primario (1° a 6° grado)",
-    "primary.info.schedule": "<span class='dli'><img src='assets/img/icons/clock.svg' alt=''></span><strong>Horario:</strong> lunes a viernes de 8:00 a 16:00 hs",
-    "primary.info.modality": "<span class='dli'><img src='assets/img/icons/palette.svg' alt=''></span><strong>Modalidad:</strong> doble escolaridad con inglés, deportes, arte, educación emocional y cultura",
+    "primary.info.schedule": "<span class='dli'><img src='assets/img/icons/clock.svg' alt=''></span><strong>Horario:</strong> Lunes a viernes de 8:00 a 16:00 hs",
+    "primary.info.modality": "<span class='dli'><img src='assets/img/icons/palette.svg' alt=''></span><strong>Modalidad:</strong> Doble escolaridad con inglés, deportes, arte, educación emocional y cultura",
     "primary.info.button": "Solicitá tu entrevista",
 
     "primary.proposal.label": "NUESTRA PROPUESTA",
@@ -464,9 +464,9 @@ const translations = {
     "highschool.info.label": "NIVEL",
     "highschool.info.intro": "Formamos jóvenes capaces de vivir los valores del respeto, usar responsablemente su libertad, pensar rigurosamente y ser protagonistas de su futuro.",
     "highschool.info.stage": "<span class='dli'><img src='assets/img/icons/graduation.svg' alt=''></span><strong>Etapa:</strong> Nivel Secundario (1° a 5° año)",
-    "highschool.info.schedule": "<span class='dli'><img src='assets/img/icons/clock.svg' alt=''></span><strong>Horario:</strong> lunes a viernes de 7:45 a 15:30 hs",
-    "highschool.info.tutoring": "<span class='dli'><img src='assets/img/icons/clipboard.svg' alt=''></span><strong>Tutoría:</strong> espacio de acompañamiento hasta las 16:00 hs",
-    "highschool.info.modality": "<span class='dli'><img src='assets/img/icons/interculturalidad.svg' alt=''></span><strong>Modalidad:</strong> formación académica integral, autonomía y proyecto personal",
+    "highschool.info.schedule": "<span class='dli'><img src='assets/img/icons/clock.svg' alt=''></span><strong>Horario:</strong> Lunes a viernes de 7:45 a 15:30 hs",
+    "highschool.info.tutoring": "<span class='dli'><img src='assets/img/icons/clipboard.svg' alt=''></span><strong>Tutoría:</strong> Espacio de acompañamiento hasta las 16:00 hs",
+    "highschool.info.modality": "<span class='dli'><img src='assets/img/icons/interculturalidad.svg' alt=''></span><strong>Modalidad:</strong> Formación académica integral, autonomía y proyecto personal",
     "highschool.info.button": "Solicitá tu entrevista",
 
     "highschool.proposal.label": "NUESTRA PROPUESTA",
@@ -630,7 +630,7 @@ const translations = {
     "englishPage.program.culture.title": "Interculturality",
     "englishPage.program.culture.text": "Learning English also means understanding other cultures and broadening horizons.",
 
-    "englishPage.certs.label": "INTERNATIONAL ENDORSEMENTS",
+    "englishPage.certs.label": "ENDORSEMENTS",
     "englishPage.certs.title": "International Certifications",
     "englishPage.certs.subtitle": "We prepare our students to sit internationally recognised exams from the earliest years of schooling.",
     "englishPage.certs.trinity.grade": "2nd and 3rd grade",

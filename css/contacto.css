@@ -86,7 +86,7 @@
 }
 
 .contact-header-box h1 {
-  font-family: 'Playfair Display', 'Cormorant Garamond', Georgia, serif;
+  font-family: Arial, sans-serif;
   font-size: clamp(2rem, 3.6vw, 3.7rem);
   font-weight: 800;
   line-height: 1.15;
@@ -195,7 +195,7 @@
 
 .contact-form-box h2,
 .contact-map-box h2 {
-  font-family: 'Playfair Display', 'Cormorant Garamond', Georgia, serif;
+  font-family: Arial, sans-serif;
   font-weight: 700;
   font-size: 1.75rem;
   line-height: 1.18;
@@ -366,7 +366,7 @@
 }
 
 .faq-head h2 {
-  font-family: 'Playfair Display', Georgia, serif;
+  font-family: Arial, sans-serif;
   font-weight: 700;
   font-size: 1.75rem;
   color: var(--contact-blue);
@@ -425,7 +425,7 @@
 }
 
 .faq-item summary span {
-  font-family: 'Playfair Display', Georgia, serif;
+  font-family: Arial, sans-serif;
   font-size: 1.02rem;
   font-weight: 700;
   color: var(--contact-blue);
@@ -598,4 +598,37 @@
     width: 100%;
     text-align: center;
   }
+}
+
+/* === TÍTULOS EN IMAGEN (data-i18n-src) === */
+
+.contact-form-box .section-title-img,
+.contact-map-box .section-title-img {
+  display: block;
+  max-width: 200px;
+  height: auto;
+  margin-bottom: 24px;
+}
+
+.contact-form-box:has(.section-title-img)::before,
+.contact-map-box:has(.section-title-img)::before {
+  content: none;
+}
+
+.faq-head .section-title-img {
+  display: block;
+  max-width: 420px;
+  height: auto;
+  margin-top: 10px;
+  margin-bottom: 14px;
+}
+
+.faq-head:has(.section-title-img)::after {
+  content: "";
+  display: block;
+  width: 72px;
+  height: 3px;
+  border-radius: 2px;
+  background: var(--contact-red);
+  margin-bottom: 0;
 }

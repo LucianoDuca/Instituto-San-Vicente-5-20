@@ -146,7 +146,7 @@
 
 .en-info-card h1 {
   color: #083656;
-  font-family: 'Playfair Display', Georgia, serif;
+  font-family: Arial, sans-serif;
   font-size: clamp(1.5rem, 2.5vw, 2.1rem);
   font-weight: 800;
   line-height: 1.15;
@@ -268,7 +268,7 @@
 
 .en-proposal-text h2 {
   color: #083656;
-  font-family: 'Playfair Display', Georgia, serif;
+  font-family: Arial, sans-serif;
   font-size: clamp(2rem, 4vw, 3rem);
   font-weight: 800;
   line-height: 1;
@@ -434,6 +434,27 @@
   width: 44px;
   height: 4px;
   margin: 12px auto 0;
+  background: #ff2b1c;
+  border-radius: 999px;
+}
+
+.en-certs-head .section-title-img {
+  display: block;
+  max-width: 420px;
+  height: auto;
+  margin: 0 auto 0;
+}
+
+.en-certs-head .section-title-img + p {
+  margin-top: 12px;
+}
+
+.en-certs-head:has(.section-title-img)::after {
+  content: "";
+  display: block;
+  width: 44px;
+  height: 4px;
+  margin: 12px auto 12px;
   background: #ff2b1c;
   border-radius: 999px;
 }
@@ -676,7 +697,7 @@
 
 .en-inmersion-content h2 {
   color: #ffffff;
-  font-family: 'Playfair Display', Georgia, serif;
+  font-family: Arial, sans-serif;
   font-size: clamp(1.65rem, 2.8vw, 2.5rem);
   font-weight: 800;
   line-height: 1.15;
@@ -740,7 +761,7 @@
 }
 
 .en-final-cta h2 {
-  font-family: 'Playfair Display', Georgia, serif;
+  font-family: Arial, sans-serif;
   font-size: clamp(2rem, 4vw, 3rem);
   font-weight: 800;
   margin-bottom: 12px;

@@ -81,6 +81,15 @@
   margin-bottom: 12px;
 }
 
+.login-brand .login-title-img {
+  display: block;
+  width: auto;
+  max-width: 70%;
+  height: auto;
+  margin-bottom: 12px;
+  filter: none;
+}
+
 .login-brand p {
   max-width: 500px;
   color: #5c7182;

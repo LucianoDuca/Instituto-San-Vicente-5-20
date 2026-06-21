@@ -262,7 +262,7 @@
 }
 
 .club-about h2 {
-  font-family: 'Playfair Display', Georgia, serif;
+  font-family: Arial, sans-serif;
   font-size: clamp(1.8rem, 3vw, 2.8rem);
   font-weight: 800;
   color: var(--cs-white);
@@ -313,7 +313,7 @@
 }
 
 .club-section-head h2 {
-  font-family: 'Playfair Display', Georgia, serif;
+  font-family: Arial, sans-serif;
   font-size: clamp(1.8rem, 3vw, 2.6rem);
   font-weight: 800;
   color: var(--cs-blue);
@@ -392,7 +392,7 @@
 }
 
 .ca-content h3 {
-  font-family: 'Playfair Display', Georgia, serif;
+  font-family: Arial, sans-serif;
   font-size: clamp(2rem, 3vw, 2.8rem);
   font-weight: 800;
   color: var(--cs-white);
@@ -538,7 +538,7 @@
 }
 
 .cg-intro h2 {
-  font-family: 'Playfair Display', Georgia, serif;
+  font-family: Arial, sans-serif;
   font-size: clamp(2rem, 3.5vw, 3rem);
   font-weight: 800;
   color: var(--cs-white);
@@ -726,7 +726,7 @@
 }
 
 .club-cta h2 {
-  font-family: 'Playfair Display', Georgia, serif;
+  font-family: Arial, sans-serif;
   font-size: clamp(2rem, 4vw, 3.4rem);
   font-weight: 800;
   color: var(--cs-white);
@@ -759,7 +759,7 @@
 
 .club-cta-tagline {
   margin-top: 40px !important;
-  font-family: 'Playfair Display', Georgia, serif;
+  font-family: Arial, sans-serif;
   font-style: italic;
   font-size: clamp(1.15rem, 2vw, 1.65rem) !important;
   color: rgba(255,255,255,0.60) !important;

@@ -200,6 +200,13 @@ body {
   color: #fff;
 }
 
+.intro-card-title-img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  margin-bottom: 18px;
+}
+
 .intro-card p {
   line-height: 1.7;
   color: rgba(255, 255, 255, 0.82);
