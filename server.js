@@ -913,11 +913,28 @@ app.post("/api/admin/club-sanvi/galeria", soloAdmin, async (req, res) => {
 app.delete("/api/admin/club-sanvi/galeria/:id", soloAdmin, async (req, res) => {
   try {
     const { id } = req.params;
+
+    const { data: foto } = await supabaseAdmin
+      .from("club_galeria")
+      .select("url")
+      .eq("id", id)
+      .single();
+
     const { error } = await supabaseAdmin
       .from("club_galeria")
       .delete()
       .eq("id", id);
     if (error) return res.status(500).json({ error: error.message });
+
+    if (foto?.url) {
+      const marker = "/object/public/club-sanvi/";
+      const idx    = foto.url.indexOf(marker);
+      if (idx !== -1) {
+        const path = foto.url.slice(idx + marker.length);
+        await supabaseAdmin.storage.from("club-sanvi").remove([path]);
+      }
+    }
+
     return res.json({ ok: true });
   } catch (e) {
     return res.status(500).json({ error: e.message });

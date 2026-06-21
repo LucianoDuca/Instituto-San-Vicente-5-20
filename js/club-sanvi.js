@@ -120,48 +120,79 @@ var openLightbox = null;
 })();
 
 /* =============================================
-   GALERÍA MASONRY — filtros + lightbox
+   GALERÍA MASONRY — filtros + lightbox + API
 ============================================= */
 (function () {
   var filters  = document.querySelectorAll('.cg-filter');
   var masonry  = document.getElementById('cgMasonry');
   if (!masonry) return;
 
-  var items    = masonry.querySelectorAll('.cg-item');
   var currentFilter = 'all';
 
-  /* Filtro por disciplina */
-  filters.forEach(function (btn) {
-    btn.addEventListener('click', function () {
-      currentFilter = this.getAttribute('data-filter');
+  function capitalize(str) {
+    if (!str) return '';
+    return str.charAt(0).toUpperCase() + str.slice(1);
+  }
 
-      filters.forEach(function (b) { b.classList.remove('active'); });
-      this.classList.add('active');
+  function buildItem(data) {
+    var div = document.createElement('div');
+    div.className = 'cg-item';
+    div.setAttribute('data-disc', data.disciplina);
+    div.innerHTML =
+      '<img src="' + data.url + '" alt="' + (data.alt || data.disciplina) + '" loading="lazy" decoding="async">' +
+      '<div class="cg-overlay"><span class="cg-badge">' + capitalize(data.disciplina) + '</span></div>';
+    return div;
+  }
 
-      /* Fade out → reordenar → fade in */
-      masonry.classList.add('cg-fading');
-      setTimeout(function () {
-        items.forEach(function (item) {
-          var disc = item.getAttribute('data-disc');
-          var show = currentFilter === 'all' || disc === currentFilter;
-          item.style.display = show ? '' : 'none';
-        });
-        masonry.classList.remove('cg-fading');
-      }, 260);
+  function applyFilter(items, filter) {
+    items.forEach(function (item) {
+      var disc = item.getAttribute('data-disc');
+      item.style.display = (filter === 'all' || disc === filter) ? '' : 'none';
     });
-  });
+  }
 
-  /* Lightbox — abre con todas las fotos visibles y navega entre ellas */
-  items.forEach(function (item) {
-    item.addEventListener('click', function () {
-      var visible = Array.from(items).filter(function (i) {
-        return i.style.display !== 'none';
-      });
-      var images = visible.map(function (i) {
-        return i.querySelector('img').src;
-      });
-      var idx = visible.indexOf(this);
-      if (openLightbox) openLightbox(images, idx);
+  function initGallery() {
+    var items = Array.from(masonry.querySelectorAll('.cg-item'));
+
+    applyFilter(items, currentFilter);
+
+    /* Filtros */
+    filters.forEach(function (btn) {
+      btn.onclick = function () {
+        currentFilter = this.getAttribute('data-filter');
+        filters.forEach(function (b) { b.classList.remove('active'); });
+        this.classList.add('active');
+        masonry.classList.add('cg-fading');
+        setTimeout(function () {
+          applyFilter(Array.from(masonry.querySelectorAll('.cg-item')), currentFilter);
+          masonry.classList.remove('cg-fading');
+        }, 260);
+      };
     });
-  });
+
+    /* Lightbox */
+    items.forEach(function (item) {
+      item.addEventListener('click', function () {
+        var all     = Array.from(masonry.querySelectorAll('.cg-item'));
+        var visible = all.filter(function (i) { return i.style.display !== 'none'; });
+        var images  = visible.map(function (i) { return i.querySelector('img').src; });
+        var idx     = visible.indexOf(this);
+        if (openLightbox) openLightbox(images, idx);
+      });
+    });
+  }
+
+  /* Arrancar con el contenido estático primero (sin flash) */
+  initGallery();
+
+  /* Luego reemplazar con datos de la DB si los hay */
+  fetch('/api/club-sanvi/galeria')
+    .then(function (r) { return r.json(); })
+    .then(function (data) {
+      if (!Array.isArray(data) || !data.length) return;
+      masonry.innerHTML = '';
+      data.forEach(function (item) { masonry.appendChild(buildItem(item)); });
+      initGallery();
+    })
+    .catch(function () { /* fallback: mantiene el HTML estático */ });
 })();
