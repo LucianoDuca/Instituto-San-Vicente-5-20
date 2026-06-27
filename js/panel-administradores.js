@@ -759,7 +759,7 @@ document.querySelectorAll(".eg-tab").forEach(function (btn) {
       cargarGaleria();
       cargarDisciplinasAdmin();
     } else {
-      cargarSvSeccion(svSeccionActiva);
+      renderSvAccordion();
     }
   });
 });
@@ -771,7 +771,7 @@ document.querySelector('[data-section="edicion-galeria"]')?.addEventListener("cl
     cargarGaleria();
     cargarDisciplinasAdmin();
   } else {
-    cargarSvSeccion(svSeccionActiva);
+    renderSvAccordion();
   }
 });
 
@@ -780,58 +780,145 @@ document.querySelector('[data-section="edicion-galeria"]')?.addEventListener("cl
 ============================================= */
 
 var SV_SECCIONES = {
-  hero:          { label: "Inicio — Sección Hero",          slots: 4  },
-  instalaciones: { label: "Inicio — Instalaciones",         slots: 5  },
-  inicios:       { label: "Inicio — Inicios 2014",          slots: 4  },
-  edificios:     { label: "Instituto — Edificios",          slots: 10 },
-  kinder:        { label: "Nivel Inicial — Kinder",         slots: 5  },
-  primario:      { label: "Nivel Primario",                 slots: 5  },
-  secundario:    { label: "Nivel Secundario",               slots: 4  },
-  academic:      { label: "Academic Levels",                slots: 3  }
+  hero: {
+    label: "Hero — Carrusel del Inicio",
+    desc: "Las 4 imágenes que rotan en el carrusel principal de la página de inicio.",
+    slots: 4
+  },
+  inscripcion: {
+    label: "Inicio — Fondo Inscripción 2027",
+    desc: "La imagen de fondo de la sección 'Inscripción: Ciclo Lectivo 2027'. Se aplica como fondo de pantalla completa en la página de inicio.",
+    slots: 1,
+    bg: true
+  },
+  instalaciones: {
+    label: "Inicio — Galería Instalaciones",
+    desc: "Las 5 fotos que aparecen en la sección de instalaciones del instituto en la página de inicio.",
+    slots: 5
+  },
+  inicios: {
+    label: "Inicio — Galería Inicios 2014",
+    desc: "Las 4 fotos históricas de la sección 'Nuestros Inicios 2014' en la página de inicio.",
+    slots: 4
+  },
+  edificios: {
+    label: "Instituto — Galería Edificios",
+    desc: "Las 10 fotos de los edificios e instalaciones del campus que aparecen en la página del instituto.",
+    slots: 10
+  },
+  kinder: {
+    label: "Nivel Inicial — Galería Kinder",
+    desc: "Las 5 fotos del carrusel y galería de la página de Nivel Inicial (Kinder).",
+    slots: 5
+  },
+  primario: {
+    label: "Nivel Primario — Galería",
+    desc: "Las 5 fotos del carrusel y galería de la página de Nivel Primario.",
+    slots: 5
+  },
+  secundario: {
+    label: "Nivel Secundario — Galería",
+    desc: "Las 4 fotos del carrusel y galería de la página de Nivel Secundario.",
+    slots: 4
+  },
+  academic: {
+    label: "Academic Levels — Portadas",
+    desc: "Las 3 imágenes de portada de las tarjetas de niveles en la página Academic Levels.",
+    slots: 3,
+    slotNames: ["Portada Kinder", "Portada Primario", "Portada Secundario"]
+  }
 };
 
-var svSeccionActiva = "hero";
+var SV_GRUPOS = [
+  { label: "Inicio",             secciones: ["hero", "inscripcion", "instalaciones", "inicios"] },
+  { label: "Instituto",          secciones: ["edificios"] },
+  { label: "Niveles Académicos", secciones: ["kinder", "primario", "secundario", "academic"] }
+];
 
-document.getElementById("svTabs")?.querySelectorAll(".sv-tab").forEach(function (btn) {
-  btn.addEventListener("click", function () {
-    document.querySelectorAll(".sv-tab").forEach(function (b) { b.classList.remove("active"); });
-    btn.classList.add("active");
-    svSeccionActiva = btn.dataset.svTab;
-    cargarSvSeccion(svSeccionActiva);
-  });
-});
-
-async function cargarSvSeccion(seccion) {
-  var container = document.getElementById("svGaleriaContainer");
+function renderSvAccordion() {
+  var container = document.getElementById("svAccordion");
   if (!container) return;
-  container.innerHTML = skeletonCards(4).replace(/skeleton-card/g, "skeleton sv-skel");
+
+  var html = "";
+  SV_GRUPOS.forEach(function (grupo) {
+    html += "<div class='sv-acc-group'>";
+    html += "<p class='sv-acc-group-label'>" + grupo.label + "</p>";
+
+    grupo.secciones.forEach(function (key) {
+      var cfg = SV_SECCIONES[key];
+      html += "<div class='sv-acc-item' data-seccion='" + key + "'>";
+      html += "<button class='sv-acc-trigger' aria-expanded='false'>";
+      html += "<div class='sv-acc-trigger-main'>";
+      html += "<strong class='sv-acc-name'>" + cfg.label + "</strong>";
+      html += "<span class='sv-acc-badge'>" + cfg.slots + (cfg.slots === 1 ? " foto" : " fotos") + "</span>";
+      html += "</div>";
+      html += "<span class='sv-acc-arrow'></span>";
+      html += "</button>";
+      html += "<div class='sv-acc-body' hidden>";
+      html += "<p class='sv-acc-desc'>" + cfg.desc + "</p>";
+      html += "<div class='sv-acc-slots' id='sv-slots-" + key + "'></div>";
+      html += "</div>";
+      html += "</div>";
+    });
+
+    html += "</div>";
+  });
+
+  container.innerHTML = html;
+
+  container.querySelectorAll(".sv-acc-trigger").forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      var item = this.closest(".sv-acc-item");
+      var body = item.querySelector(".sv-acc-body");
+      var isOpen = this.getAttribute("aria-expanded") === "true";
+
+      if (isOpen) {
+        this.setAttribute("aria-expanded", "false");
+        body.hidden = true;
+      } else {
+        this.setAttribute("aria-expanded", "true");
+        body.hidden = false;
+        if (!item.dataset.loaded) {
+          item.dataset.loaded = "1";
+          cargarSvSeccion(item.dataset.seccion, item.querySelector(".sv-acc-slots"));
+        }
+      }
+    });
+  });
+}
+
+async function cargarSvSeccion(seccion, container) {
+  if (!container) container = document.getElementById("sv-slots-" + seccion);
+  if (!container) return;
+  container.innerHTML = skeletonCards(Math.min(SV_SECCIONES[seccion]?.slots || 4, 6)).replace(/skeleton-card/g, "skeleton sv-skel");
   try {
     var response = await fetchAuth("/api/sv/imagenes/" + seccion);
     if (!response) return;
     var data = await response.json();
     if (!response.ok) throw new Error(data.error);
-    renderSvGrid(seccion, data);
+    renderSvGrid(seccion, data, container);
   } catch (e) {
     container.innerHTML = "<p class='status error'>" + e.message + "</p>";
   }
 }
 
-function renderSvGrid(seccion, items) {
-  var container = document.getElementById("svGaleriaContainer");
+function renderSvGrid(seccion, items, container) {
+  if (!container) container = document.getElementById("sv-slots-" + seccion);
   var config = SV_SECCIONES[seccion];
   var bySlot = {};
   items.forEach(function (item) { bySlot[item.slot] = item; });
 
-  var html = "<p class='sv-section-title'>" + config.label + "</p><div class='sv-slots-grid'>";
+  var html = "<div class='sv-slots-grid'>";
   for (var s = 1; s <= config.slots; s++) {
     var item = bySlot[s];
     var imgSrc = item ? escaparHTML(item.url) : "";
+    var slotLabel = config.slotNames ? config.slotNames[s - 1] : "Foto " + s;
     html += "<div class='sv-slot-card' data-seccion='" + seccion + "' data-slot='" + s + "'>" +
       "<div class='sv-slot-img'>" +
-      (imgSrc ? "<img src='" + imgSrc + "' alt='Slot " + s + "'>" : "<div class='sv-slot-empty'>Sin imagen</div>") +
+      (imgSrc ? "<img src='" + imgSrc + "' alt='" + slotLabel + "'>" : "<div class='sv-slot-empty'>Sin imagen</div>") +
       "</div>" +
       "<div class='sv-slot-footer'>" +
-      "<span class='sv-slot-label'>Slot " + s + "</span>" +
+      "<span class='sv-slot-label'>" + slotLabel + "</span>" +
       "<label class='sv-slot-btn'>Cambiar<input type='file' accept='.webp' class='sv-file-input' data-seccion='" + seccion + "' data-slot='" + s + "'></label>" +
       "</div>" +
       "<p class='sv-slot-status status'></p>" +

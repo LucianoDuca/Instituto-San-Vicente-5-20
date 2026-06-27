@@ -24,8 +24,14 @@
         data.forEach(function (item) {
           var entry = sections[sec].find(function (e) { return e.slot === item.slot; });
           if (entry && item.url) {
-            entry.img.src = item.url;
-            if (item.alt) entry.img.alt = item.alt;
+            if (entry.img.tagName === 'IMG') {
+              entry.img.src = item.url;
+              if (item.alt) entry.img.alt = item.alt;
+            } else {
+              entry.img.style.backgroundImage = 'url(' + item.url + ')';
+              entry.img.style.backgroundSize = 'cover';
+              entry.img.style.backgroundPosition = 'center';
+            }
           }
         });
       })

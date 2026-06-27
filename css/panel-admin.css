@@ -143,14 +143,23 @@ body{margin:0;font-family:Segoe UI,Arial,sans-serif;background:#eef3f7;color:#12
 .eg-panel{display:none}.eg-panel.active{display:block}
 
 /* =============================================
-   SAN VICENTE PANEL
+   SAN VICENTE PANEL — ACORDEÓN
 ============================================= */
-.sv-tabs{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:20px;align-items:center}
-.sv-tab{border:0;border-radius:14px;padding:10px 16px;font-weight:800;cursor:pointer;background:#e8eef3;color:#0b3558;font-size:.82rem;transition:background .2s}
-.sv-tab.active{background:#0b4a78;color:#fff}
-.sv-tab-group{font-size:.64rem;font-weight:900;text-transform:uppercase;letter-spacing:.12em;color:#8fa0b0;padding:0 2px;user-select:none}
-.sv-section-title{margin:0 0 16px;font-size:.72rem;font-weight:900;text-transform:uppercase;letter-spacing:.1em;color:#8fa0b0}
-.sv-slots-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:14px;margin-top:6px}
+.sv-accordion{display:grid;gap:20px}
+.sv-acc-group{display:grid;gap:8px}
+.sv-acc-group-label{margin:0;font-size:.66rem;font-weight:900;text-transform:uppercase;letter-spacing:.12em;color:#8fa0b0}
+.sv-acc-item{border:1px solid rgba(11,53,88,.12);border-radius:16px;overflow:hidden;background:#fff;box-shadow:0 2px 8px rgba(16,32,51,.04)}
+.sv-acc-trigger{width:100%;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:16px 20px;background:none;border:0;cursor:pointer;text-align:left;transition:background .18s}
+.sv-acc-trigger:hover{background:#f4f8fb}
+.sv-acc-trigger[aria-expanded="true"]{background:#f0f6fb;border-bottom:1px solid rgba(11,53,88,.1)}
+.sv-acc-trigger-main{display:flex;align-items:center;gap:10px;flex:1;min-width:0}
+.sv-acc-name{font-size:.88rem;color:#0b3558;font-weight:800}
+.sv-acc-badge{font-size:.67rem;font-weight:900;background:#eaf0f5;color:#30485f;padding:3px 9px;border-radius:999px;white-space:nowrap;flex-shrink:0}
+.sv-acc-arrow{width:8px;height:8px;border-right:2px solid #8fa0b0;border-bottom:2px solid #8fa0b0;transform:rotate(-45deg);transition:transform .2s;flex-shrink:0;margin-right:4px}
+.sv-acc-trigger[aria-expanded="true"] .sv-acc-arrow{transform:rotate(45deg)}
+.sv-acc-body{padding:16px 20px 20px}
+.sv-acc-desc{margin:0 0 16px;font-size:.82rem;color:#66798b;line-height:1.55;background:#f8fbfd;border-radius:10px;padding:10px 14px}
+.sv-slots-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:14px}
 .sv-slot-card{border:1px solid rgba(11,53,88,.1);border-radius:14px;overflow:hidden;background:#f8fbfd}
 .sv-slot-img{aspect-ratio:4/3;background:#071f34;overflow:hidden}
 .sv-slot-img img{width:100%;height:100%;object-fit:contain;display:block}
@@ -161,4 +170,4 @@ body{margin:0;font-family:Segoe UI,Arial,sans-serif;background:#eef3f7;color:#12
 .sv-slot-btn input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
 .sv-slot-status{margin:0 12px 10px;font-size:.74rem;min-height:16px}
 .sv-skel{height:140px!important;border-radius:14px!important}
-@media(max-width:640px){.sv-slots-grid{grid-template-columns:repeat(auto-fill,minmax(140px,1fr))}}
+@media(max-width:640px){.sv-slots-grid{grid-template-columns:repeat(auto-fill,minmax(140px,1fr))}.sv-acc-trigger{padding:14px 16px}.sv-acc-body{padding:14px 16px 18px}}
