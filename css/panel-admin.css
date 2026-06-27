@@ -145,9 +145,11 @@ body{margin:0;font-family:Segoe UI,Arial,sans-serif;background:#eef3f7;color:#12
 /* =============================================
    SAN VICENTE PANEL
 ============================================= */
-.sv-tabs{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:20px}
+.sv-tabs{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:20px;align-items:center}
 .sv-tab{border:0;border-radius:14px;padding:10px 16px;font-weight:800;cursor:pointer;background:#e8eef3;color:#0b3558;font-size:.82rem;transition:background .2s}
 .sv-tab.active{background:#0b4a78;color:#fff}
+.sv-tab-group{font-size:.64rem;font-weight:900;text-transform:uppercase;letter-spacing:.12em;color:#8fa0b0;padding:0 2px;user-select:none}
+.sv-section-title{margin:0 0 16px;font-size:.72rem;font-weight:900;text-transform:uppercase;letter-spacing:.1em;color:#8fa0b0}
 .sv-slots-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:14px;margin-top:6px}
 .sv-slot-card{border:1px solid rgba(11,53,88,.1);border-radius:14px;overflow:hidden;background:#f8fbfd}
 .sv-slot-img{aspect-ratio:4/3;background:#071f34;overflow:hidden}

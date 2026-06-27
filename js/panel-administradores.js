@@ -644,7 +644,7 @@ async function cargarDisciplinasAdmin() {
                style="${disc.foto_url ? "" : "display:none"}">
           <label class="cs-disc-photo-overlay">
             📷
-            <input type="file" accept="image/*" class="cs-disc-file" data-slug="${escaparHTML(disc.slug)}">
+            <input type="file" accept=".webp" class="cs-disc-file" data-slug="${escaparHTML(disc.slug)}">
           </label>
         </div>
         <div class="cs-disc-form-inner">
@@ -780,14 +780,14 @@ document.querySelector('[data-section="edicion-galeria"]')?.addEventListener("cl
 ============================================= */
 
 var SV_SECCIONES = {
-  hero:          { label: "Hero (Inicio)",  slots: 4  },
-  instalaciones: { label: "Instalaciones", slots: 5  },
-  inicios:       { label: "Inicios 2014",  slots: 4  },
-  edificios:     { label: "Edificios",     slots: 10 },
-  kinder:        { label: "Kinder",        slots: 5  },
-  primario:      { label: "Primario",      slots: 5  },
-  secundario:    { label: "Secundario",    slots: 4  },
-  academic:      { label: "Academic Levels", slots: 3 }
+  hero:          { label: "Inicio — Sección Hero",          slots: 4  },
+  instalaciones: { label: "Inicio — Instalaciones",         slots: 5  },
+  inicios:       { label: "Inicio — Inicios 2014",          slots: 4  },
+  edificios:     { label: "Instituto — Edificios",          slots: 10 },
+  kinder:        { label: "Nivel Inicial — Kinder",         slots: 5  },
+  primario:      { label: "Nivel Primario",                 slots: 5  },
+  secundario:    { label: "Nivel Secundario",               slots: 4  },
+  academic:      { label: "Academic Levels",                slots: 3  }
 };
 
 var svSeccionActiva = "hero";
@@ -822,7 +822,7 @@ function renderSvGrid(seccion, items) {
   var bySlot = {};
   items.forEach(function (item) { bySlot[item.slot] = item; });
 
-  var html = "<div class='sv-slots-grid'>";
+  var html = "<p class='sv-section-title'>" + config.label + "</p><div class='sv-slots-grid'>";
   for (var s = 1; s <= config.slots; s++) {
     var item = bySlot[s];
     var imgSrc = item ? escaparHTML(item.url) : "";
@@ -832,7 +832,7 @@ function renderSvGrid(seccion, items) {
       "</div>" +
       "<div class='sv-slot-footer'>" +
       "<span class='sv-slot-label'>Slot " + s + "</span>" +
-      "<label class='sv-slot-btn'>Cambiar<input type='file' accept='image/*' class='sv-file-input' data-seccion='" + seccion + "' data-slot='" + s + "'></label>" +
+      "<label class='sv-slot-btn'>Cambiar<input type='file' accept='.webp' class='sv-file-input' data-seccion='" + seccion + "' data-slot='" + s + "'></label>" +
       "</div>" +
       "<p class='sv-slot-status status'></p>" +
       "</div>";
