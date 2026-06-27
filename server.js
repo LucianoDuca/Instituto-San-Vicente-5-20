@@ -889,6 +889,9 @@ app.post("/api/admin/club-sanvi/galeria", soloAdmin, async (req, res) => {
     if (!url || !disciplina) {
       return res.status(400).json({ error: "url y disciplina son obligatorios" });
     }
+    if (!url.toLowerCase().endsWith(".webp")) {
+      return res.status(400).json({ error: "Solo se aceptan imágenes en formato .webp" });
+    }
 
     const { data: existing } = await supabaseAdmin
       .from("club_galeria")

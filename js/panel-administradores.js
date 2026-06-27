@@ -504,8 +504,8 @@ document.getElementById("csImageInput")?.addEventListener("change", function () 
 });
 
 async function subirImagenStorage(file, carpeta) {
-  const ext  = file.name.split(".").pop();
-  const path = `${carpeta}/${Date.now()}.${ext}`;
+  if (file.type !== "image/webp") throw new Error("Solo se aceptan imágenes en formato .webp");
+  const path = `${carpeta}/${Date.now()}.webp`;
   const { error } = await window.supabaseClient.storage
     .from("club-sanvi")
     .upload(path, file, { cacheControl: "3600", upsert: false });
@@ -586,6 +586,7 @@ document.getElementById("csGaleriaForm")?.addEventListener("submit", async funct
   const alt       = form.get("alt") || disciplina;
 
   if (!file)      return setStatus(status, "Seleccioná una imagen primero.", "error");
+  if (file.type !== "image/webp") return setStatus(status, "Solo se aceptan imágenes .webp. Convertí la foto antes de subirla.", "error");
   if (!disciplina) return setStatus(status, "Seleccioná una disciplina.", "error");
 
   try {
