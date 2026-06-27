@@ -10,7 +10,7 @@ const loaderMarkup = `
       <div class="route-loader__logo-wrap">
         <div class="route-loader__glow"></div>
         <img
-          src="${_loaderBase}assets/img/logo.webp"
+          src="${_loaderBase}assets/img/Sanvi Logos/logo.webp"
           alt="Instituto San Vicente"
           class="route-loader__logo"
         >
