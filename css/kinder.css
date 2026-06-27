@@ -368,7 +368,7 @@
   padding: 42px 46px;
   background:
     linear-gradient(90deg, rgba(8, 54, 86, 0.96) 0%, rgba(8, 54, 86, 0.76) 42%, rgba(8, 54, 86, 0.18) 100%),
-    url("../assets/img/niveles-iniciales/kinder/IMG-20260319-WA0070.webp") center/cover no-repeat;
+    url("../assets/img/academic-levels/inicial-kinder/galeria/IMG-20260319-WA0070.webp") center/cover no-repeat;
   display: flex;
   align-items: center;
 }
@@ -478,7 +478,7 @@
     padding: 34px 24px;
     background:
       linear-gradient(90deg, rgba(8, 54, 86, 0.94), rgba(8, 54, 86, 0.78)),
-      url("../assets/img/niveles-iniciales/kinder/IMG-20260319-WA0070.webp") center/cover no-repeat;
+      url("../assets/img/academic-levels/inicial-kinder/galeria/IMG-20260319-WA0070.webp") center/cover no-repeat;
   }
 }
 

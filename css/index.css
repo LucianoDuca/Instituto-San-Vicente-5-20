@@ -820,7 +820,7 @@ body {
   position: relative;
   width: 100%;
   min-height: 320px;
-  background: url("../assets/img/footer.webp") center/cover no-repeat;
+  background: url("../assets/img/inicio-ourschool/footer.webp") center/cover no-repeat;
   display: flex;
   align-items: center;
   overflow: hidden;
