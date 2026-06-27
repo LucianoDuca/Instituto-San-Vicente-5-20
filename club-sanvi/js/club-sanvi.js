@@ -149,7 +149,7 @@ var openLightbox = null;
 
 /* =============================================
    GALERÍA MASONRY — filtros + lightbox
-   La galería se carga desde /api/club-sanvi/galeria.
+   La galería se carga desde Supabase (club_galeria).
    Si la API devuelve items, reemplaza el HTML estático.
    Si falla o devuelve vacío, usa los items estáticos como fallback.
 ============================================= */
@@ -198,26 +198,28 @@ var openLightbox = null;
     });
   });
 
-  /* Cargar galería desde API */
-  fetch('/api/club-sanvi/galeria')
-    .then(function (r) { return r.json(); })
-    .then(function (data) {
-      if (!Array.isArray(data) || !data.length) {
+  /* Cargar galería desde Supabase */
+  if (window.supabaseClient) {
+    window.supabaseClient
+      .from('club_galeria')
+      .select('*')
+      .order('created_at', { ascending: false })
+      .then(function (result) {
+        var data = result.data;
+        if (result.error || !Array.isArray(data) || !data.length) { bindLightbox(getItems()); return; }
+        masonry.innerHTML = data.map(function (item) {
+          var badge = item.disciplina.charAt(0).toUpperCase() + item.disciplina.slice(1);
+          return '<div class="cg-item" data-disc="' + item.disciplina + '">' +
+            '<img src="' + item.url + '" alt="' + (item.alt || 'Club Sanvi') + '" loading="lazy" decoding="async">' +
+            '<div class="cg-overlay"><span class="cg-badge">' + badge + '</span></div>' +
+            '</div>';
+        }).join('');
         bindLightbox(getItems());
-        return;
-      }
-      masonry.innerHTML = data.map(function (item) {
-        var badge = item.disciplina.charAt(0).toUpperCase() + item.disciplina.slice(1);
-        return '<div class="cg-item" data-disc="' + item.disciplina + '">' +
-          '<img src="' + item.url + '" alt="' + (item.alt || 'Club Sanvi') + '" loading="lazy" decoding="async">' +
-          '<div class="cg-overlay"><span class="cg-badge">' + badge + '</span></div>' +
-          '</div>';
-      }).join('');
-      bindLightbox(getItems());
-    })
-    .catch(function () {
-      bindLightbox(getItems());
-    });
+      })
+      .catch(function () { bindLightbox(getItems()); });
+  } else {
+    bindLightbox(getItems());
+  }
 })();
 
 /* =============================================
@@ -225,26 +227,29 @@ var openLightbox = null;
    Usa los estáticos como fallback si la API no responde.
 ============================================= */
 (function () {
-  fetch('/api/club-sanvi/disciplinas')
-    .then(function (r) { return r.json(); })
-    .then(function (data) {
-      if (!Array.isArray(data)) return;
-      data.forEach(function (disc) {
-        var row = document.querySelector('[data-disciplina="' + disc.slug + '"]');
-        if (!row) return;
-        if (disc.foto_url) {
-          var img = row.querySelector('.ca-photo img');
-          if (img) img.src = disc.foto_url;
-        }
-        if (disc.nombre) {
-          var h3 = row.querySelector('.ca-content h3');
-          if (h3 && !h3.hasAttribute('data-i18n')) h3.textContent = disc.nombre;
-        }
-        if (disc.descripcion) {
-          var p = row.querySelector('.ca-feature p');
-          if (p && !p.hasAttribute('data-i18n')) p.textContent = disc.descripcion;
-        }
-      });
-    })
-    .catch(function () {});
+  if (window.supabaseClient) {
+    window.supabaseClient
+      .from('club_disciplinas')
+      .select('*')
+      .then(function (result) {
+        if (result.error || !Array.isArray(result.data)) return;
+        result.data.forEach(function (disc) {
+          var row = document.querySelector('[data-disciplina="' + disc.slug + '"]');
+          if (!row) return;
+          if (disc.foto_url) {
+            var img = row.querySelector('.ca-photo img');
+            if (img) img.src = disc.foto_url;
+          }
+          if (disc.nombre) {
+            var h3 = row.querySelector('.ca-content h3');
+            if (h3 && !h3.hasAttribute('data-i18n')) h3.textContent = disc.nombre;
+          }
+          if (disc.descripcion) {
+            var p = row.querySelector('.ca-feature p');
+            if (p && !p.hasAttribute('data-i18n')) p.textContent = disc.descripcion;
+          }
+        });
+      })
+      .catch(function () {});
+  }
 })();
