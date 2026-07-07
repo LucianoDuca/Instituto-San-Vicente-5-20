@@ -12,6 +12,7 @@ app.use(express.json({ limit: "200kb" }));
 
 app.get("/contacto/", (req, res) => res.redirect(301, "/contacto.html"));
 app.get("/usuariosanvi/", (req, res) => res.redirect(301, "/login.html"));
+app.get("/home/", (req, res) => res.redirect(301, "/index.html"));
 
 app.use(express.static(__dirname));
 
