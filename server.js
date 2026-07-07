@@ -7,6 +7,12 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 app.use(express.json({ limit: "200kb" }));
+
+/* REDIRECCIONES — URLs viejas de WordPress indexadas en Google */
+
+app.get("/contacto/", (req, res) => res.redirect(301, "/contacto.html"));
+app.get("/usuariosanvi/", (req, res) => res.redirect(301, "/login.html"));
+
 app.use(express.static(__dirname));
 
 const resend = new Resend(process.env.RESEND_API_KEY);
