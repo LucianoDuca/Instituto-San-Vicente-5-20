@@ -7,6 +7,9 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 app.use(express.json({ limit: "200kb" }));
+
+app.get("/club-sanvi/", (req, res) => res.redirect(301, "https://sanviclub.onrender.com/"));
+
 app.use(express.static(__dirname));
 
 const resend = new Resend(process.env.RESEND_API_KEY);
