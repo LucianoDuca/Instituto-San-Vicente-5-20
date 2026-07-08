@@ -26,8 +26,8 @@ body{margin:0;font-family:Segoe UI,Arial,sans-serif;background:#eef3f7;color:#12
 .admin-form textarea{min-height:96px;resize:vertical}
 .admin-form input:focus,.admin-form select:focus,.admin-form textarea:focus,.search-input:focus{border-color:#0b4a78;box-shadow:0 0 0 4px rgba(11,74,120,.12)}
 .admin-form button,.card-head button{background:#0b4a78;color:#fff}
-.libretas-link-btn{display:inline-block;border:0;border-radius:14px;padding:13px 16px;font-weight:800;cursor:pointer;text-decoration:none;background:#0b4a78;color:#fff}
-.libretas-link-btn:hover{background:#123d61}
+.nav-link-external{display:block;border:0;border-radius:14px;padding:13px 16px;font-weight:800;cursor:pointer;text-decoration:none;background:transparent;color:#c8d7e4;text-align:left}
+.nav-link-external:hover{background:#123d61;color:#fff}
 .secondary{background:#e8eef3!important;color:#0b3558!important}.hidden{display:none!important}
 .form-actions{display:flex;gap:10px}.form-actions button{flex:1}
 .status{margin:0;font-weight:800}.status.success{color:#16803d}.status.error{color:#c1121f}
