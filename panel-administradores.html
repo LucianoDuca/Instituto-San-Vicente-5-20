@@ -14,7 +14,7 @@
   <div class="sidebar-overlay" id="sidebarOverlay"></div>
   <aside class="admin-sidebar">
     <div class="brand">
-      <span>ISV</span>
+      <img src="assets/img/Sanvi Logos/logo.webp" alt="Instituto San Vicente" class="brand-logo" />
       <div>
         <h2>San Vicente</h2>
         <p>Panel interno</p>
@@ -27,7 +27,7 @@
       <button class="nav-btn" data-section="biblioteca">Biblioteca</button>
       <button class="nav-btn" data-section="comunicados">Comunicados</button>
       <button class="nav-btn nav-btn--gallery" data-section="edicion-galeria">Edición Galería</button>
-      <a class="nav-link-external" href="http://libretas.institutosanvicente.com" target="_blank" rel="noopener noreferrer">Acceder a libretas (Viejo)</a>
+      <a class="nav-link-external" href="https://libretas.institutosanvicente.com" target="_blank" rel="noopener noreferrer">Acceder a libretas (Viejo)</a>
     </nav>
 
     <button id="logoutBtn" class="logout-btn">Cerrar sesión</button>
@@ -62,56 +62,75 @@
     </section>
 
     <section id="usuarios" class="admin-section">
-      <div class="two-columns">
-        <div class="admin-card">
-          <h2>Crear usuario</h2>
+      <div class="admin-card">
+        <div class="card-head">
+          <h2>Usuarios <span id="usersCount" class="list-counter"></span></h2>
+          <div class="card-head-actions">
+            <button id="toggleCreateUserBtn">Crear usuario</button>
+            <button id="reloadUsersBtn">Actualizar</button>
+          </div>
+        </div>
+        <div id="usersContainer" class="list-container"></div>
+      </div>
+
+      <div class="modal-overlay" id="createUserCard">
+        <div class="modal-box">
+          <button type="button" class="modal-close" id="closeCreateUserBtn" aria-label="Cerrar">✕</button>
+          <h2 id="userFormTitle">Crear usuario</h2>
 
           <form id="createUserForm" class="admin-form">
+            <input type="hidden" name="id" id="userId" />
             <input type="text" name="nombre" placeholder="Nombre" required />
             <input type="text" name="apellido" placeholder="Apellido" />
-            <input type="email" name="email" placeholder="usuario@docentes.com" required />
-            <input type="password" name="password" placeholder="Contraseña temporal" required />
+            <input type="password" name="password" id="userPasswordInput" placeholder="Contraseña (opcional, por defecto 12345)" />
 
-            <select name="nivel">
-              <option value="General">General</option>
+            <select name="rol" id="userRolSelect" required>
+              <option value="">— Rol de cuenta —</option>
+              <option value="admin">Administrador</option>
+              <option value="directivo">Directivo</option>
+              <option value="docente">Docente</option>
+            </select>
+
+            <select name="nivel" id="userNivelSelect" class="hidden">
+              <option value="">— Nivel —</option>
               <option value="Inicial">Inicial</option>
               <option value="Primario">Primario</option>
               <option value="Secundario">Secundario</option>
             </select>
 
-            <select name="area">
-              <option value="Institucional">Institucional</option>
-              <option value="Educación Física">Educación Física</option>
-              <option value="Inglés">Inglés</option>
-              <option value="Arte">Arte</option>
-              <option value="Matemática">Matemática</option>
-              <option value="Lengua">Lengua</option>
-              <option value="Ciencias">Ciencias</option>
-              <option value="Administración">Administración</option>
-            </select>
-
-            <input type="text" name="cargo" placeholder="Cargo / función" />
-            <textarea name="observaciones" placeholder="Observaciones"></textarea>
-
-            <p class="hint">Rol automático: @admin.com, @directivos.com o @docentes.com</p>
+            <p class="hint">El usuario institucional se genera automáticamente a partir del nombre y apellido. Si dejás la contraseña vacía, se asigna 12345.</p>
             <p id="adminStatus" class="status"></p>
-            <button id="createUserBtn" type="submit">Crear usuario</button>
+            <div class="form-actions">
+              <button id="createUserBtn" type="submit">Crear usuario</button>
+              <button id="cancelEditUserBtn" type="button" class="secondary hidden">Cancelar edición</button>
+            </div>
           </form>
-        </div>
-
-        <div class="admin-card">
-          <div class="card-head">
-            <h2>Usuarios existentes <span id="usersCount" class="list-counter"></span></h2>
-            <button id="reloadUsersBtn">Actualizar</button>
-          </div>
-          <div id="usersContainer" class="list-container"></div>
         </div>
       </div>
     </section>
 
     <section id="biblioteca" class="admin-section">
-      <div class="two-columns">
-        <div class="admin-card">
+      <div class="admin-card">
+        <div class="card-head">
+          <h2>Biblioteca <span id="docsCount" class="list-counter"></span></h2>
+          <div class="card-head-actions">
+            <button id="toggleCreateDocumentBtn">Cargar documento</button>
+            <button id="reloadDocumentsBtn">Actualizar</button>
+          </div>
+        </div>
+
+        <div class="storage-meter" id="storageMeter">
+          <div class="storage-meter-bar"><div class="storage-meter-fill" id="storageMeterFill"></div></div>
+          <p class="storage-meter-label" id="storageMeterLabel">Calculando espacio usado...</p>
+        </div>
+
+        <input id="documentSearch" class="search-input" type="search" placeholder="Buscar documento..." />
+        <div id="adminDocumentsContainer" class="list-container"></div>
+      </div>
+
+      <div class="modal-overlay" id="documentModal">
+        <div class="modal-box">
+          <button type="button" class="modal-close" id="closeDocumentModalBtn" aria-label="Cerrar">✕</button>
           <h2 id="documentFormTitle">Cargar documento</h2>
 
           <form id="createDocumentForm" class="admin-form">
@@ -153,7 +172,15 @@
               <option value="admin">Solo administradores</option>
             </select>
 
-            <input type="url" name="drive_url" placeholder="https://drive.google.com/..." required />
+            <div class="cs-upload-zone">
+              <input type="file" id="documentFileInput" class="cs-file-input" />
+              <label for="documentFileInput" class="cs-upload-label">
+                <span id="documentUploadText">📎 Elegir archivo (imagen, PDF, Word, Excel...)</span>
+              </label>
+            </div>
+
+            <p class="hint">O pegá un enlace externo (ej. Google Drive) en vez de subir un archivo:</p>
+            <input type="url" name="drive_url" id="documentDriveUrl" placeholder="https://drive.google.com/..." />
 
             <p id="documentStatus" class="status"></p>
 
@@ -162,17 +189,6 @@
               <button id="cancelEditDocumentBtn" type="button" class="secondary hidden">Cancelar edición</button>
             </div>
           </form>
-        </div>
-
-        <div class="admin-card">
-          <div class="card-head">
-            <h2>Biblioteca</h2>
-            <button id="reloadDocumentsBtn">Actualizar</button>
-          </div>
-          <p id="docsCount" class="list-counter"></p>
-
-          <input id="documentSearch" class="search-input" type="search" placeholder="Buscar documento..." />
-          <div id="adminDocumentsContainer" class="list-container"></div>
         </div>
       </div>
     </section>
@@ -238,7 +254,7 @@
                 </select>
                 <input type="text" name="alt" placeholder="Descripción de la foto (opcional)" />
                 <div class="cs-upload-zone">
-                  <input type="file" id="csImageInput" accept=".webp" class="cs-file-input" />
+                  <input type="file" id="csImageInput" accept="image/*" class="cs-file-input" />
                   <label for="csImageInput" class="cs-upload-label">
                     <span id="csUploadText">📷 Elegir imagen</span>
                   </label>

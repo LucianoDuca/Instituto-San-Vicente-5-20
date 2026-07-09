@@ -1,4 +1,6 @@
 const express = require("express");
+const multer = require("multer");
+const sharp = require("sharp");
 const { Resend } = require("resend");
 const { createClient } = require("@supabase/supabase-js");
 require("dotenv").config();
@@ -19,6 +21,45 @@ const supabaseAdmin = createClient(
   process.env.SUPABASE_SERVICE_ROLE_KEY
 );
 
+const BUCKET_BIBLIOTECA = "biblioteca";
+const EXTENSIONES_BLOQUEADAS = ["exe", "bat", "cmd", "sh", "msi", "com", "scr", "js", "vbs", "ps1", "jar", "app"];
+
+const uploadBiblioteca = multer({
+  storage: multer.memoryStorage(),
+  limits: { fileSize: 20 * 1024 * 1024 },
+  fileFilter: (req, file, cb) => {
+    const extension = (file.originalname.split(".").pop() || "").toLowerCase();
+    if (EXTENSIONES_BLOQUEADAS.includes(extension)) {
+      return cb(new Error("Tipo de archivo no permitido"));
+    }
+    cb(null, true);
+  }
+});
+
+const uploadImagen = multer({
+  storage: multer.memoryStorage(),
+  limits: { fileSize: 15 * 1024 * 1024 },
+  fileFilter: (req, file, cb) => {
+    if (!file.mimetype.startsWith("image/")) {
+      return cb(new Error("Solo se aceptan archivos de imagen"));
+    }
+    cb(null, true);
+  }
+});
+
+function limpiarCarpeta(valor) {
+  return String(valor || "").replace(/\.\./g, "").replace(/[^a-zA-Z0-9/_-]/g, "");
+}
+
+supabaseAdmin.storage.listBuckets().then(async ({ data: buckets }) => {
+  const existe = buckets?.some((b) => b.name === BUCKET_BIBLIOTECA);
+  if (!existe) {
+    await supabaseAdmin.storage.createBucket(BUCKET_BIBLIOTECA, { public: true });
+  }
+}).catch((error) => {
+  console.error("No se pudo verificar/crear el bucket de biblioteca:", error.message);
+});
+
 function limpiarTexto(valor) {
   if (!valor) return "";
   return String(valor).trim().replace(/[<>]/g, "").slice(0, 2500);
@@ -33,14 +74,10 @@ function validarUrlDrive(url) {
   }
 }
 
-function detectarRolPorEmail(email) {
-  const correo = String(email || "").toLowerCase().trim();
+const ROLES_VALIDOS = ["admin", "directivo", "docente"];
 
-  if (correo.endsWith("@admin.com")) return "admin";
-  if (correo.endsWith("@directivos.com")) return "directivo";
-  if (correo.endsWith("@docentes.com")) return "docente";
-
-  return null;
+function rolValido(rol) {
+  return ROLES_VALIDOS.includes(String(rol || "").trim());
 }
 
 async function obtenerUsuarioDesdeToken(req) {
@@ -312,7 +349,7 @@ app.post("/api/admin/create-user", soloAdmin, async (req, res) => {
   try {
     const email = limpiarTexto(req.body.email).toLowerCase();
     const password = String(req.body.password || "").trim();
-    const rolDetectado = detectarRolPorEmail(email);
+    const rol = String(req.body.rol || "").trim();
 
     if (!email || !password) {
       return res.status(400).json({
@@ -320,9 +357,9 @@ app.post("/api/admin/create-user", soloAdmin, async (req, res) => {
       });
     }
 
-    if (!rolDetectado) {
+    if (!rolValido(rol)) {
       return res.status(400).json({
-        error: "El email debe terminar en @admin.com, @directivos.com o @docentes.com"
+        error: "El rol debe ser admin, directivo o docente"
       });
     }
 
@@ -330,7 +367,7 @@ app.post("/api/admin/create-user", soloAdmin, async (req, res) => {
       nombre: limpiarTexto(req.body.nombre),
       apellido: limpiarTexto(req.body.apellido),
       email,
-      rol: rolDetectado,
+      rol,
       area: limpiarTexto(req.body.area),
       nivel: limpiarTexto(req.body.nivel),
       cargo: limpiarTexto(req.body.cargo),
@@ -388,7 +425,7 @@ app.patch("/api/admin/users/:id", soloAdmin, async (req, res) => {
     const { id } = req.params;
 
     const email = limpiarTexto(req.body.email).toLowerCase();
-    const rolDetectado = detectarRolPorEmail(email);
+    const rol = String(req.body.rol || "").trim();
 
     if (!email) {
       return res.status(400).json({
@@ -396,9 +433,9 @@ app.patch("/api/admin/users/:id", soloAdmin, async (req, res) => {
       });
     }
 
-    if (!rolDetectado) {
+    if (!rolValido(rol)) {
       return res.status(400).json({
-        error: "El email debe terminar en @admin.com, @directivos.com o @docentes.com"
+        error: "El rol debe ser admin, directivo o docente"
       });
     }
 
@@ -417,7 +454,7 @@ app.patch("/api/admin/users/:id", soloAdmin, async (req, res) => {
       nombre: limpiarTexto(req.body.nombre),
       apellido: limpiarTexto(req.body.apellido),
       email,
-      rol: rolDetectado,
+      rol,
       area: limpiarTexto(req.body.area),
       nivel: limpiarTexto(req.body.nivel),
       cargo: limpiarTexto(req.body.cargo),
@@ -452,9 +489,9 @@ app.patch("/api/admin/users/:id/password", soloAdmin, async (req, res) => {
     const { id } = req.params;
     const password = String(req.body.password || "").trim();
 
-    if (!password || password.length < 6) {
+    if (!password || password.length < 5) {
       return res.status(400).json({
-        error: "La contraseña debe tener al menos 6 caracteres"
+        error: "La contraseña debe tener al menos 5 caracteres"
       });
     }
 
@@ -549,6 +586,87 @@ app.get("/api/library", usuarioLogueado, async (req, res) => {
     return res.status(500).json({
       error: error.message
     });
+  }
+});
+
+const LIMITE_STORAGE_BYTES = 1024 * 1024 * 1024; // Plan Free de Supabase: 1 GB compartido entre todos los buckets
+
+async function calcularTamanioBucket(bucket, carpeta = "") {
+  const { data, error } = await supabaseAdmin.storage.from(bucket).list(carpeta, { limit: 1000 });
+  if (error || !data) return 0;
+
+  let total = 0;
+  for (const item of data) {
+    if (item.metadata && typeof item.metadata.size === "number") {
+      total += item.metadata.size;
+    } else {
+      const subcarpeta = carpeta ? `${carpeta}/${item.name}` : item.name;
+      total += await calcularTamanioBucket(bucket, subcarpeta);
+    }
+  }
+  return total;
+}
+
+app.get("/api/admin/storage-usage", soloAdmin, async (req, res) => {
+  try {
+    const { data: buckets, error } = await supabaseAdmin.storage.listBuckets();
+    if (error) {
+      return res.status(500).json({ error: error.message });
+    }
+
+    const detalle = [];
+    let usedBytes = 0;
+
+    for (const bucket of buckets || []) {
+      const tamanio = await calcularTamanioBucket(bucket.name);
+      detalle.push({ bucket: bucket.name, usedBytes: tamanio });
+      usedBytes += tamanio;
+    }
+
+    return res.json({
+      usedBytes,
+      limitBytes: LIMITE_STORAGE_BYTES,
+      buckets: detalle
+    });
+
+  } catch (error) {
+    return res.status(500).json({ error: error.message });
+  }
+});
+
+app.post("/api/admin/library/upload", soloAdmin, (req, res, next) => {
+  uploadBiblioteca.single("file")(req, res, (error) => {
+    if (error) {
+      return res.status(400).json({ error: error.message });
+    }
+    next();
+  });
+}, async (req, res) => {
+  try {
+    if (!req.file) {
+      return res.status(400).json({ error: "No se recibió ningún archivo" });
+    }
+
+    const extension = (req.file.originalname.split(".").pop() || "bin").toLowerCase().replace(/[^a-z0-9]/g, "");
+    const path = `documentos/${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${extension}`;
+
+    const { error } = await supabaseAdmin.storage
+      .from(BUCKET_BIBLIOTECA)
+      .upload(path, req.file.buffer, {
+        contentType: req.file.mimetype,
+        upsert: false
+      });
+
+    if (error) {
+      return res.status(500).json({ error: error.message });
+    }
+
+    const { data } = supabaseAdmin.storage.from(BUCKET_BIBLIOTECA).getPublicUrl(path);
+
+    return res.json({ ok: true, url: data.publicUrl });
+
+  } catch (error) {
+    return res.status(500).json({ error: error.message });
   }
 });
 
@@ -681,6 +799,12 @@ app.delete("/api/admin/library/:id", soloAdmin, async (req, res) => {
   try {
     const { id } = req.params;
 
+    const { data: documento } = await supabaseAdmin
+      .from("documents_library")
+      .select("drive_url")
+      .eq("id", id)
+      .single();
+
     const { error } = await supabaseAdmin
       .from("documents_library")
       .delete()
@@ -690,6 +814,15 @@ app.delete("/api/admin/library/:id", soloAdmin, async (req, res) => {
       return res.status(500).json({
         error: error.message
       });
+    }
+
+    if (documento?.drive_url) {
+      const marker = `/object/public/${BUCKET_BIBLIOTECA}/`;
+      const idx = documento.drive_url.indexOf(marker);
+      if (idx !== -1) {
+        const path = documento.drive_url.slice(idx + marker.length);
+        await supabaseAdmin.storage.from(BUCKET_BIBLIOTECA).remove([path]);
+      }
     }
 
     return res.json({
@@ -863,6 +996,53 @@ app.patch("/api/change-password", usuarioLogueado, async (req, res) => {
     return res.status(500).json({
       error: error.message
     });
+  }
+});
+
+/* =============================================
+   CLUB SANVI — SUBIDA DE IMÁGENES (convierte a WebP)
+============================================= */
+
+app.post("/api/admin/club-sanvi/upload-imagen", soloAdmin, (req, res, next) => {
+  uploadImagen.single("file")(req, res, (error) => {
+    if (error) {
+      return res.status(400).json({ error: error.message });
+    }
+    next();
+  });
+}, async (req, res) => {
+  try {
+    if (!req.file) {
+      return res.status(400).json({ error: "No se recibió ninguna imagen" });
+    }
+
+    const carpeta = limpiarCarpeta(req.body.carpeta) || "otros";
+
+    let webpBuffer;
+    try {
+      webpBuffer = await sharp(req.file.buffer).webp({ quality: 82 }).toBuffer();
+    } catch (conversionError) {
+      return res.status(400).json({
+        error: "No se pudo procesar la imagen. Probá con otro archivo (JPG o PNG)."
+      });
+    }
+
+    const path = `${carpeta}/${Date.now()}.webp`;
+
+    const { error } = await supabaseAdmin.storage
+      .from("club-sanvi")
+      .upload(path, webpBuffer, { contentType: "image/webp", upsert: false });
+
+    if (error) {
+      return res.status(500).json({ error: error.message });
+    }
+
+    const { data } = supabaseAdmin.storage.from("club-sanvi").getPublicUrl(path);
+
+    return res.json({ ok: true, url: data.publicUrl });
+
+  } catch (error) {
+    return res.status(500).json({ error: error.message });
   }
 });
 

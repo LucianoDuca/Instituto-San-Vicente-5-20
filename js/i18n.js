@@ -10,6 +10,7 @@ const translations = {
     "nav.primary": "PRIMARIA",
     "nav.highschool": "SECUNDARIA",
     "nav.clubSanvi": "CLUB SANVI",
+    "nav.appSanvi": "APP SANVI",
     "nav.contact": "CONTACTO",
     "nav.login": "INICIAR SESIÓN",
 
@@ -194,21 +195,6 @@ const translations = {
     "kinder.slider.image3Alt": "Jornada recreativa del Nivel Inicial",
     "kinder.slider.image4Alt": "Actividades de juego y exploración",
 
-    "kinder.main.title": "Nivel Inicial",
-    "kinder.main.ages": "<strong>Edades:</strong> de 2 a 5 años",
-    "kinder.main.schedule": "<strong>Horario:</strong> lunes a viernes de 9:00 a 12:30 hs",
-    "kinder.main.options": "<strong>Opciones:</strong> pre y post hora, horario extendido hasta las 16:00 hs",
-    "kinder.main.playSpace": "<strong>Espacio lúdico:</strong> de 13:00 a 16:00 hs para niños de 2 y 3 años",
-    "kinder.main.modality": "<strong>Modalidad:</strong> acompañamiento integral y personalizado",
-    "kinder.main.quote": "Acompañamos los primeros aprendizajes desde una propuesta que invita a aprender jugando, incorporando experiencias y desarrollando al máximo las múltiples inteligencias.",
-    "kinder.main.button": "SOLICITÁ TU ENTREVISTA",
-
-    "kinder.description.label": "PROPUESTA EDUCATIVA",
-    "kinder.description.title": "Aprender jugando",
-    "kinder.description.text1": "El Jardín de Infantes del Instituto San Vicente funciona de lunes a viernes de 9:00 a 12:30 hs, con la posibilidad de pre y post hora y modalidad de horario extendido hasta las 16:00 hs.",
-    "kinder.description.text2": "El espacio lúdico está habilitado para niños de 2 y 3 años en el horario de 13:00 a 16:00 hs, pensado como un entorno agradable para disfrutar, compartir y crecer mediante desafíos y metas personales.",
-    "kinder.description.text3": "La propuesta institucional integra inglés, deportes, arte, educación emocional y cultura, promoviendo una formación integral desde los primeros años.",
-
     "sharedEnrollment.title": "Inscripción: Ciclo Lectivo 2027",
     "sharedEnrollment.text": "Solicitá una entrevista con nuestro equipo directivo y conocé la propuesta educativa que tenemos para ofrecerte.",
     "sharedEnrollment.button": "SOLICITAR ENTREVISTA",
@@ -222,19 +208,6 @@ const translations = {
     "primary.slider.image3Alt": "Jornada recreativa del Nivel Primario",
     "primary.slider.image4Alt": "Actividades educativas y de exploración",
 
-    "primary.main.title": "Primaria",
-    "primary.main.stage": "<strong>Etapa:</strong> Nivel Primario",
-    "primary.main.schedule": "<strong>Horario:</strong> lunes a viernes de 8:00 a 16:00 hs",
-    "primary.main.modality": "<strong>Modalidad:</strong> doble escolaridad con inglés, deportes, arte, educación emocional y cultura",
-    "primary.main.quote": "Buscamos que cada estudiante incorpore experiencias, desarrolle sus múltiples inteligencias y crezca mediante desafíos y metas personales.",
-    "primary.main.button": "SOLICITÁ TU ENTREVISTA",
-
-    "primary.description.label": "PROPUESTA EDUCATIVA",
-    "primary.description.title": "Experiencias para aprender y crecer",
-    "primary.description.text1": "El Nivel Primario del Instituto San Vicente funciona de lunes a viernes de 8:00 a 16:00 hs, dentro de una propuesta educativa moderna y actualizada a los tiempos de hoy.",
-    "primary.description.text2": "La institución propone un recorrido donde los estudiantes puedan desarrollar actividades académicas, deportivas, artísticas, culturales y emocionales en un entorno agradable, pensado para disfrutar cada experiencia.",
-    "primary.description.text3": "Acompañamos la autonomía, la libertad responsable, el respeto, la apertura al encuentro con los demás y el pensamiento riguroso, fortaleciendo el desarrollo integral de cada alumno.",
-
 
 
 
@@ -242,20 +215,6 @@ const translations = {
     "highschool.slider.image1Alt": "Estudiantes de Secundaria en actividad educativa",
     "highschool.slider.image2Alt": "Espacios de aprendizaje del Nivel Secundario",
     "highschool.slider.image3Alt": "Jornada institucional del Nivel Secundario",
-
-    "highschool.main.title": "Secundaria",
-    "highschool.main.stage": "<strong>Etapa:</strong> Nivel Secundario",
-    "highschool.main.schedule": "<strong>Horario:</strong> de 7:45 a 15:30 hs",
-    "highschool.main.tutoring": "<strong>Tutoría:</strong> espacio de acompañamiento hasta las 16:00 hs",
-    "highschool.main.modality": "<strong>Modalidad:</strong> formación académica integral, autonomía y proyecto personal",
-    "highschool.main.quote": "Formamos jóvenes capaces de vivir los valores del respeto, usar responsablemente su libertad, pensar rigurosamente y ser protagonistas de su futuro.",
-    "highschool.main.button": "SOLICITÁ TU ENTREVISTA",
-
-    "highschool.description.label": "PROPUESTA EDUCATIVA",
-    "highschool.description.title": "Autonomía, responsabilidad y futuro",
-    "highschool.description.text1": "El Nivel Secundario del Instituto San Vicente funciona de 7:45 a 15:30 hs, con espacio de tutoría hasta las 16:00 hs, acompañando a los estudiantes en una etapa clave de crecimiento académico, personal y social.",
-    "highschool.description.text2": "La propuesta busca que cada estudiante desarrolle sus múltiples inteligencias, dé lo mejor de sí desde su singularidad y utilice su libertad responsablemente, fortaleciendo su autonomía.",
-    "highschool.description.text3": "Acompañamos una formación integral donde el alumno no solo aprende, sino que aprende a pensar cómo piensa y actúa, desarrollando su metacognición y su capacidad de sumar valor como creador de futuro.",
 
     "highschool.enrollment.title": "Inscripción: Ciclo Lectivo 2027",
     "highschool.enrollment.text": "Solicitá una entrevista con nuestro equipo directivo y conocé la propuesta educativa del Nivel Secundario.",
@@ -507,6 +466,7 @@ const translations = {
     "nav.primary": "PRIMARY",
     "nav.highschool": "HIGH SCHOOL",
     "nav.clubSanvi": "CLUB SANVI",
+    "nav.appSanvi": "APP SANVI",
     "nav.contact": "CONTACT",
     "nav.login": "LOGIN",
 
@@ -686,21 +646,6 @@ const translations = {
     "kinder.slider.image3Alt": "Kindergarten recreational day",
     "kinder.slider.image4Alt": "Play and exploration activities",
 
-    "kinder.main.title": "Kindergarten Level",
-    "kinder.main.ages": "<strong>Ages:</strong> from 2 to 5 years old",
-    "kinder.main.schedule": "<strong>Schedule:</strong> Monday to Friday from 9:00 AM to 12:30 PM",
-    "kinder.main.options": "<strong>Options:</strong> pre-hour and post-hour service, with extended hours until 4:00 PM",
-    "kinder.main.playSpace": "<strong>Play space:</strong> from 1:00 PM to 4:00 PM for children aged 2 and 3",
-    "kinder.main.modality": "<strong>Modality:</strong> comprehensive and personalized support",
-    "kinder.main.quote": "We support early learning through a proposal that invites children to learn by playing, incorporating experiences and developing multiple intelligences to their fullest potential.",
-    "kinder.main.button": "REQUEST YOUR INTERVIEW",
-
-    "kinder.description.label": "EDUCATIONAL PROPOSAL",
-    "kinder.description.title": "Learning through play",
-    "kinder.description.text1": "The Kindergarten at Instituto San Vicente runs Monday to Friday from 9:00 AM to 12:30 PM, with the possibility of pre-hour and post-hour service and extended hours until 4:00 PM.",
-    "kinder.description.text2": "The play space is available for children aged 2 and 3 from 1:00 PM to 4:00 PM, designed as a pleasant environment to enjoy, share and grow through personal challenges and goals.",
-    "kinder.description.text3": "The institutional proposal integrates English, sports, arts, emotional education and culture, promoting comprehensive education from the earliest years.",
-
     "sharedEnrollment.title": "Enrollment: 2027 School Year",
     "sharedEnrollment.text": "Request an interview with our leadership team and learn about the educational proposal we have to offer.",
     "sharedEnrollment.button": "REQUEST AN INTERVIEW",
@@ -714,39 +659,12 @@ const translations = {
     "primary.slider.image3Alt": "Primary level recreational day",
     "primary.slider.image4Alt": "Educational and exploration activities",
 
-    "primary.main.title": "Primary",
-    "primary.main.stage": "<strong>Stage:</strong> Primary Level",
-    "primary.main.schedule": "<strong>Schedule:</strong> Monday to Friday from 8:00 AM to 4:00 PM",
-    "primary.main.modality": "<strong>Modality:</strong> full-day schooling with English, sports, arts, emotional education and culture",
-    "primary.main.quote": "We seek for every student to incorporate experiences, develop their multiple intelligences and grow through personal challenges and goals.",
-    "primary.main.button": "REQUEST YOUR INTERVIEW",
-
-    "primary.description.label": "EDUCATIONAL PROPOSAL",
-    "primary.description.title": "Experiences to learn and grow",
-    "primary.description.text1": "The Primary Level at Instituto San Vicente runs Monday to Friday from 8:00 AM to 4:00 PM, within a modern educational proposal adapted to today’s times.",
-    "primary.description.text2": "The institution offers a journey where students can develop academic, sports, artistic, cultural and emotional activities in a pleasant environment designed to enjoy every experience.",
-    "primary.description.text3": "We support autonomy, responsible freedom, respect, openness to meeting others and rigorous thinking, strengthening each student’s comprehensive development.",
-
 
 
 
     "highschool.slider.image1Alt": "High School students in an educational activity",
     "highschool.slider.image2Alt": "High School learning spaces",
     "highschool.slider.image3Alt": "High School institutional day",
-
-    "highschool.main.title": "High School",
-    "highschool.main.stage": "<strong>Stage:</strong> High School Level",
-    "highschool.main.schedule": "<strong>Schedule:</strong> from 7:45 AM to 3:30 PM",
-    "highschool.main.tutoring": "<strong>Tutoring:</strong> support space until 4:00 PM",
-    "highschool.main.modality": "<strong>Modality:</strong> comprehensive academic education, autonomy and personal project development",
-    "highschool.main.quote": "We educate young people capable of living the values of respect, using their freedom responsibly, thinking rigorously and becoming protagonists of their future.",
-    "highschool.main.button": "REQUEST YOUR INTERVIEW",
-
-    "highschool.description.label": "EDUCATIONAL PROPOSAL",
-    "highschool.description.title": "Autonomy, responsibility and future",
-    "highschool.description.text1": "The High School Level at Instituto San Vicente runs from 7:45 AM to 3:30 PM, with tutoring space until 4:00 PM, supporting students during a key stage of academic, personal and social growth.",
-    "highschool.description.text2": "The proposal seeks for each student to develop their multiple intelligences, give their best from their own uniqueness and use their freedom responsibly, strengthening their autonomy.",
-    "highschool.description.text3": "We support a comprehensive education where students not only learn, but also learn to think about how they think and act, developing metacognition and their ability to add value as creators of the future.",
 
     "highschool.enrollment.title": "Enrollment: 2027 School Year",
     "highschool.enrollment.text": "Request an interview with our leadership team and learn about the High School educational proposal.",
@@ -886,10 +804,10 @@ const translations = {
     // ======= KINDER – NEW DESIGN =======
     "kinder.info.label": "LEVEL",
     "kinder.info.intro": "A space of discovery, play and learning where every child begins to explore the world with joy, creativity and confidence.",
-    "kinder.info.ages": "<span class='dli'><img src='assets/img/icons/person.svg' alt=''></span><strong>Ages:</strong> from 1 to 5 years old",
+    "kinder.info.ages": "<span class='dli'><img src='assets/img/icons/person.svg' alt=''></span><strong>Ages:</strong> From 2 to 5 years old",
     "kinder.info.schedule": "<span class='dli'><img src='assets/img/icons/clock.svg' alt=''></span><strong>Schedule:</strong> Monday to Friday from 9:00 AM to 12:30 PM",
-    "kinder.info.options": "<span class='dli'><img src='assets/img/icons/calendar.svg' alt=''></span><strong>Options:</strong> pre-hour and post-hour service, extended hours until 4:00 PM",
-    "kinder.info.workshops": "<span class='dli'><img src='assets/img/icons/palette.svg' alt=''></span><strong>Workshop space:</strong> from 1:30 PM to 4:00 PM",
+    "kinder.info.options": "<span class='dli'><img src='assets/img/icons/calendar.svg' alt=''></span><strong>Options:</strong> Pre-hour and post-hour service, extended hours until 4:00 PM",
+    "kinder.info.workshops": "<span class='dli'><img src='assets/img/icons/palette.svg' alt=''></span><strong>Workshop space:</strong> From 1:30 PM to 4:00 PM",
     "kinder.info.button": "Request your interview",
 
     "kinder.proposal.label": "OUR PROPOSAL",
@@ -924,7 +842,7 @@ const translations = {
     "primary.info.intro": "We seek for every student to incorporate experiences, develop their multiple intelligences and grow through personal challenges and goals.",
     "primary.info.stage": "<span class='dli'><img src='assets/img/icons/literature.svg' alt=''></span><strong>Stage:</strong> Primary Level (1st to 6th grade)",
     "primary.info.schedule": "<span class='dli'><img src='assets/img/icons/clock.svg' alt=''></span><strong>Schedule:</strong> Monday to Friday from 8:00 AM to 4:00 PM",
-    "primary.info.modality": "<span class='dli'><img src='assets/img/icons/palette.svg' alt=''></span><strong>Modality:</strong> full-day schooling with English, sports, arts, emotional education and culture",
+    "primary.info.modality": "<span class='dli'><img src='assets/img/icons/palette.svg' alt=''></span><strong>Modality:</strong> Full-day schooling with English, sports, arts, emotional education and culture",
     "primary.info.button": "Request your interview",
 
     "primary.proposal.label": "OUR PROPOSAL",
@@ -959,8 +877,8 @@ const translations = {
     "highschool.info.intro": "We educate young people capable of living the values of respect, using their freedom responsibly, thinking rigorously and becoming protagonists of their future.",
     "highschool.info.stage": "<span class='dli'><img src='assets/img/icons/graduation.svg' alt=''></span><strong>Stage:</strong> High School Level (1st to 5th year)",
     "highschool.info.schedule": "<span class='dli'><img src='assets/img/icons/clock.svg' alt=''></span><strong>Schedule:</strong> Monday to Friday from 7:45 AM to 3:30 PM",
-    "highschool.info.tutoring": "<span class='dli'><img src='assets/img/icons/clipboard.svg' alt=''></span><strong>Tutoring:</strong> support space until 4:00 PM",
-    "highschool.info.modality": "<span class='dli'><img src='assets/img/icons/interculturalidad.svg' alt=''></span><strong>Modality:</strong> comprehensive academic education, autonomy and personal project development",
+    "highschool.info.tutoring": "<span class='dli'><img src='assets/img/icons/clipboard.svg' alt=''></span><strong>Tutoring:</strong> Support space until 4:00 PM",
+    "highschool.info.modality": "<span class='dli'><img src='assets/img/icons/interculturalidad.svg' alt=''></span><strong>Modality:</strong> Comprehensive academic education, autonomy and personal project development",
     "highschool.info.button": "Request your interview",
 
     "highschool.proposal.label": "OUR PROPOSAL",

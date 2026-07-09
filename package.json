@@ -11,9 +11,8 @@
     "@supabase/supabase-js": "^2.105.4",
     "dotenv": "^17.2.3",
     "express": "^5.1.0",
-    "resend": "^6.12.3"
-  },
-  "devDependencies": {
+    "multer": "^2.2.0",
+    "resend": "^6.12.3",
     "sharp": "^0.35.1"
   }
 }

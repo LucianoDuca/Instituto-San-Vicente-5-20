@@ -10,22 +10,37 @@ const statDocumentos = document.getElementById("statDocumentos");
 const statComunicados = document.getElementById("statComunicados");
 
 const createUserForm = document.getElementById("createUserForm");
+const createUserCard = document.getElementById("createUserCard");
+const userFormTitle = document.getElementById("userFormTitle");
+const userId = document.getElementById("userId");
+const userPasswordInput = document.getElementById("userPasswordInput");
+const userNivelSelect = document.getElementById("userNivelSelect");
 const usersContainer = document.getElementById("usersContainer");
 const usersCount = document.getElementById("usersCount");
 const adminStatus = document.getElementById("adminStatus");
 const createUserBtn = document.getElementById("createUserBtn");
+const cancelEditUserBtn = document.getElementById("cancelEditUserBtn");
+const toggleCreateUserBtn = document.getElementById("toggleCreateUserBtn");
+const closeCreateUserBtn = document.getElementById("closeCreateUserBtn");
 const reloadUsersBtn = document.getElementById("reloadUsersBtn");
 
 const createDocumentForm = document.getElementById("createDocumentForm");
+const documentModal = document.getElementById("documentModal");
 const documentFormTitle = document.getElementById("documentFormTitle");
 const documentId = document.getElementById("documentId");
 const documentStatus = document.getElementById("documentStatus");
+const documentFileInput = document.getElementById("documentFileInput");
+const documentUploadText = document.getElementById("documentUploadText");
 const createDocumentBtn = document.getElementById("createDocumentBtn");
 const cancelEditDocumentBtn = document.getElementById("cancelEditDocumentBtn");
+const toggleCreateDocumentBtn = document.getElementById("toggleCreateDocumentBtn");
+const closeDocumentModalBtn = document.getElementById("closeDocumentModalBtn");
 const reloadDocumentsBtn = document.getElementById("reloadDocumentsBtn");
 const adminDocumentsContainer = document.getElementById("adminDocumentsContainer");
 const documentSearch = document.getElementById("documentSearch");
 const docsCount = document.getElementById("docsCount");
+const storageMeterFill = document.getElementById("storageMeterFill");
+const storageMeterLabel = document.getElementById("storageMeterLabel");
 
 const createAnnouncementForm = document.getElementById("createAnnouncementForm");
 const announcementStatus = document.getElementById("announcementStatus");
@@ -39,6 +54,15 @@ const sidebarOverlay = document.getElementById("sidebarOverlay");
 const adminShell = document.querySelector(".admin-shell");
 
 let documentosAdmin = [];
+let usuariosAdmin = [];
+
+const DOMINIO_INTERNO = "sanvicente.interno";
+
+const ROL_ETIQUETAS = {
+  admin: "Administrador",
+  directivo: "Directivo",
+  docente: "Docente"
+};
 
 function escaparHTML(str) {
   return String(str ?? "")
@@ -113,10 +137,11 @@ async function obtenerToken() {
 async function fetchAuth(url, options = {}) {
   const token = await obtenerToken();
   if (!token) return null;
+  const esFormData = options.body instanceof FormData;
   return fetch(url, {
     ...options,
     headers: {
-      "Content-Type": "application/json",
+      ...(esFormData ? {} : { "Content-Type": "application/json" }),
       Authorization: `Bearer ${token}`,
       ...(options.headers || {})
     }
@@ -143,6 +168,14 @@ async function cargarStats() {
 
 /* Usuarios */
 
+function generarUsuarioDesdeNombre(nombre, apellido) {
+  const normalizar = (texto) => String(texto || "")
+    .normalize("NFD")
+    .toLowerCase()
+    .replace(/[^a-z0-9]/g, "");
+  return [normalizar(nombre), normalizar(apellido)].filter(Boolean).join(".");
+}
+
 async function cargarUsuarios() {
   try {
     usersContainer.innerHTML = skeletonCards(3);
@@ -154,34 +187,44 @@ async function cargarUsuarios() {
 
     if (!response.ok) throw new Error(result.error || "Error al cargar usuarios");
 
-    if (!result.length) {
+    usuariosAdmin = Array.isArray(result) ? result : [];
+
+    if (!usuariosAdmin.length) {
       usersContainer.innerHTML = "<p class='muted'>No hay usuarios creados todavía.</p>";
       return;
     }
 
-    usersCount.textContent = `(${result.length})`;
+    usersCount.textContent = `(${usuariosAdmin.length})`;
     usersContainer.innerHTML = "";
 
-    result.forEach((user) => {
+    usuariosAdmin.forEach((user) => {
       const card = document.createElement("article");
       card.className = "item-card";
       card.innerHTML = `
-        <div>
+        <div class="user-avatar">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 12c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm0 2c-3.33 0-10 1.67-10 5v3h20v-3c0-3.33-6.67-5-10-5z"/></svg>
+        </div>
+        <div class="user-info">
           <h3>${escaparHTML(user.nombre) || "Sin nombre"} ${escaparHTML(user.apellido)}</h3>
           <p>${escaparHTML(user.email) || "Sin email"}</p>
           <div class="meta">
-            <span class="role">${escaparHTML(user.rol) || "sin rol"}</span>
-            <span>${escaparHTML(user.nivel) || "General"}</span>
-            <span>${escaparHTML(user.area) || "Sin área"}</span>
-            <span>${escaparHTML(user.cargo) || "Sin cargo"}</span>
+            <span class="role">${escaparHTML(ROL_ETIQUETAS[user.rol] || user.rol) || "sin rol"}</span>
+            ${user.nivel ? `<span>${escaparHTML(user.nivel)}</span>` : ""}
           </div>
           <p class="item-date">Alta: ${formatFecha(user.created_at)}</p>
         </div>
         <div class="item-actions">
+          <button class="edit-btn" data-id="${escaparHTML(user.id)}">Editar</button>
           <button class="delete-btn" data-id="${escaparHTML(user.id)}">Borrar</button>
         </div>
       `;
       usersContainer.appendChild(card);
+    });
+
+    document.querySelectorAll(".edit-btn").forEach((button) => {
+      button.addEventListener("click", () => {
+        editarUsuario(button.dataset.id);
+      });
     });
 
     document.querySelectorAll(".delete-btn").forEach((button) => {
@@ -195,8 +238,58 @@ async function cargarUsuarios() {
   }
 }
 
+function actualizarCampoNivel() {
+  const esDocente = createUserForm.rol.value === "docente";
+  userNivelSelect.classList.toggle("hidden", !esDocente);
+  userNivelSelect.required = esDocente;
+  if (!esDocente) userNivelSelect.value = "";
+}
+
+function resetFormularioUsuario() {
+  userFormTitle.textContent = "Crear usuario";
+  userId.value = "";
+  createUserForm.reset();
+  cancelEditUserBtn.classList.add("hidden");
+  createUserBtn.textContent = "Crear usuario";
+  setStatus(adminStatus, "");
+  actualizarCampoNivel();
+}
+
+function abrirModalUsuario() {
+  createUserCard.classList.add("open");
+}
+
+function cerrarPanelUsuario() {
+  createUserCard.classList.remove("open");
+  resetFormularioUsuario();
+}
+
+function editarUsuario(id) {
+  const user = usuariosAdmin.find((item) => item.id === id);
+  if (!user) return;
+
+  abrirModalUsuario();
+  userFormTitle.textContent = "Editar usuario";
+  userId.value = user.id;
+  createUserForm.nombre.value = user.nombre || "";
+  createUserForm.apellido.value = user.apellido || "";
+  createUserForm.rol.value = user.rol || "";
+  userPasswordInput.value = "";
+  actualizarCampoNivel();
+  createUserForm.nivel.value = user.nivel || "";
+
+  cancelEditUserBtn.classList.remove("hidden");
+  createUserBtn.textContent = "Guardar cambios";
+  setStatus(adminStatus, "Editando usuario seleccionado.", "success");
+}
+
 async function borrarUsuario(id) {
-  if (!confirm("¿Seguro que querés borrar este usuario?")) return;
+  const confirmacion = prompt('Para eliminar este usuario, escribí "sanvicente" (sin comillas) para confirmar:');
+  if (confirmacion === null) return;
+  if (confirmacion.trim().toLowerCase() !== "sanvicente") {
+    alert("Texto de confirmación incorrecto. No se eliminó el usuario.");
+    return;
+  }
   try {
     const response = await fetchAuth(`/api/admin/users/${id}`, { method: "DELETE" });
     if (!response) return;
@@ -211,31 +304,126 @@ async function borrarUsuario(id) {
 createUserForm.addEventListener("submit", async (event) => {
   event.preventDefault();
   const datos = Object.fromEntries(new FormData(createUserForm).entries());
+  const editando = Boolean(datos.id);
+
+  if (!datos.rol) {
+    setStatus(adminStatus, "Elegí un rol para el usuario.", "error");
+    return;
+  }
+  datos.email = `${generarUsuarioDesdeNombre(datos.nombre, datos.apellido)}@${DOMINIO_INTERNO}`;
+
   try {
     createUserBtn.disabled = true;
-    createUserBtn.textContent = "Creando...";
     setStatus(adminStatus, "");
-    const response = await fetchAuth("/api/admin/create-user", {
-      method: "POST",
-      body: JSON.stringify(datos)
-    });
-    if (!response) return;
-    const result = await response.json();
-    if (!response.ok) throw new Error(result.error || "No se pudo crear el usuario");
-    setStatus(adminStatus, "Usuario creado correctamente.", "success");
-    createUserForm.reset();
-    await Promise.all([cargarUsuarios(), cargarStats()]);
+
+    if (editando) {
+      createUserBtn.textContent = "Guardando...";
+      const response = await fetchAuth(`/api/admin/users/${datos.id}`, {
+        method: "PATCH",
+        body: JSON.stringify(datos)
+      });
+      if (!response) return;
+      const result = await response.json();
+      if (!response.ok) throw new Error(result.error || "No se pudo editar el usuario");
+
+      if (datos.password) {
+        const passResponse = await fetchAuth(`/api/admin/users/${datos.id}/password`, {
+          method: "PATCH",
+          body: JSON.stringify({ password: datos.password })
+        });
+        if (!passResponse) return;
+        const passResult = await passResponse.json();
+        if (!passResponse.ok) throw new Error(passResult.error || "No se pudo actualizar la contraseña");
+      }
+
+      await Promise.all([cargarUsuarios(), cargarStats()]);
+      cerrarPanelUsuario();
+      setStatus(adminStatus, "Usuario actualizado correctamente.", "success");
+    } else {
+      createUserBtn.textContent = "Creando...";
+      if (!datos.password) datos.password = "12345";
+      const response = await fetchAuth("/api/admin/create-user", {
+        method: "POST",
+        body: JSON.stringify(datos)
+      });
+      if (!response) return;
+      const result = await response.json();
+      if (!response.ok) throw new Error(result.error || "No se pudo crear el usuario");
+      await Promise.all([cargarUsuarios(), cargarStats()]);
+      cerrarPanelUsuario();
+      setStatus(adminStatus, "Usuario creado correctamente.", "success");
+    }
   } catch (error) {
     setStatus(adminStatus, error.message, "error");
   } finally {
     createUserBtn.disabled = false;
-    createUserBtn.textContent = "Crear usuario";
+    createUserBtn.textContent = editando ? "Guardar cambios" : "Crear usuario";
   }
 });
 
+createUserForm.rol.addEventListener("change", actualizarCampoNivel);
+
+toggleCreateUserBtn.addEventListener("click", () => {
+  resetFormularioUsuario();
+  abrirModalUsuario();
+});
+
+closeCreateUserBtn.addEventListener("click", cerrarPanelUsuario);
+cancelEditUserBtn.addEventListener("click", cerrarPanelUsuario);
 reloadUsersBtn.addEventListener("click", cargarUsuarios);
 
+createUserCard.addEventListener("click", (event) => {
+  if (event.target === createUserCard) cerrarPanelUsuario();
+});
+
 /* Biblioteca */
+
+function formatearBytes(bytes) {
+  if (!bytes) return "0 MB";
+  const mb = bytes / (1024 * 1024);
+  if (mb < 1024) return `${mb.toFixed(1)} MB`;
+  return `${(mb / 1024).toFixed(2)} GB`;
+}
+
+async function cargarUsoStorage() {
+  if (!storageMeterFill) return;
+  try {
+    const response = await fetchAuth("/api/admin/storage-usage");
+    if (!response) return;
+    const result = await response.json();
+    if (!response.ok) throw new Error(result.error || "No se pudo calcular el espacio usado");
+
+    const porcentaje = Math.min(100, (result.usedBytes / result.limitBytes) * 100);
+    storageMeterFill.style.width = `${porcentaje}%`;
+    storageMeterFill.classList.toggle("warn", porcentaje >= 70 && porcentaje < 90);
+    storageMeterFill.classList.toggle("danger", porcentaje >= 90);
+    storageMeterLabel.textContent =
+      `${formatearBytes(result.usedBytes)} de ${formatearBytes(result.limitBytes)} usados (${porcentaje.toFixed(1)}%)`;
+  } catch (error) {
+    storageMeterLabel.textContent = "No se pudo calcular el espacio usado.";
+  }
+}
+
+const EXT_IMAGEN = ["jpg", "jpeg", "png", "gif", "webp", "svg"];
+const EXT_ETIQUETAS = {
+  pdf: "PDF", doc: "DOC", docx: "DOC", xls: "XLS", xlsx: "XLS",
+  ppt: "PPT", pptx: "PPT", csv: "CSV", txt: "TXT", zip: "ZIP"
+};
+
+function extensionDeUrl(url) {
+  const limpio = String(url || "").split("?")[0];
+  const match = limpio.match(/\.([a-z0-9]+)$/i);
+  return match ? match[1].toLowerCase() : "";
+}
+
+function renderPreviewDocumento(doc) {
+  const ext = extensionDeUrl(doc.drive_url);
+  if (EXT_IMAGEN.includes(ext)) {
+    return `<div class="doc-preview"><img src="${escaparHTML(doc.drive_url)}" alt="" loading="lazy" /></div>`;
+  }
+  const etiqueta = EXT_ETIQUETAS[ext] || (ext ? ext.toUpperCase() : "LINK");
+  return `<div class="doc-preview doc-preview-file"><span>${escaparHTML(etiqueta)}</span></div>`;
+}
 
 function renderDocumentos(lista) {
   if (docsCount) {
@@ -255,7 +443,8 @@ function renderDocumentos(lista) {
     const card = document.createElement("article");
     card.className = "item-card";
     card.innerHTML = `
-      <div>
+      ${renderPreviewDocumento(doc)}
+      <div class="user-info">
         <h3>${escaparHTML(doc.titulo)}</h3>
         <p>${escaparHTML(doc.descripcion) || "Sin descripción"}</p>
         <div class="meta">
@@ -313,9 +502,28 @@ function aplicarBusquedaDocumentos() {
   renderDocumentos(filtrados);
 }
 
+function resetFormularioDocumento() {
+  documentFormTitle.textContent = "Cargar documento";
+  documentId.value = "";
+  createDocumentForm.reset();
+  documentUploadText.textContent = "📎 Elegir archivo (imagen, PDF, Word, Excel...)";
+  cancelEditDocumentBtn.classList.add("hidden");
+  setStatus(documentStatus, "");
+}
+
+function abrirModalDocumento() {
+  documentModal.classList.add("open");
+}
+
+function cerrarModalDocumento() {
+  documentModal.classList.remove("open");
+  resetFormularioDocumento();
+}
+
 function editarDocumento(id) {
   const doc = documentosAdmin.find((item) => item.id === id);
   if (!doc) return;
+  abrirModalDocumento();
   documentFormTitle.textContent = "Editar documento";
   documentId.value = doc.id;
   createDocumentForm.titulo.value = doc.titulo || "";
@@ -329,14 +537,6 @@ function editarDocumento(id) {
   setStatus(documentStatus, "Editando documento seleccionado.", "success");
 }
 
-function cancelarEdicionDocumento() {
-  documentFormTitle.textContent = "Cargar documento";
-  documentId.value = "";
-  createDocumentForm.reset();
-  cancelEditDocumentBtn.classList.add("hidden");
-  setStatus(documentStatus, "");
-}
-
 async function borrarDocumento(id) {
   if (!confirm("¿Seguro que querés borrar este documento?")) return;
   try {
@@ -344,20 +544,49 @@ async function borrarDocumento(id) {
     if (!response) return;
     const result = await response.json();
     if (!response.ok) throw new Error(result.error || "No se pudo borrar");
-    await Promise.all([cargarDocumentosAdmin(), cargarStats()]);
+    await Promise.all([cargarDocumentosAdmin(), cargarStats(), cargarUsoStorage()]);
   } catch (error) {
     alert(error.message);
   }
 }
 
+async function subirDocumentoStorage(file) {
+  const formData = new FormData();
+  formData.append("file", file);
+  const response = await fetchAuth("/api/admin/library/upload", {
+    method: "POST",
+    body: formData
+  });
+  if (!response) throw new Error("No se pudo subir el archivo");
+  const result = await response.json();
+  if (!response.ok) throw new Error(result.error || "No se pudo subir el archivo");
+  return result.url;
+}
+
+documentFileInput.addEventListener("change", () => {
+  documentUploadText.textContent = documentFileInput.files[0]?.name || "📎 Elegir archivo (imagen, PDF, Word, Excel...)";
+});
+
 createDocumentForm.addEventListener("submit", async (event) => {
   event.preventDefault();
   const datos = Object.fromEntries(new FormData(createDocumentForm).entries());
   const editando = Boolean(datos.id);
+  const archivo = documentFileInput.files[0];
+
   try {
     createDocumentBtn.disabled = true;
-    createDocumentBtn.textContent = editando ? "Guardando..." : "Cargando...";
     setStatus(documentStatus, "");
+
+    if (archivo) {
+      createDocumentBtn.textContent = "Subiendo archivo...";
+      datos.drive_url = await subirDocumentoStorage(archivo);
+    }
+
+    if (!datos.drive_url) {
+      throw new Error("Subí un archivo o pegá un enlace.");
+    }
+
+    createDocumentBtn.textContent = editando ? "Guardando..." : "Cargando...";
     const response = await fetchAuth(
       editando ? `/api/admin/library/${datos.id}` : "/api/admin/library",
       { method: editando ? "PATCH" : "POST", body: JSON.stringify(datos) }
@@ -365,9 +594,10 @@ createDocumentForm.addEventListener("submit", async (event) => {
     if (!response) return;
     const result = await response.json();
     if (!response.ok) throw new Error(result.error || "No se pudo guardar el documento");
+
+    await Promise.all([cargarDocumentosAdmin(), cargarStats(), cargarUsoStorage()]);
+    cerrarModalDocumento();
     setStatus(documentStatus, editando ? "Documento editado correctamente." : "Documento cargado correctamente.", "success");
-    cancelarEdicionDocumento();
-    await Promise.all([cargarDocumentosAdmin(), cargarStats()]);
   } catch (error) {
     setStatus(documentStatus, error.message, "error");
   } finally {
@@ -376,7 +606,18 @@ createDocumentForm.addEventListener("submit", async (event) => {
   }
 });
 
-cancelEditDocumentBtn.addEventListener("click", cancelarEdicionDocumento);
+toggleCreateDocumentBtn.addEventListener("click", () => {
+  resetFormularioDocumento();
+  abrirModalDocumento();
+});
+
+closeDocumentModalBtn.addEventListener("click", cerrarModalDocumento);
+cancelEditDocumentBtn.addEventListener("click", cerrarModalDocumento);
+
+documentModal.addEventListener("click", (event) => {
+  if (event.target === documentModal) cerrarModalDocumento();
+});
+
 reloadDocumentsBtn.addEventListener("click", cargarDocumentosAdmin);
 documentSearch.addEventListener("input", aplicarBusquedaDocumentos);
 
@@ -504,14 +745,18 @@ document.getElementById("csImageInput")?.addEventListener("change", function () 
 });
 
 async function subirImagenStorage(file, carpeta) {
-  if (file.type !== "image/webp") throw new Error("Solo se aceptan imágenes en formato .webp");
-  const path = `${carpeta}/${Date.now()}.webp`;
-  const { error } = await window.supabaseClient.storage
-    .from("club-sanvi")
-    .upload(path, file, { cacheControl: "3600", upsert: false });
-  if (error) throw new Error("Storage: " + error.message);
-  const { data } = window.supabaseClient.storage.from("club-sanvi").getPublicUrl(path);
-  return data.publicUrl;
+  if (!file.type.startsWith("image/")) throw new Error("Solo se aceptan archivos de imagen");
+  const formData = new FormData();
+  formData.append("file", file);
+  formData.append("carpeta", carpeta);
+  const response = await fetchAuth("/api/admin/club-sanvi/upload-imagen", {
+    method: "POST",
+    body: formData
+  });
+  if (!response) throw new Error("No se pudo subir la imagen");
+  const result = await response.json();
+  if (!response.ok) throw new Error(result.error || "No se pudo subir la imagen");
+  return result.url;
 }
 
 async function cargarGaleria() {
@@ -586,7 +831,7 @@ document.getElementById("csGaleriaForm")?.addEventListener("submit", async funct
   const alt       = form.get("alt") || disciplina;
 
   if (!file)      return setStatus(status, "Seleccioná una imagen primero.", "error");
-  if (file.type !== "image/webp") return setStatus(status, "Solo se aceptan imágenes .webp. Convertí la foto antes de subirla.", "error");
+  if (!file.type.startsWith("image/")) return setStatus(status, "Seleccioná un archivo de imagen.", "error");
   if (!disciplina) return setStatus(status, "Seleccioná una disciplina.", "error");
 
   try {
@@ -645,7 +890,7 @@ async function cargarDisciplinasAdmin() {
                style="${disc.foto_url ? "" : "display:none"}">
           <label class="cs-disc-photo-overlay">
             📷
-            <input type="file" accept=".webp" class="cs-disc-file" data-slug="${escaparHTML(disc.slug)}">
+            <input type="file" accept="image/*" class="cs-disc-file" data-slug="${escaparHTML(disc.slug)}">
           </label>
         </div>
         <div class="cs-disc-form-inner">
@@ -920,7 +1165,7 @@ function renderSvGrid(seccion, items, container) {
       "</div>" +
       "<div class='sv-slot-footer'>" +
       "<span class='sv-slot-label'>" + slotLabel + "</span>" +
-      "<label class='sv-slot-btn'>Cambiar<input type='file' accept='.webp' class='sv-file-input' data-seccion='" + seccion + "' data-slot='" + s + "'></label>" +
+      "<label class='sv-slot-btn'>Cambiar<input type='file' accept='image/*' class='sv-file-input' data-seccion='" + seccion + "' data-slot='" + s + "'></label>" +
       "</div>" +
       "<p class='sv-slot-status status'></p>" +
       "</div>";
@@ -981,7 +1226,8 @@ async function iniciarAdmin() {
     cargarStats(),
     cargarUsuarios(),
     cargarDocumentosAdmin(),
-    cargarComunicados()
+    cargarComunicados(),
+    cargarUsoStorage()
   ]);
 }
 
