@@ -65,6 +65,71 @@ function limpiarTexto(valor) {
   return String(valor).trim().replace(/[<>]/g, "").slice(0, 2500);
 }
 
+/* ===== Plantillas de correo (estética Instituto San Vicente) ===== */
+
+const MARCA = {
+  nombre: "Instituto San Vicente",
+  eslogan: "Educación para crecer, crear y transformar",
+  sitio: "https://institutosanvicente.com",
+  sitioTexto: "institutosanvicente.com",
+  logo: "https://institutosanvicente.com/assets/img/Sanvi%20Logos/logo.webp",
+  whatsapp: "266 4214497",
+  emisor: "Instituto San Vicente <noreply@institutosanvicente.com>",
+  rojo: "#b81424",
+  rojoClaro: "#c83c3c",
+  azul: "#1f3f63",
+  crema: "#f6f1e8",
+  cremaClara: "#fffaf2",
+  borde: "#ece3d4",
+  texto: "#2b2b2b",
+  suave: "#62584f"
+};
+
+// Fila etiqueta/valor para las tablas de datos del correo
+function filaDato(label, valor) {
+  return `<tr>
+    <td style="padding:9px 14px 9px 0;font-family:Arial,Helvetica,sans-serif;font-size:13px;font-weight:bold;color:${MARCA.azul};vertical-align:top;white-space:nowrap;">${label}</td>
+    <td style="padding:9px 0;font-family:Arial,Helvetica,sans-serif;font-size:15px;color:${MARCA.texto};vertical-align:top;border-bottom:1px solid ${MARCA.borde};">${valor}</td>
+  </tr>`;
+}
+
+// Envoltorio con cabecera, cuerpo y pie de marca. Pensado para clientes de correo (Gmail, etc.).
+function plantillaEmail({ titulo, preheader = "", cuerpo, notaPie = "" }) {
+  return `<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="color-scheme" content="light only">
+<title>${titulo}</title>
+</head>
+<body style="margin:0;padding:0;background-color:${MARCA.crema};">
+<div style="display:none;max-height:0;overflow:hidden;opacity:0;color:${MARCA.crema};">${preheader}</div>
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:${MARCA.crema};padding:24px 12px;">
+<tr><td align="center">
+<table role="presentation" cellpadding="0" cellspacing="0" style="width:600px;max-width:600px;background-color:${MARCA.cremaClara};border-radius:14px;overflow:hidden;border:1px solid ${MARCA.borde};">
+  <tr><td style="height:6px;line-height:6px;font-size:0;background-color:${MARCA.rojo};">&nbsp;</td></tr>
+  <tr><td align="center" style="padding:30px 24px 14px 24px;">
+    <img src="${MARCA.logo}" width="72" alt="Instituto San Vicente" style="display:block;width:72px;height:auto;margin:0 auto 12px auto;border:0;">
+    <div style="font-family:Georgia,'Times New Roman',serif;font-size:22px;font-weight:bold;color:${MARCA.azul};letter-spacing:.3px;">${MARCA.nombre}</div>
+    <div style="font-family:Georgia,'Times New Roman',serif;font-size:11px;color:${MARCA.rojoClaro};text-transform:uppercase;letter-spacing:2px;margin-top:6px;">${MARCA.eslogan}</div>
+  </td></tr>
+  <tr><td style="padding:6px 24px 0 24px;"><div style="height:2px;background-color:${MARCA.rojo};font-size:0;line-height:0;">&nbsp;</div></td></tr>
+  <tr><td style="padding:24px;">${cuerpo}</td></tr>
+  <tr><td style="padding:22px 24px;background-color:${MARCA.azul};font-family:Arial,Helvetica,sans-serif;">
+    <div style="color:${MARCA.crema};font-size:13px;line-height:1.7;">
+      <strong style="color:#ffffff;">${MARCA.nombre}</strong><br>
+      <a href="${MARCA.sitio}" style="color:${MARCA.crema};text-decoration:underline;">${MARCA.sitioTexto}</a>&nbsp;&nbsp;·&nbsp;&nbsp;WhatsApp ${MARCA.whatsapp}
+    </div>
+    ${notaPie ? `<div style="color:#9fb2c6;font-size:11px;line-height:1.6;margin-top:12px;">${notaPie}</div>` : ""}
+  </td></tr>
+</table>
+</td></tr>
+</table>
+</body>
+</html>`;
+}
+
 function validarUrlDrive(url) {
   try {
     const parsed = new URL(url);
@@ -163,26 +228,71 @@ app.post("/api/contacto", async (req, res) => {
       });
     }
 
+    const destinoConsultas = process.env.CONTACT_EMAIL || "luciano.duca.contacto@gmail.com";
+
+    const htmlAdmin = plantillaEmail({
+      titulo: "Nueva consulta desde la web",
+      preheader: `Nueva consulta de ${nombre} ${apellido}`,
+      cuerpo: `
+        <h1 style="margin:0 0 6px 0;font-family:Georgia,'Times New Roman',serif;font-size:20px;color:${MARCA.rojo};">Nueva consulta desde la web</h1>
+        <p style="margin:0 0 20px 0;color:${MARCA.suave};font-size:14px;line-height:1.6;">Recibiste una nueva consulta a través del formulario de contacto del sitio.</p>
+        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse;margin-bottom:20px;">
+          ${filaDato("Nombre", `${nombre} ${apellido}`)}
+          ${filaDato("Correo", correo)}
+          ${filaDato("Teléfono", telefono || "No indicado")}
+          ${filaDato("Asunto", asunto || "Sin asunto")}
+        </table>
+        <div style="background-color:${MARCA.crema};border-left:4px solid ${MARCA.rojo};border-radius:8px;padding:16px 18px;">
+          <div style="font-family:Georgia,'Times New Roman',serif;font-size:12px;text-transform:uppercase;letter-spacing:1px;color:${MARCA.azul};margin-bottom:8px;">Mensaje</div>
+          <div style="color:${MARCA.texto};font-size:15px;line-height:1.7;white-space:pre-line;">${mensaje}</div>
+        </div>`
+    });
+
     const { error } = await resend.emails.send({
-      from: "Instituto San Vicente <onboarding@resend.dev>",
-      to: [process.env.CONTACT_EMAIL || "lucianoduca123@gmail.com"],
-      subject: asunto || "Nueva consulta desde la web",
+      from: MARCA.emisor,
+      to: [destinoConsultas],
+      subject: asunto ? `Consulta web: ${asunto}` : "Nueva consulta desde la web",
       reply_to: correo,
-      html: `
-        <h2>Nueva consulta institucional</h2>
-        <p><strong>Nombre:</strong> ${nombre} ${apellido}</p>
-        <p><strong>Correo:</strong> ${correo}</p>
-        <p><strong>Teléfono:</strong> ${telefono || "No indicado"}</p>
-        <p><strong>Asunto:</strong> ${asunto || "Sin asunto"}</p>
-        <hr>
-        <p>${mensaje}</p>
-      `
+      html: htmlAdmin
     });
 
     if (error) {
       return res.status(500).json({
         error: error.message
       });
+    }
+
+    // Correo automático de agradecimiento al visitante (no interrumpe la respuesta si falla)
+    if (/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(correo)) {
+      const htmlGracias = plantillaEmail({
+        titulo: "¡Gracias por escribirnos!",
+        preheader: "Recibimos tu mensaje y te responderemos a la brevedad.",
+        notaPie: "Este correo fue enviado automáticamente. Si respondés a este mensaje, tu respuesta llegará a nuestro equipo.",
+        cuerpo: `
+          <h1 style="margin:0 0 12px 0;font-family:Georgia,'Times New Roman',serif;font-size:22px;color:${MARCA.rojo};">¡Gracias por escribirnos, ${nombre}!</h1>
+          <p style="margin:0 0 16px 0;color:${MARCA.texto};font-size:15px;line-height:1.7;">Recibimos tu mensaje y nuestro equipo se pondrá en contacto con vos a la brevedad. Nos alegra mucho tu interés en <strong>Instituto San Vicente</strong>.</p>
+          <div style="background-color:${MARCA.crema};border-left:4px solid ${MARCA.rojo};border-radius:8px;padding:16px 18px;margin:0 0 22px 0;">
+            <div style="font-family:Georgia,'Times New Roman',serif;font-size:12px;text-transform:uppercase;letter-spacing:1px;color:${MARCA.azul};margin-bottom:8px;">Tu mensaje</div>
+            ${asunto ? `<div style="color:${MARCA.suave};font-size:13px;margin-bottom:8px;"><strong>Asunto:</strong> ${asunto}</div>` : ""}
+            <div style="color:${MARCA.texto};font-size:15px;line-height:1.7;white-space:pre-line;">${mensaje}</div>
+          </div>
+          <table role="presentation" cellpadding="0" cellspacing="0" style="margin:0 0 22px 0;"><tr><td style="border-radius:8px;background-color:${MARCA.rojo};">
+            <a href="${MARCA.sitio}" style="display:inline-block;padding:12px 26px;font-family:Arial,Helvetica,sans-serif;font-size:14px;font-weight:bold;color:#ffffff;text-decoration:none;border-radius:8px;">Conocé nuestro sitio</a>
+          </td></tr></table>
+          <p style="margin:0;color:${MARCA.suave};font-size:14px;line-height:1.6;">Un cálido saludo,<br><strong style="color:${MARCA.azul};">Equipo de Instituto San Vicente</strong></p>`
+      });
+
+      try {
+        await resend.emails.send({
+          from: MARCA.emisor,
+          to: [correo],
+          subject: "¡Gracias por contactarte con Instituto San Vicente!",
+          reply_to: destinoConsultas,
+          html: htmlGracias
+        });
+      } catch (e) {
+        console.error("No se pudo enviar el correo de agradecimiento:", e?.message || e);
+      }
     }
 
     return res.json({ ok: true });
