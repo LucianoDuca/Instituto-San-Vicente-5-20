@@ -245,7 +245,7 @@ app.post("/api/contacto", async (req, res) => {
       });
     }
 
-    const destinoConsultas = process.env.CONTACT_EMAIL || "luciano.duca.contacto@gmail.com";
+    const destinoConsultas = process.env.CONTACT_EMAIL || "Admsanvicentejk@gmail.com";
 
     const htmlAdmin = plantillaEmail({
       titulo: "Nueva consulta desde la web",
