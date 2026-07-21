@@ -1072,13 +1072,20 @@ var SV_SECCIONES = {
     desc: "Las 3 imágenes de portada de las tarjetas de niveles en la página Academic Levels.",
     slots: 3,
     slotNames: ["Portada Kinder", "Portada Primario", "Portada Secundario"]
+  },
+  ingles: {
+    label: "Inglés — Galería y fotos",
+    desc: "Las fotos de la página de Inglés: las 3 del slider principal, la foto de «Nuestra propuesta» y la foto de «Inmersión en Inglaterra».",
+    slots: 5,
+    slotNames: ["Slider 1", "Slider 2", "Slider 3", "Foto «Nuestra propuesta»", "Foto «Inmersión en Inglaterra»"]
   }
 };
 
 var SV_GRUPOS = [
   { label: "Inicio",             secciones: ["hero", "inscripcion", "instalaciones", "inicios"] },
   { label: "Instituto",          secciones: ["edificios"] },
-  { label: "Niveles Académicos", secciones: ["kinder", "primario", "secundario", "academic"] }
+  { label: "Niveles Académicos", secciones: ["kinder", "primario", "secundario", "academic"] },
+  { label: "Inglés",             secciones: ["ingles"] }
 ];
 
 function renderSvAccordion() {
