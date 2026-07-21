@@ -353,9 +353,7 @@ const translations = {
     "kinder.info.intro": "Un espacio de descubrimiento, juego y aprendizaje donde cada niño/a comienza a explorar el mundo con alegría, creatividad y confianza.",
     "kinder.info.ages": "<span class='dli'><img src='assets/img/icons/person.svg' alt=''></span><strong>Edades:</strong> de 2 a 5 años",
     "kinder.info.schedule": "<span class='dli'><img src='assets/img/icons/clock.svg' alt=''></span><strong>Horario:</strong> lunes a viernes de 9:00 a 12:30 hs",
-    "kinder.info.options": "<span class='dli'><img src='assets/img/icons/calendar.svg' alt=''></span><strong>Opciones:</strong> pre y post hora, horario extendido hasta las 16:00 hs",
-    "kinder.info.workshops": "<span class='dli'><img src='assets/img/icons/palette.svg' alt=''></span><strong>Espacio de talleres:</strong> de 13:30 a 16:00 hs",
-    "kinder.info.button": "Solicitá tu entrevista",
+    "kinder.info.options": "<span class='dli'><img src='assets/img/icons/calendar.svg' alt=''></span><strong>Opciones:</strong> pre y post hora, horario extendido hasta las 16:00 hs",    "kinder.info.button": "Solicitá tu entrevista",
 
     "kinder.proposal.label": "NUESTRA PROPUESTA",
     "kinder.proposal.title": "Aprender jugando",
@@ -806,9 +804,7 @@ const translations = {
     "kinder.info.intro": "A space of discovery, play and learning where every child begins to explore the world with joy, creativity and confidence.",
     "kinder.info.ages": "<span class='dli'><img src='assets/img/icons/person.svg' alt=''></span><strong>Ages:</strong> From 2 to 5 years old",
     "kinder.info.schedule": "<span class='dli'><img src='assets/img/icons/clock.svg' alt=''></span><strong>Schedule:</strong> Monday to Friday from 9:00 AM to 12:30 PM",
-    "kinder.info.options": "<span class='dli'><img src='assets/img/icons/calendar.svg' alt=''></span><strong>Options:</strong> Pre-hour and post-hour service, extended hours until 4:00 PM",
-    "kinder.info.workshops": "<span class='dli'><img src='assets/img/icons/palette.svg' alt=''></span><strong>Workshop space:</strong> From 1:30 PM to 4:00 PM",
-    "kinder.info.button": "Request your interview",
+    "kinder.info.options": "<span class='dli'><img src='assets/img/icons/calendar.svg' alt=''></span><strong>Options:</strong> Pre-hour and post-hour service, extended hours until 4:00 PM",    "kinder.info.button": "Request your interview",
 
     "kinder.proposal.label": "OUR PROPOSAL",
     "kinder.proposal.title": "Learning through play",
