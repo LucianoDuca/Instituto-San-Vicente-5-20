@@ -69,31 +69,39 @@ function limpiarTexto(valor) {
 
 const MARCA = {
   nombre: "Instituto San Vicente",
-  eslogan: "Educación para crecer, crear y transformar",
   sitio: "https://institutosanvicente.com",
   sitioTexto: "institutosanvicente.com",
-  logo: "https://institutosanvicente.com/assets/img/Sanvi%20Logos/logo.webp",
+  banner: "https://institutosanvicente.com/assets/img/email/encabezado-correo.png",
+  fuenteApricot: "https://institutosanvicente.com/assets/fonts/Apricot.ttf",
   whatsapp: "266 4214497",
   emisor: "Instituto San Vicente <noreply@institutosanvicente.com>",
-  rojo: "#b81424",
-  rojoClaro: "#c83c3c",
-  azul: "#1f3f63",
-  crema: "#f6f1e8",
-  cremaClara: "#fffaf2",
-  borde: "#ece3d4",
-  texto: "#2b2b2b",
-  suave: "#62584f"
+  navy: "#083656",
+  azul: "#0b4a78",
+  rojo: "#e8342a",
+  fondo: "#ebebeb",
+  caja: "#f1f5f8",
+  borde: "#e2e8ee",
+  suave: "#5b7488",
+  tituloFont: "'Apricot','Franklin Gothic Medium','Arial Narrow',Arial,sans-serif"
 };
+
+// Titulo a dos lineas estilo index: linea navy + linea roja (fuente Apricot con respaldo)
+function tituloEmail(linea1, linea2) {
+  return `<div style="text-transform:uppercase;line-height:1.05;margin:0 0 18px 0;">
+    <div style="font-family:${MARCA.tituloFont};font-size:30px;color:${MARCA.azul};letter-spacing:.5px;">${linea1}</div>
+    <div style="font-family:${MARCA.tituloFont};font-size:21px;color:${MARCA.rojo};letter-spacing:.5px;margin-top:2px;">${linea2}</div>
+  </div>`;
+}
 
 // Fila etiqueta/valor para las tablas de datos del correo
 function filaDato(label, valor) {
   return `<tr>
-    <td style="padding:9px 14px 9px 0;font-family:Arial,Helvetica,sans-serif;font-size:13px;font-weight:bold;color:${MARCA.azul};vertical-align:top;white-space:nowrap;">${label}</td>
-    <td style="padding:9px 0;font-family:Arial,Helvetica,sans-serif;font-size:15px;color:${MARCA.texto};vertical-align:top;border-bottom:1px solid ${MARCA.borde};">${valor}</td>
+    <td style="padding:10px 16px 10px 0;font-family:Arial,Helvetica,sans-serif;font-size:13px;font-weight:bold;color:${MARCA.navy};vertical-align:top;white-space:nowrap;">${label}</td>
+    <td style="padding:10px 0;font-family:Arial,Helvetica,sans-serif;font-size:15px;color:${MARCA.azul};vertical-align:top;border-bottom:1px solid ${MARCA.borde};">${valor}</td>
   </tr>`;
 }
 
-// Envoltorio con cabecera, cuerpo y pie de marca. Pensado para clientes de correo (Gmail, etc.).
+// Envoltorio con banner decorativo, cuerpo y pie institucional. Pensado para clientes de correo (Gmail, etc.).
 function plantillaEmail({ titulo, preheader = "", cuerpo, notaPie = "" }) {
   return `<!doctype html>
 <html lang="es">
@@ -102,26 +110,35 @@ function plantillaEmail({ titulo, preheader = "", cuerpo, notaPie = "" }) {
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="color-scheme" content="light only">
 <title>${titulo}</title>
+<style>
+@font-face{font-family:'Apricot';src:url('${MARCA.fuenteApricot}') format('truetype');font-weight:normal;font-style:normal;font-display:swap;}
+</style>
 </head>
-<body style="margin:0;padding:0;background-color:${MARCA.crema};">
-<div style="display:none;max-height:0;overflow:hidden;opacity:0;color:${MARCA.crema};">${preheader}</div>
-<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:${MARCA.crema};padding:24px 12px;">
+<body style="margin:0;padding:0;background-color:${MARCA.fondo};">
+<div style="display:none;max-height:0;overflow:hidden;opacity:0;color:${MARCA.fondo};">${preheader}</div>
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:${MARCA.fondo};padding:26px 12px;">
 <tr><td align="center">
-<table role="presentation" cellpadding="0" cellspacing="0" style="width:600px;max-width:600px;background-color:${MARCA.cremaClara};border-radius:14px;overflow:hidden;border:1px solid ${MARCA.borde};">
-  <tr><td style="height:6px;line-height:6px;font-size:0;background-color:${MARCA.rojo};">&nbsp;</td></tr>
-  <tr><td align="center" style="padding:30px 24px 14px 24px;">
-    <img src="${MARCA.logo}" width="72" alt="Instituto San Vicente" style="display:block;width:72px;height:auto;margin:0 auto 12px auto;border:0;">
-    <div style="font-family:Georgia,'Times New Roman',serif;font-size:22px;font-weight:bold;color:${MARCA.azul};letter-spacing:.3px;">${MARCA.nombre}</div>
-    <div style="font-family:Georgia,'Times New Roman',serif;font-size:11px;color:${MARCA.rojoClaro};text-transform:uppercase;letter-spacing:2px;margin-top:6px;">${MARCA.eslogan}</div>
+<table role="presentation" cellpadding="0" cellspacing="0" style="width:600px;max-width:600px;background-color:#ffffff;border-radius:16px;overflow:hidden;border:1px solid #e0e0e0;">
+  <tr><td style="padding:0;font-size:0;line-height:0;">
+    <img src="${MARCA.banner}" alt="Instituto San Vicente" width="600" style="display:block;width:100%;max-width:600px;height:auto;border:0;">
   </td></tr>
-  <tr><td style="padding:6px 24px 0 24px;"><div style="height:2px;background-color:${MARCA.rojo};font-size:0;line-height:0;">&nbsp;</div></td></tr>
-  <tr><td style="padding:24px;">${cuerpo}</td></tr>
-  <tr><td style="padding:22px 24px;background-color:${MARCA.azul};font-family:Arial,Helvetica,sans-serif;">
-    <div style="color:${MARCA.crema};font-size:13px;line-height:1.7;">
-      <strong style="color:#ffffff;">${MARCA.nombre}</strong><br>
-      <a href="${MARCA.sitio}" style="color:${MARCA.crema};text-decoration:underline;">${MARCA.sitioTexto}</a>&nbsp;&nbsp;·&nbsp;&nbsp;WhatsApp ${MARCA.whatsapp}
-    </div>
-    ${notaPie ? `<div style="color:#9fb2c6;font-size:11px;line-height:1.6;margin-top:12px;">${notaPie}</div>` : ""}
+  <tr><td style="padding:24px 34px 32px 34px;">${cuerpo}</td></tr>
+  <tr><td style="padding:26px 34px;background-color:${MARCA.navy};font-family:Arial,Helvetica,sans-serif;">
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr>
+      <td style="vertical-align:top;padding:0 12px 0 0;width:38%;">
+        <div style="color:#ffffff;font-size:12px;font-weight:bold;margin-bottom:5px;">Dirección</div>
+        <div style="color:#bcd0df;font-size:12px;line-height:1.6;">Av. del Viento Chorrillero 2570<br>Juana Koslay, San Luis</div>
+      </td>
+      <td style="vertical-align:top;padding:0 12px;width:28%;">
+        <div style="color:#ffffff;font-size:12px;font-weight:bold;margin-bottom:5px;">Horario</div>
+        <div style="color:#bcd0df;font-size:12px;line-height:1.6;">Lun a Vie<br>8:00 a 16:00 hs</div>
+      </td>
+      <td style="vertical-align:top;padding:0 0 0 12px;width:34%;">
+        <div style="color:#ffffff;font-size:12px;font-weight:bold;margin-bottom:5px;">Contacto</div>
+        <div style="color:#bcd0df;font-size:12px;line-height:1.6;">266 4214497<br><a href="${MARCA.sitio}" style="color:#bcd0df;text-decoration:none;">institutosanvicente.com</a></div>
+      </td>
+    </tr></table>
+    <div style="border-top:1px solid rgba(255,255,255,.16);margin-top:16px;padding-top:12px;color:#8fabc0;font-size:11px;line-height:1.6;">© 2026 Instituto San Vicente. Todos los derechos reservados.${notaPie ? `<br>${notaPie}` : ""}</div>
   </td></tr>
 </table>
 </td></tr>
@@ -234,17 +251,17 @@ app.post("/api/contacto", async (req, res) => {
       titulo: "Nueva consulta desde la web",
       preheader: `Nueva consulta de ${nombre} ${apellido}`,
       cuerpo: `
-        <h1 style="margin:0 0 6px 0;font-family:Georgia,'Times New Roman',serif;font-size:20px;color:${MARCA.rojo};">Nueva consulta desde la web</h1>
-        <p style="margin:0 0 20px 0;color:${MARCA.suave};font-size:14px;line-height:1.6;">Recibiste una nueva consulta a través del formulario de contacto del sitio.</p>
-        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse;margin-bottom:20px;">
+        ${tituloEmail("Nueva consulta", "desde la web")}
+        <p style="margin:0 0 22px 0;font-family:Arial,Helvetica,sans-serif;color:${MARCA.suave};font-size:14px;line-height:1.6;">Recibiste una nueva consulta a través del formulario de contacto del sitio.</p>
+        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse;margin-bottom:22px;">
           ${filaDato("Nombre", `${nombre} ${apellido}`)}
           ${filaDato("Correo", correo)}
           ${filaDato("Teléfono", telefono || "No indicado")}
           ${filaDato("Asunto", asunto || "Sin asunto")}
         </table>
-        <div style="background-color:${MARCA.crema};border-left:4px solid ${MARCA.rojo};border-radius:8px;padding:16px 18px;">
-          <div style="font-family:Georgia,'Times New Roman',serif;font-size:12px;text-transform:uppercase;letter-spacing:1px;color:${MARCA.azul};margin-bottom:8px;">Mensaje</div>
-          <div style="color:${MARCA.texto};font-size:15px;line-height:1.7;white-space:pre-line;">${mensaje}</div>
+        <div style="background-color:${MARCA.caja};border-left:4px solid ${MARCA.rojo};padding:16px 18px;">
+          <div style="font-family:${MARCA.tituloFont};font-size:13px;text-transform:uppercase;letter-spacing:1px;color:${MARCA.navy};margin-bottom:8px;">Mensaje</div>
+          <div style="font-family:Arial,Helvetica,sans-serif;color:${MARCA.azul};font-size:15px;line-height:1.7;white-space:pre-line;">${mensaje}</div>
         </div>`
     });
 
@@ -269,17 +286,17 @@ app.post("/api/contacto", async (req, res) => {
         preheader: "Recibimos tu mensaje y te responderemos a la brevedad.",
         notaPie: "Este correo fue enviado automáticamente. Si respondés a este mensaje, tu respuesta llegará a nuestro equipo.",
         cuerpo: `
-          <h1 style="margin:0 0 12px 0;font-family:Georgia,'Times New Roman',serif;font-size:22px;color:${MARCA.rojo};">¡Gracias por escribirnos, ${nombre}!</h1>
-          <p style="margin:0 0 16px 0;color:${MARCA.texto};font-size:15px;line-height:1.7;">Recibimos tu mensaje y nuestro equipo se pondrá en contacto con vos a la brevedad. Nos alegra mucho tu interés en <strong>Instituto San Vicente</strong>.</p>
-          <div style="background-color:${MARCA.crema};border-left:4px solid ${MARCA.rojo};border-radius:8px;padding:16px 18px;margin:0 0 22px 0;">
-            <div style="font-family:Georgia,'Times New Roman',serif;font-size:12px;text-transform:uppercase;letter-spacing:1px;color:${MARCA.azul};margin-bottom:8px;">Tu mensaje</div>
-            ${asunto ? `<div style="color:${MARCA.suave};font-size:13px;margin-bottom:8px;"><strong>Asunto:</strong> ${asunto}</div>` : ""}
-            <div style="color:${MARCA.texto};font-size:15px;line-height:1.7;white-space:pre-line;">${mensaje}</div>
+          ${tituloEmail(`¡Gracias, ${nombre}!`, "por escribirnos")}
+          <p style="margin:0 0 16px 0;font-family:Arial,Helvetica,sans-serif;color:${MARCA.azul};font-size:15px;line-height:1.7;">Recibimos tu mensaje y nuestro equipo se pondrá en contacto con vos a la brevedad. Nos alegra mucho tu interés en <strong>Instituto San Vicente</strong>.</p>
+          <div style="background-color:${MARCA.caja};border-left:4px solid ${MARCA.rojo};padding:16px 18px;margin:0 0 24px 0;">
+            <div style="font-family:${MARCA.tituloFont};font-size:13px;text-transform:uppercase;letter-spacing:1px;color:${MARCA.navy};margin-bottom:8px;">Tu mensaje</div>
+            ${asunto ? `<div style="font-family:Arial,Helvetica,sans-serif;color:${MARCA.suave};font-size:13px;margin-bottom:8px;"><strong>Asunto:</strong> ${asunto}</div>` : ""}
+            <div style="font-family:Arial,Helvetica,sans-serif;color:${MARCA.azul};font-size:15px;line-height:1.7;white-space:pre-line;">${mensaje}</div>
           </div>
-          <table role="presentation" cellpadding="0" cellspacing="0" style="margin:0 0 22px 0;"><tr><td style="border-radius:8px;background-color:${MARCA.rojo};">
-            <a href="${MARCA.sitio}" style="display:inline-block;padding:12px 26px;font-family:Arial,Helvetica,sans-serif;font-size:14px;font-weight:bold;color:#ffffff;text-decoration:none;border-radius:8px;">Conocé nuestro sitio</a>
+          <table role="presentation" cellpadding="0" cellspacing="0" style="margin:0 0 24px 0;"><tr><td style="border-radius:8px;background-color:${MARCA.azul};">
+            <a href="${MARCA.sitio}" style="display:inline-block;padding:13px 30px;font-family:Arial,Helvetica,sans-serif;font-size:14px;font-weight:bold;color:#ffffff;text-decoration:none;border-radius:8px;">Conocé nuestro sitio</a>
           </td></tr></table>
-          <p style="margin:0;color:${MARCA.suave};font-size:14px;line-height:1.6;">Un cálido saludo,<br><strong style="color:${MARCA.azul};">Equipo de Instituto San Vicente</strong></p>`
+          <p style="margin:0;font-family:Arial,Helvetica,sans-serif;color:${MARCA.suave};font-size:14px;line-height:1.6;">Un cálido saludo,<br><strong style="color:${MARCA.navy};">Equipo de Instituto San Vicente</strong></p>`
       });
 
       try {
