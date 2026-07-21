@@ -144,15 +144,16 @@
 
 /* REDES */
 .contact-socials {
-  display: flex;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 36px));
   align-items: center;
-  gap: 8px;
-  flex-wrap: wrap;
+  justify-content: start;
+  gap: 6px;
 }
 
 .contact-socials a {
-  width: 36px;
-  height: 36px;
+  width: 100%;
+  aspect-ratio: 1 / 1;
   display: flex;
   align-items: center;
   justify-content: center;
