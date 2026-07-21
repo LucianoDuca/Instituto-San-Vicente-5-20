@@ -618,7 +618,8 @@
 
 .faq-head .section-title-img {
   display: block;
-  max-width: 420px;
+  width: auto;
+  max-width: min(420px, 100%);
   height: auto;
   margin-top: 10px;
   margin-bottom: 14px;
