@@ -361,7 +361,7 @@ const translations = {
     "kinder.proposal.title": "Aprender jugando",
     "kinder.proposal.text": "Acompañamos los primeros aprendizajes desde una propuesta que invita a descubrir, explorar y aprender a través del juego, en un entorno cálido, creativo y pensado para cada etapa del crecimiento.",
     "kinder.proposal.point1": "El Nivel Inicial funciona de lunes a viernes de 9:00 a 12:30 hs, con opciones de pre y post hora y modalidad de horario extendido hasta las 16:00 hs.",
-    "kinder.proposal.point2": "El espacio de talleres ofrece un ambiente pensado para compartir, disfrutar y crecer.",
+    "kinder.proposal.point2": "El espacio de talleres exclusivo para nuestros/as estudiantes ofrece un ambiente pensado para compartir, disfrutar y crecer.",
     "kinder.proposal.point3": "Nuestra propuesta integra inglés, deportes, arte, educación emocional y cultura, promoviendo una formación integral desde los primeros años.",
 
     "kinder.exp.title": "Experiencias que acompañan su crecimiento",
@@ -395,8 +395,8 @@ const translations = {
     "primary.proposal.label": "NUESTRA PROPUESTA",
     "primary.proposal.title": "Aprender y crecer",
     "primary.proposal.text": "El Nivel Primario del Instituto San Vicente funciona de lunes a viernes de 8:00 a 16:00 hs, dentro de una propuesta educativa moderna y actualizada a los tiempos de hoy.",
-    "primary.proposal.point1": "La institución propone un recorrido donde los estudiantes puedan desarrollar actividades académicas, deportivas, artísticas, culturales y emocionales en un entorno agradable, pensado para disfrutar cada experiencia.",
-    "primary.proposal.point2": "Acompañamos la autonomía, la libertad responsable, el respeto, la apertura al encuentro con los demás y el pensamiento riguroso, fortaleciendo el desarrollo integral de cada alumno.",
+    "primary.proposal.point1": "La institución propone un recorrido donde los/las estudiantes puedan desarrollar actividades académicas, deportivas, artísticas, culturales y emocionales en un entorno agradable, pensado para disfrutar cada experiencia.",
+    "primary.proposal.point2": "Acompañamos la autonomía, la libertad responsable, el respeto, la apertura al encuentro con los demás y el pensamiento riguroso, fortaleciendo el desarrollo integral de cada Estudiante.",
     "primary.proposal.point3": "Nuestra propuesta integra inglés, deportes, arte, educación emocional y cultura, promoviendo una formación integral desde los primeros años de escolaridad.",
 
     "primary.exp.title": "Experiencias que enriquecen su formación",
@@ -430,9 +430,9 @@ const translations = {
 
     "highschool.proposal.label": "NUESTRA PROPUESTA",
     "highschool.proposal.title": "Formarse para el futuro",
-    "highschool.proposal.text": "El Nivel Secundario del Instituto San Vicente funciona de 7:45 a 15:30 hs, con espacio de tutoría hasta las 16:00 hs, acompañando a los estudiantes en una etapa clave de crecimiento académico, personal y social.",
+    "highschool.proposal.text": "El Nivel Secundario del Instituto San Vicente funciona de 7:45 a 15:30 hs, con espacio de tutoría hasta las 16:00 hs, acompañando a los/las estudiantes en una etapa clave de crecimiento académico, personal y social.",
     "highschool.proposal.point1": "La propuesta busca que cada estudiante desarrolle sus múltiples inteligencias, dé lo mejor de sí desde su singularidad y utilice su libertad responsablemente, fortaleciendo su autonomía.",
-    "highschool.proposal.point2": "Acompañamos una formación integral donde el alumno no solo aprende, sino que aprende a pensar cómo piensa y actúa, desarrollando su metacognición.",
+    "highschool.proposal.point2": "Acompañamos una formación integral donde cada estudiante no solo incorpora conocimientos, sino que también desarrolla la capacidad de reflexionar sobre sus propios procesos de pensamiento y acción, fortaleciendo su metacognición.",
     "highschool.proposal.point3": "Nuestra propuesta integra inglés, ciencias, arte, educación física y tecnología, preparando a cada joven para ser creador de su propio futuro.",
 
     "highschool.exp.title": "Experiencias que los preparan para el futuro",
