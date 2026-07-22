@@ -7,8 +7,12 @@
    Fallback: si la API falla, usa los nodos estáticos del HTML.
 ============================================= */
 (function () {
-  // Secciones que son sliders de nivel (cantidad de imágenes variable)
-  var NIVEL = { kinder: 1, primario: 1, secundario: 1, ingles: 1 };
+  // Tipo de cada sección con cantidad de imágenes variable
+  var TIPO = {
+    kinder: 'nivel', primario: 'nivel', secundario: 'nivel', ingles: 'nivel',
+    hero: 'carousel',
+    instalaciones: 'grid'
+  };
 
   var tagged = document.querySelectorAll('[data-sv-seccion]');
   if (!tagged.length) return;
@@ -24,17 +28,81 @@
       .then(function (r) { return r.ok ? r.json() : []; })
       .then(function (data) {
         if (!Array.isArray(data)) data = [];
-        if (NIVEL[sec]) construirNivel(sec, data);
+        var tipo = TIPO[sec];
+        if (tipo === 'nivel') construirNivel(sec, data);
+        else if (tipo === 'carousel') construirCarousel(sec, data);
+        else if (tipo === 'grid') construirGrid(sec, data);
         else reemplazarSrc(secciones[sec], data);
       })
       .catch(function () {
-        // Sin API: inicializar el slider sobre los nodos estáticos
-        if (NIVEL[sec]) {
-          var sw = sliderDeSeccion(sec);
-          if (sw) initNivelSlider(sw);
-        }
+        // Sin API: inicializar sobre los nodos estáticos
+        var tipo = TIPO[sec];
+        if (tipo === 'nivel') { var sw = sliderDeSeccion(sec); if (sw) initNivelSlider(sw); }
+        else if (tipo === 'carousel') { var t = trackDeSeccion(sec); if (t) initCarousel(t); }
       });
   });
+
+  function seteaImg(img, row) {
+    if (!img) return;
+    if (row.url) img.src = row.url;
+    if (row.alt) img.setAttribute('alt', row.alt);
+    img.setAttribute('data-sv-slot', row.slot);
+    img.removeAttribute('data-i18n-alt');
+  }
+
+  function trackDeSeccion(sec) {
+    var img = document.querySelector('[data-sv-seccion="' + sec + '"]');
+    var slide = img ? img.closest('.slide, .edificios-slide') : null;
+    return slide ? slide.parentElement : null;
+  }
+
+  /* Carrusel translateX (hero / edificios): reconstruye slides y (re)inicia autoplay */
+  function construirCarousel(sec, data) {
+    var rows = data.slice().sort(function (a, b) { return a.slot - b.slot; });
+    var img = document.querySelector('[data-sv-seccion="' + sec + '"]');
+    var slideTpl = img ? img.closest('.slide, .edificios-slide') : null;
+    if (!slideTpl) return;
+    var track = slideTpl.parentElement;
+
+    if (rows.length) {
+      var base = slideTpl.cloneNode(true);
+      track.innerHTML = '';
+      rows.forEach(function (row) {
+        var s = base.cloneNode(true);
+        seteaImg(s.querySelector('img'), row);
+        track.appendChild(s);
+      });
+    }
+    initCarousel(track);
+  }
+
+  function initCarousel(track) {
+    if (!track || !track.children.length) return;
+    var i = 0;
+    setInterval(function () {
+      i = (i + 1) % track.children.length;
+      track.style.transform = 'translateX(-' + (i * 100) + '%)';
+    }, 4000);
+  }
+
+  /* Grilla (instalaciones): reconstruye las celdas según la DB (la 1ª conserva sus clases) */
+  function construirGrid(sec, data) {
+    var rows = data.slice().sort(function (a, b) { return a.slot - b.slot; });
+    if (!rows.length) return;
+    var imgs = document.querySelectorAll('[data-sv-seccion="' + sec + '"]');
+    if (!imgs.length) return;
+    var firstUnit = imgs[0].parentElement;
+    var container = firstUnit.parentElement;
+    var firstTpl = firstUnit.cloneNode(true);
+    var plainTpl = (imgs[1] && imgs[1].parentElement ? imgs[1].parentElement : firstUnit).cloneNode(true);
+
+    container.innerHTML = '';
+    rows.forEach(function (row, i) {
+      var u = (i === 0 ? firstTpl : plainTpl).cloneNode(true);
+      seteaImg(u.querySelector('img'), row);
+      container.appendChild(u);
+    });
+  }
 
   function sliderDeSeccion(sec) {
     var img = document.querySelector('[data-sv-seccion="' + sec + '"]');

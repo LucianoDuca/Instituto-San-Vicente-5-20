@@ -25,23 +25,4 @@ if (hamburger && navMenu) {
   });
 }
 
-// ==========================
-// SLIDER AUTOMÁTICO
-// ==========================
-const slides = document.getElementById("slides");
-const slideItems = document.querySelectorAll(".slide");
-let currentIndex = 0;
-
-if (slides && slideItems.length > 0) {
-  function nextSlide() {
-    currentIndex++;
-
-    if (currentIndex >= slideItems.length) {
-      currentIndex = 0;
-    }
-
-    slides.style.transform = `translateX(-${currentIndex * 100}%)`;
-  }
-
-  setInterval(nextSlide, 4000);
-}
+// El carrusel del hero ahora lo maneja js/sv-galeria.js (construcción dinámica + autoplay).

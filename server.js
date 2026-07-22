@@ -22,7 +22,7 @@ const supabaseAdmin = createClient(
 );
 
 const BUCKET_BIBLIOTECA = "biblioteca";
-const SV_MAX_SLOTS = 7; // tope de imágenes por sección editable (galerías/sliders dinámicos)
+const SV_MAX_SLOTS = 20; // límite de seguridad del backend (secciones fijas pueden tener más de 7, ej. Edificios=10). El tope de 7 para agregar en secciones dinámicas lo aplica el panel.
 const EXTENSIONES_BLOQUEADAS = ["exe", "bat", "cmd", "sh", "msi", "com", "scr", "js", "vbs", "ps1", "jar", "app"];
 
 const uploadBiblioteca = multer({

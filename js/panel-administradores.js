@@ -1028,8 +1028,8 @@ document.querySelector('[data-section="edicion-galeria"]')?.addEventListener("cl
 var SV_SECCIONES = {
   hero: {
     label: "Hero — Carrusel del Inicio",
-    desc: "Las 4 imágenes que rotan en el carrusel principal de la página de inicio.",
-    slots: 4
+    desc: "Las imágenes que rotan en el carrusel principal de la página de inicio. Podés agregar o quitar (hasta 7).",
+    slots: 4, dynamic: true, min: 1, max: 7
   },
   inscripcion: {
     label: "Inicio — Fondo Inscripción 2027",
@@ -1039,8 +1039,8 @@ var SV_SECCIONES = {
   },
   instalaciones: {
     label: "Inicio — Galería Instalaciones",
-    desc: "Las 5 fotos que aparecen en la sección de instalaciones del instituto en la página de inicio.",
-    slots: 5
+    desc: "Las fotos de la sección de instalaciones del instituto en la página de inicio. Podés agregar o quitar (hasta 7).",
+    slots: 5, dynamic: true, min: 1, max: 7
   },
   inicios: {
     label: "Inicio — Galería Inicios 2014",
