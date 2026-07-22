@@ -1112,7 +1112,11 @@ function renderSvAccordion() {
   var container = document.getElementById("svAccordion");
   if (!container) return;
 
-  var html = "";
+  var html = "<div class='sv-seed-box'>" +
+    "<button type='button' id='svSeedBtn' class='sv-seed-btn'>Importar imágenes actuales</button>" +
+    "<span class='sv-seed-note'>Solo la primera vez: carga las fotos actuales del sitio para poder agregarlas/quitarlas. No pisa las que ya editaste.</span>" +
+    "<span id='svSeedStatus' class='status'></span>" +
+    "</div>";
   SV_GRUPOS.forEach(function (grupo) {
     html += "<div class='sv-acc-group'>";
     html += "<p class='sv-acc-group-label'>" + grupo.label + "</p>";
@@ -1139,6 +1143,9 @@ function renderSvAccordion() {
 
   container.innerHTML = html;
 
+  var seedBtn = document.getElementById("svSeedBtn");
+  if (seedBtn) seedBtn.addEventListener("click", svImportarActuales);
+
   container.querySelectorAll(".sv-acc-trigger").forEach(function (btn) {
     btn.addEventListener("click", function () {
       var item = this.closest(".sv-acc-item");
@@ -1158,6 +1165,27 @@ function renderSvAccordion() {
       }
     });
   });
+}
+
+async function svImportarActuales() {
+  var btn = document.getElementById("svSeedBtn");
+  var status = document.getElementById("svSeedStatus");
+  if (!confirm("Carga las imágenes actuales del sitio en las secciones dinámicas para poder gestionarlas. No pisa las que ya editaste. ¿Continuar?")) return;
+  try {
+    if (btn) { btn.disabled = true; btn.textContent = "Importando..."; }
+    var response = await fetchAuth("/api/admin/sv/seed", { method: "POST" });
+    var result = await response.json();
+    if (!response.ok) throw new Error(result.error);
+    setStatus(status, "¡Listo! Ya podés gestionar las imágenes.", "success");
+    document.querySelectorAll(".sv-acc-item").forEach(function (item) {
+      var body = item.querySelector(".sv-acc-body");
+      if (body && !body.hidden) cargarSvSeccion(item.dataset.seccion, item.querySelector(".sv-acc-slots"));
+    });
+  } catch (e) {
+    setStatus(status, e.message, "error");
+  } finally {
+    if (btn) { btn.disabled = false; btn.textContent = "Importar imágenes actuales"; }
+  }
 }
 
 async function cargarSvSeccion(seccion, container) {
@@ -1262,8 +1290,12 @@ async function svAgregarImagen(seccion, file, card, container) {
   try {
     var url = await subirImagenStorage(file, "sv/" + seccion);
     if (!url) throw new Error("No se pudo subir la imagen");
-    var actuales = container.querySelectorAll(".sv-slot-card[data-slot]").length;
-    var response = await fetchAuth("/api/admin/sv/imagenes/" + seccion + "/" + (actuales + 1), {
+    var maxSlot = 0;
+    container.querySelectorAll(".sv-slot-card[data-slot]").forEach(function (c) {
+      var s = parseInt(c.dataset.slot) || 0;
+      if (s > maxSlot) maxSlot = s;
+    });
+    var response = await fetchAuth("/api/admin/sv/imagenes/" + seccion + "/" + (maxSlot + 1), {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ url: url, alt: file.name })

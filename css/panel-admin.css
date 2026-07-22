@@ -200,4 +200,9 @@ body{margin:0;font-family:Segoe UI,Arial,sans-serif;background:#eef3f7;color:#12
 .sv-slot-addbox{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;width:100%;height:100%;padding:18px;cursor:pointer;color:#0b4a78;font-weight:800;font-size:.8rem;position:relative;text-align:center}
 .sv-slot-addbox input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
 .sv-slot-addplus{font-size:1.6rem;line-height:1;color:#0b4a78}
+.sv-seed-box{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:16px;padding:12px 14px;background:#eef5fb;border:1px solid rgba(11,74,120,.15);border-radius:12px}
+.sv-seed-btn{border:0;border-radius:10px;padding:9px 16px;background:#0b4a78;color:#fff;font-weight:800;font-size:.78rem;cursor:pointer}
+.sv-seed-btn:hover{background:#083656}
+.sv-seed-btn:disabled{opacity:.6;cursor:default}
+.sv-seed-note{font-size:.72rem;color:#4a6480;flex:1 1 220px;min-width:180px}
 @media(max-width:640px){.sv-slots-grid{grid-template-columns:repeat(auto-fill,minmax(140px,1fr))}.sv-acc-trigger{padding:14px 16px}.sv-acc-body{padding:14px 16px 18px}}

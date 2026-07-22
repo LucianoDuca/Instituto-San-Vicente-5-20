@@ -1400,6 +1400,86 @@ app.delete("/api/admin/sv/imagenes/:seccion/:slot", soloAdmin, async (req, res) 
   }
 });
 
+// Imágenes actuales (estáticas) de las secciones dinámicas, para sembrar la base la 1ª vez
+const SV_DEFAULTS = {
+  hero: [
+    "/assets/img/inicio-ourschool/hero-1.webp",
+    "/assets/img/inicio-ourschool/hero-2.webp",
+    "/assets/img/inicio-ourschool/hero-3.webp",
+    "/assets/img/inicio-ourschool/hero-4.webp"
+  ],
+  instalaciones: [
+    "/assets/img/institucion-institution/1.webp",
+    "/assets/img/institucion-institution/2.webp",
+    "/assets/img/institucion-institution/3.webp",
+    "/assets/img/institucion-institution/4.webp",
+    "/assets/img/institucion-institution/5.webp"
+  ],
+  kinder: [
+    "/assets/img/academic-levels/inicial-kinder/galeria/IMG-20260319-WA0065.webp",
+    "/assets/img/academic-levels/inicial-kinder/galeria/IMG-20260401-WA0063.webp",
+    "/assets/img/academic-levels/inicial-kinder/galeria/IMG-20260319-WA0070.webp",
+    "/assets/img/academic-levels/inicial-kinder/galeria/IMG-20260319-WA0068.webp"
+  ],
+  primario: [
+    "/assets/img/academic-levels/primaria-primary/galeria/foto-68.webp",
+    "/assets/img/academic-levels/primaria-primary/galeria/foto-83.webp",
+    "/assets/img/academic-levels/primaria-primary/galeria/foto-119.webp",
+    "/assets/img/academic-levels/primaria-primary/galeria/IMG-20260415-WA0065.webp"
+  ],
+  secundario: [
+    "/assets/img/academic-levels/secundaria-highschool/galeria/foto-299.webp",
+    "/assets/img/academic-levels/secundaria-highschool/galeria/IMG-20250505-WA0074.webp",
+    "/assets/img/academic-levels/secundaria-highschool/galeria/IMG-20250506-WA0132.webp"
+  ],
+  ingles: [
+    "/assets/img/ingles-english/foto-285.webp",
+    "/assets/img/ingles-english/IMG-20260311-WA0087.jpg",
+    "/assets/img/ingles-english/IMG-20260311-WA0058.webp"
+  ]
+};
+
+// Mudanzas de las "fotos sueltas" de los sliders a sus secciones *-foto propias
+const SV_MOVIMIENTOS = [
+  { from: "kinder", slot: 5, to: "kinder-foto", toSlot: 1 },
+  { from: "primario", slot: 5, to: "primario-foto", toSlot: 1 },
+  { from: "secundario", slot: 4, to: "secundario-foto", toSlot: 1 },
+  { from: "ingles", slot: 4, to: "ingles-foto", toSlot: 1 },
+  { from: "ingles", slot: 5, to: "ingles-foto", toSlot: 2 }
+];
+
+// Siembra las imágenes actuales en las secciones dinámicas SOLO donde falten (no pisa ediciones)
+// y mueve las fotos sueltas a sus secciones *-foto. Idempotente; correr una vez desde el panel.
+app.post("/api/admin/sv/seed", soloAdmin, async (req, res) => {
+  try {
+    // 1) Mover fotos sueltas si quedaron con el nombre de sección viejo
+    for (const m of SV_MOVIMIENTOS) {
+      const { data: fila } = await supabaseAdmin
+        .from("sv_imagenes").select("url,alt").eq("seccion", m.from).eq("slot", m.slot).maybeSingle();
+      if (fila) {
+        await supabaseAdmin.from("sv_imagenes")
+          .upsert({ seccion: m.to, slot: m.toSlot, url: fila.url, alt: fila.alt || "" }, { onConflict: "seccion,slot", ignoreDuplicates: true });
+        await supabaseAdmin.from("sv_imagenes").delete().eq("seccion", m.from).eq("slot", m.slot);
+      }
+    }
+
+    // 2) Sembrar las imágenes actuales donde falten
+    const filas = [];
+    Object.keys(SV_DEFAULTS).forEach((sec) => {
+      SV_DEFAULTS[sec].forEach((url, i) => {
+        filas.push({ seccion: sec, slot: i + 1, url, alt: "" });
+      });
+    });
+    const { error } = await supabaseAdmin
+      .from("sv_imagenes")
+      .upsert(filas, { onConflict: "seccion,slot", ignoreDuplicates: true });
+    if (error) return res.status(500).json({ error: error.message });
+    return res.json({ ok: true, total: filas.length });
+  } catch (e) {
+    return res.status(500).json({ error: e.message });
+  }
+});
+
 app.listen(PORT, () => {
   console.log(`Servidor funcionando en http://localhost:${PORT}`);
 });

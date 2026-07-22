@@ -57,6 +57,17 @@
   }
 
   /* Carrusel translateX (hero / edificios): reconstruye slides y (re)inicia autoplay */
+  // La DB "manda" (cantidad variable) solo si sus slots son 1..N contiguos.
+  // Si son parciales (huecos o no arrancan en 1) => datos legacy: solo reemplazar src,
+  // sin tocar la cantidad de nodos estáticos (así no se pierden fotos).
+  function esAutoritativo(rows) {
+    if (!rows.length) return false;
+    for (var i = 0; i < rows.length; i++) {
+      if (rows[i].slot !== i + 1) return false;
+    }
+    return true;
+  }
+
   function construirCarousel(sec, data) {
     var rows = data.slice().sort(function (a, b) { return a.slot - b.slot; });
     var img = document.querySelector('[data-sv-seccion="' + sec + '"]');
@@ -64,7 +75,7 @@
     if (!slideTpl) return;
     var track = slideTpl.parentElement;
 
-    if (rows.length) {
+    if (esAutoritativo(rows)) {
       var base = slideTpl.cloneNode(true);
       track.innerHTML = '';
       rows.forEach(function (row) {
@@ -72,6 +83,8 @@
         seteaImg(s.querySelector('img'), row);
         track.appendChild(s);
       });
+    } else if (rows.length) {
+      reemplazarSrc(document.querySelectorAll('[data-sv-seccion="' + sec + '"]'), data);
     }
     initCarousel(track);
   }
@@ -91,6 +104,12 @@
     if (!rows.length) return;
     var imgs = document.querySelectorAll('[data-sv-seccion="' + sec + '"]');
     if (!imgs.length) return;
+
+    if (!esAutoritativo(rows)) {
+      reemplazarSrc(imgs, data); // datos parciales legacy: no tocar la cantidad
+      return;
+    }
+
     var firstUnit = imgs[0].parentElement;
     var container = firstUnit.parentElement;
     var firstTpl = firstUnit.cloneNode(true);
@@ -140,7 +159,10 @@
     var rows = data.slice().sort(function (a, b) { return a.slot - b.slot; });
     var slideTpl = slider.querySelector('.nivel-slide');
 
-    if (rows.length && slideTpl) {
+    if (!esAutoritativo(rows) && rows.length) {
+      // datos parciales legacy: solo reemplazar src, sin cambiar la cantidad de slides
+      reemplazarSrc(document.querySelectorAll('[data-sv-seccion="' + sec + '"]'), data);
+    } else if (esAutoritativo(rows) && slideTpl) {
       var baseSlide = slideTpl.cloneNode(true);
       slider.innerHTML = '';
       rows.forEach(function (row, i) {
