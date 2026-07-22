@@ -1053,19 +1053,34 @@ var SV_SECCIONES = {
     slots: 10
   },
   kinder: {
-    label: "Nivel Inicial — Galería Kinder",
-    desc: "Las 5 fotos del carrusel y galería de la página de Nivel Inicial (Kinder).",
-    slots: 5
+    label: "Nivel Inicial — Slider",
+    desc: "Las fotos del slider de Nivel Inicial (Kinder). Podés agregar o quitar (hasta 7).",
+    slots: 4, dynamic: true, min: 1, max: 7
+  },
+  "kinder-foto": {
+    label: "Nivel Inicial — Foto suelta",
+    desc: "La foto de «Actividad artística» que aparece debajo del slider.",
+    slots: 1
   },
   primario: {
-    label: "Nivel Primario — Galería",
-    desc: "Las 5 fotos del carrusel y galería de la página de Nivel Primario.",
-    slots: 5
+    label: "Nivel Primario — Slider",
+    desc: "Las fotos del slider de Nivel Primario. Podés agregar o quitar (hasta 7).",
+    slots: 4, dynamic: true, min: 1, max: 7
+  },
+  "primario-foto": {
+    label: "Nivel Primario — Foto suelta",
+    desc: "La foto que aparece debajo del slider.",
+    slots: 1
   },
   secundario: {
-    label: "Nivel Secundario — Galería",
-    desc: "Las 4 fotos del carrusel y galería de la página de Nivel Secundario.",
-    slots: 4
+    label: "Nivel Secundario — Slider",
+    desc: "Las fotos del slider de Nivel Secundario. Podés agregar o quitar (hasta 7).",
+    slots: 3, dynamic: true, min: 1, max: 7
+  },
+  "secundario-foto": {
+    label: "Nivel Secundario — Foto suelta",
+    desc: "La foto que aparece debajo del slider.",
+    slots: 1
   },
   academic: {
     label: "Academic Levels — Portadas",
@@ -1074,18 +1089,23 @@ var SV_SECCIONES = {
     slotNames: ["Portada Kinder", "Portada Primario", "Portada Secundario"]
   },
   ingles: {
-    label: "Inglés — Galería y fotos",
-    desc: "Las fotos de la página de Inglés: las 3 del slider principal, la foto de «Nuestra propuesta» y la foto de «Inmersión en Inglaterra».",
-    slots: 5,
-    slotNames: ["Slider 1", "Slider 2", "Slider 3", "Foto «Nuestra propuesta»", "Foto «Inmersión en Inglaterra»"]
+    label: "Inglés — Slider",
+    desc: "Las fotos del slider principal de Inglés. Podés agregar o quitar (hasta 7).",
+    slots: 3, dynamic: true, min: 1, max: 7
+  },
+  "ingles-foto": {
+    label: "Inglés — Fotos sueltas",
+    desc: "La foto de «Nuestra propuesta» y la de «Inmersión en Inglaterra».",
+    slots: 2,
+    slotNames: ["Foto «Nuestra propuesta»", "Foto «Inmersión en Inglaterra»"]
   }
 };
 
 var SV_GRUPOS = [
   { label: "Inicio",             secciones: ["hero", "inscripcion", "instalaciones", "inicios"] },
   { label: "Instituto",          secciones: ["edificios"] },
-  { label: "Niveles Académicos", secciones: ["kinder", "primario", "secundario", "academic"] },
-  { label: "Inglés",             secciones: ["ingles"] }
+  { label: "Niveles Académicos", secciones: ["kinder", "kinder-foto", "primario", "primario-foto", "secundario", "secundario-foto", "academic"] },
+  { label: "Inglés",             secciones: ["ingles", "ingles-foto"] }
 ];
 
 function renderSvAccordion() {
@@ -1158,25 +1178,61 @@ async function cargarSvSeccion(seccion, container) {
 function renderSvGrid(seccion, items, container) {
   if (!container) container = document.getElementById("sv-slots-" + seccion);
   var config = SV_SECCIONES[seccion];
-  var bySlot = {};
-  items.forEach(function (item) { bySlot[item.slot] = item; });
+  items = (items || []).slice().sort(function (a, b) { return a.slot - b.slot; });
 
   var html = "<div class='sv-slots-grid'>";
-  for (var s = 1; s <= config.slots; s++) {
-    var item = bySlot[s];
-    var imgSrc = item ? escaparHTML(item.url) : "";
-    var slotLabel = config.slotNames ? config.slotNames[s - 1] : "Foto " + s;
-    html += "<div class='sv-slot-card' data-seccion='" + seccion + "' data-slot='" + s + "'>" +
-      "<div class='sv-slot-img'>" +
-      (imgSrc ? "<img src='" + imgSrc + "' alt='" + slotLabel + "'>" : "<div class='sv-slot-empty'>Sin imagen</div>") +
-      "</div>" +
-      "<div class='sv-slot-footer'>" +
-      "<span class='sv-slot-label'>" + slotLabel + "</span>" +
-      "<label class='sv-slot-btn'>Cambiar<input type='file' accept='image/*' class='sv-file-input' data-seccion='" + seccion + "' data-slot='" + s + "'></label>" +
-      "</div>" +
-      "<p class='sv-slot-status status'></p>" +
-      "</div>";
+
+  if (config.dynamic) {
+    var min = config.min || 1;
+    var max = config.max || 7;
+    var puedeQuitar = items.length > min;
+    items.forEach(function (item, i) {
+      var imgSrc = escaparHTML(item.url || "");
+      var label = "Imagen " + (i + 1);
+      html += "<div class='sv-slot-card' data-seccion='" + seccion + "' data-slot='" + item.slot + "'>" +
+        "<div class='sv-slot-img'>" +
+        (imgSrc ? "<img src='" + imgSrc + "' alt='" + label + "'>" : "<div class='sv-slot-empty'>Sin imagen</div>") +
+        "</div>" +
+        "<div class='sv-slot-footer'>" +
+        "<span class='sv-slot-label'>" + label + "</span>" +
+        "<span class='sv-slot-actions'>" +
+        "<label class='sv-slot-btn'>Cambiar<input type='file' accept='image/*' class='sv-file-input' data-seccion='" + seccion + "' data-slot='" + item.slot + "'></label>" +
+        (puedeQuitar ? "<button type='button' class='sv-slot-del' data-seccion='" + seccion + "' data-slot='" + item.slot + "'>✕ Quitar</button>" : "") +
+        "</span>" +
+        "</div>" +
+        "<p class='sv-slot-status status'></p>" +
+        "</div>";
+    });
+    if (items.length < max) {
+      html += "<div class='sv-slot-card sv-slot-add'>" +
+        "<label class='sv-slot-addbox'>" +
+        "<span class='sv-slot-addplus'>+</span>" +
+        "<span>Agregar imagen</span>" +
+        "<input type='file' accept='image/*' class='sv-file-add' data-seccion='" + seccion + "'>" +
+        "</label>" +
+        "<p class='sv-slot-status status'></p>" +
+        "</div>";
+    }
+  } else {
+    var bySlot = {};
+    items.forEach(function (item) { bySlot[item.slot] = item; });
+    for (var s = 1; s <= config.slots; s++) {
+      var item = bySlot[s];
+      var imgSrc = item ? escaparHTML(item.url) : "";
+      var slotLabel = config.slotNames ? config.slotNames[s - 1] : "Foto " + s;
+      html += "<div class='sv-slot-card' data-seccion='" + seccion + "' data-slot='" + s + "'>" +
+        "<div class='sv-slot-img'>" +
+        (imgSrc ? "<img src='" + imgSrc + "' alt='" + slotLabel + "'>" : "<div class='sv-slot-empty'>Sin imagen</div>") +
+        "</div>" +
+        "<div class='sv-slot-footer'>" +
+        "<span class='sv-slot-label'>" + slotLabel + "</span>" +
+        "<label class='sv-slot-btn'>Cambiar<input type='file' accept='image/*' class='sv-file-input' data-seccion='" + seccion + "' data-slot='" + s + "'></label>" +
+        "</div>" +
+        "<p class='sv-slot-status status'></p>" +
+        "</div>";
+    }
   }
+
   html += "</div>";
   container.innerHTML = html;
 
@@ -1186,6 +1242,53 @@ function renderSvGrid(seccion, items, container) {
       await svReemplazarImagen(this.dataset.seccion, parseInt(this.dataset.slot), this.files[0], this.closest(".sv-slot-card"));
     });
   });
+  container.querySelectorAll(".sv-file-add").forEach(function (input) {
+    input.addEventListener("change", async function () {
+      if (!this.files[0]) return;
+      await svAgregarImagen(this.dataset.seccion, this.files[0], this.closest(".sv-slot-card"), container);
+    });
+  });
+  container.querySelectorAll(".sv-slot-del").forEach(function (btn) {
+    btn.addEventListener("click", async function () {
+      await svQuitarImagen(this.dataset.seccion, parseInt(this.dataset.slot), this.closest(".sv-slot-card"), container);
+    });
+  });
+}
+
+// Alta: sube la imagen y la guarda como último slot (respeta el tope del backend)
+async function svAgregarImagen(seccion, file, card, container) {
+  var status = card.querySelector(".sv-slot-status");
+  setStatus(status, "Subiendo...", "");
+  try {
+    var url = await subirImagenStorage(file, "sv/" + seccion);
+    if (!url) throw new Error("No se pudo subir la imagen");
+    var actuales = container.querySelectorAll(".sv-slot-card[data-slot]").length;
+    var response = await fetchAuth("/api/admin/sv/imagenes/" + seccion + "/" + (actuales + 1), {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ url: url, alt: file.name })
+    });
+    var result = await response.json();
+    if (!response.ok) throw new Error(result.error);
+    await cargarSvSeccion(seccion, container);
+  } catch (e) {
+    setStatus(status, e.message, "error");
+  }
+}
+
+// Baja: borra la imagen (el backend renumera los slots siguientes)
+async function svQuitarImagen(seccion, slot, card, container) {
+  if (!confirm("¿Quitar esta imagen?")) return;
+  var status = card.querySelector(".sv-slot-status");
+  setStatus(status, "Quitando...", "");
+  try {
+    var response = await fetchAuth("/api/admin/sv/imagenes/" + seccion + "/" + slot, { method: "DELETE" });
+    var result = await response.json();
+    if (!response.ok) throw new Error(result.error);
+    await cargarSvSeccion(seccion, container);
+  } catch (e) {
+    setStatus(status, e.message, "error");
+  }
 }
 
 async function svReemplazarImagen(seccion, slot, file, card) {

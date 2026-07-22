@@ -22,6 +22,7 @@ const supabaseAdmin = createClient(
 );
 
 const BUCKET_BIBLIOTECA = "biblioteca";
+const SV_MAX_SLOTS = 7; // tope de imágenes por sección editable (galerías/sliders dinámicos)
 const EXTENSIONES_BLOQUEADAS = ["exe", "bat", "cmd", "sh", "msi", "com", "scr", "js", "vbs", "ps1", "jar", "app"];
 
 const uploadBiblioteca = multer({
@@ -1320,6 +1321,9 @@ app.put("/api/admin/sv/imagenes/:seccion/:slot", soloAdmin, async (req, res) => 
     const alt = limpiarTexto(req.body.alt) || "";
 
     if (!url) return res.status(400).json({ error: "url es obligatorio" });
+    if (!Number.isInteger(slot) || slot < 1 || slot > SV_MAX_SLOTS) {
+      return res.status(400).json({ error: `slot inválido (1 a ${SV_MAX_SLOTS})` });
+    }
 
     const { data, error } = await supabaseAdmin
       .from("sv_imagenes")
@@ -1329,6 +1333,68 @@ app.put("/api/admin/sv/imagenes/:seccion/:slot", soloAdmin, async (req, res) => 
 
     if (error) return res.status(500).json({ error: error.message });
     return res.json({ ok: true, item: data });
+  } catch (e) {
+    return res.status(500).json({ error: e.message });
+  }
+});
+
+// Borra una imagen y renumera los slots mayores para mantener 1..N contiguos
+app.delete("/api/admin/sv/imagenes/:seccion/:slot", soloAdmin, async (req, res) => {
+  try {
+    const { seccion } = req.params;
+    const slot = parseInt(req.params.slot);
+    if (!seccion || !Number.isInteger(slot)) {
+      return res.status(400).json({ error: "seccion y slot son obligatorios" });
+    }
+
+    // Recuperar la fila para limpiar el Storage
+    const { data: fila } = await supabaseAdmin
+      .from("sv_imagenes")
+      .select("url")
+      .eq("seccion", seccion)
+      .eq("slot", slot)
+      .maybeSingle();
+
+    const { error: delErr } = await supabaseAdmin
+      .from("sv_imagenes")
+      .delete()
+      .eq("seccion", seccion)
+      .eq("slot", slot);
+    if (delErr) return res.status(500).json({ error: delErr.message });
+
+    // Borrar el archivo del bucket (best-effort)
+    if (fila && fila.url) {
+      const marker = "/object/public/";
+      const i = fila.url.indexOf(marker);
+      if (i !== -1) {
+        const rest = fila.url.slice(i + marker.length);
+        const slash = rest.indexOf("/");
+        if (slash !== -1) {
+          const bucket = rest.slice(0, slash);
+          const objPath = decodeURIComponent(rest.slice(slash + 1));
+          try { await supabaseAdmin.storage.from(bucket).remove([objPath]); } catch (e) {}
+        }
+      }
+    }
+
+    // Renumerar: bajar en 1 los slots mayores (en orden ascendente, sin colisiones)
+    const { data: mayores, error: selErr } = await supabaseAdmin
+      .from("sv_imagenes")
+      .select("slot")
+      .eq("seccion", seccion)
+      .gt("slot", slot)
+      .order("slot", { ascending: true });
+    if (selErr) return res.status(500).json({ error: selErr.message });
+
+    for (const row of (mayores || [])) {
+      await supabaseAdmin
+        .from("sv_imagenes")
+        .update({ slot: row.slot - 1 })
+        .eq("seccion", seccion)
+        .eq("slot", row.slot);
+    }
+
+    return res.json({ ok: true });
   } catch (e) {
     return res.status(500).json({ error: e.message });
   }
