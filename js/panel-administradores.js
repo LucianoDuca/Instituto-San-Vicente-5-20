@@ -80,6 +80,19 @@ function formatFecha(dateStr) {
   });
 }
 
+function infoAutoria(item) {
+  const partes = [];
+  if (item.created_by_name) {
+    partes.push(`Cargado por ${escaparHTML(item.created_by_name)} · ${formatFecha(item.created_at)}`);
+  } else {
+    partes.push(`Cargado: ${formatFecha(item.created_at)}`);
+  }
+  if (item.updated_by_name) {
+    partes.push(`Editado por ${escaparHTML(item.updated_by_name)} · ${formatFecha(item.updated_at)}`);
+  }
+  return partes.join("<br>");
+}
+
 function setStatus(element, message, type = "") {
   element.textContent = message;
   element.className = `status ${type}`;
@@ -459,7 +472,7 @@ function renderDocumentos(lista) {
           <span>${escaparHTML(doc.area)}</span>
           <span class="role">${escaparHTML(doc.rol_visible)}</span>
         </div>
-        <p class="item-date">Subido: ${formatFecha(doc.created_at)}</p>
+        <p class="item-date">${infoAutoria(doc)}</p>
       </div>
       <div class="item-actions">
         <a class="open-link" href="${escaparHTML(doc.drive_url)}" target="_blank" rel="noopener noreferrer">Abrir</a>
@@ -658,8 +671,8 @@ async function cargarComunicados() {
           <p>${escaparHTML(item.contenido)}</p>
           <div class="meta">
             <span class="role">${escaparHTML(item.rol_visible)}</span>
-            <span>${formatFecha(item.created_at)}</span>
           </div>
+          <p class="item-date">${infoAutoria(item)}</p>
         </div>
         <div class="item-actions">
           <button class="delete-btn" data-id="${escaparHTML(item.id)}">Borrar</button>

@@ -241,6 +241,28 @@ async function usuarioLogueado(req, res, next) {
   next();
 }
 
+async function adminODirectivo(req, res, next) {
+  const { user, profile, error } = await obtenerUsuarioDesdeToken(req);
+
+  if (error) {
+    return res.status(401).json({ error });
+  }
+
+  if (profile.rol !== "admin" && profile.rol !== "directivo") {
+    return res.status(403).json({
+      error: "Acceso denegado. Solo administradores o directivos."
+    });
+  }
+
+  req.user = user;
+  req.profile = profile;
+  next();
+}
+
+function nombreCompleto(profile) {
+  return [profile.nombre, profile.apellido].filter(Boolean).join(" ").trim() || profile.email;
+}
+
 /* CONTACTO */
 
 app.post("/api/contacto", async (req, res) => {
@@ -732,11 +754,16 @@ app.get("/api/library", usuarioLogueado, async (req, res) => {
       rolesPermitidos = ["todos", "docente"];
     }
 
-    const { data, error } = await supabaseAdmin
+    let query = supabaseAdmin
       .from("documents_library")
       .select("*")
-      .in("rol_visible", rolesPermitidos)
       .order("created_at", { ascending: false });
+
+    query = rol === "directivo"
+      ? query.or(`rol_visible.in.(${rolesPermitidos.join(",")}),created_by.eq.${req.profile.id}`)
+      : query.in("rol_visible", rolesPermitidos);
+
+    const { data, error } = await query;
 
     if (error) {
       return res.status(500).json({
@@ -798,7 +825,7 @@ app.get("/api/admin/storage-usage", soloAdmin, async (req, res) => {
   }
 });
 
-app.post("/api/admin/library/upload", soloAdmin, (req, res, next) => {
+app.post("/api/admin/library/upload", adminODirectivo, (req, res, next) => {
   uploadBiblioteca.single("file")(req, res, (error) => {
     if (error) {
       return res.status(400).json({ error: error.message });
@@ -834,7 +861,7 @@ app.post("/api/admin/library/upload", soloAdmin, (req, res, next) => {
   }
 });
 
-app.post("/api/admin/library", soloAdmin, async (req, res) => {
+app.post("/api/admin/library", adminODirectivo, async (req, res) => {
   try {
     const documento = {
       titulo: limpiarTexto(req.body.titulo),
@@ -843,7 +870,9 @@ app.post("/api/admin/library", soloAdmin, async (req, res) => {
       nivel: limpiarTexto(req.body.nivel),
       area: limpiarTexto(req.body.area),
       rol_visible: limpiarTexto(req.body.rol_visible),
-      drive_url: limpiarTexto(req.body.drive_url)
+      drive_url: limpiarTexto(req.body.drive_url),
+      created_by: req.profile.id,
+      created_by_name: nombreCompleto(req.profile)
     };
 
     if (
@@ -895,9 +924,27 @@ app.post("/api/admin/library", soloAdmin, async (req, res) => {
   }
 });
 
-app.patch("/api/admin/library/:id", soloAdmin, async (req, res) => {
+app.patch("/api/admin/library/:id", adminODirectivo, async (req, res) => {
   try {
     const { id } = req.params;
+
+    if (req.profile.rol === "directivo") {
+      const { data: existente, error: existenteError } = await supabaseAdmin
+        .from("documents_library")
+        .select("created_by")
+        .eq("id", id)
+        .single();
+
+      if (existenteError) {
+        return res.status(500).json({ error: existenteError.message });
+      }
+
+      if (existente.created_by !== req.profile.id) {
+        return res.status(403).json({
+          error: "Solo podés modificar documentos que vos mismo cargaste."
+        });
+      }
+    }
 
     const updates = {
       titulo: limpiarTexto(req.body.titulo),
@@ -906,7 +953,10 @@ app.patch("/api/admin/library/:id", soloAdmin, async (req, res) => {
       nivel: limpiarTexto(req.body.nivel),
       area: limpiarTexto(req.body.area),
       rol_visible: limpiarTexto(req.body.rol_visible),
-      drive_url: limpiarTexto(req.body.drive_url)
+      drive_url: limpiarTexto(req.body.drive_url),
+      updated_by: req.profile.id,
+      updated_by_name: nombreCompleto(req.profile),
+      updated_at: new Date().toISOString()
     };
 
     if (
@@ -959,15 +1009,21 @@ app.patch("/api/admin/library/:id", soloAdmin, async (req, res) => {
   }
 });
 
-app.delete("/api/admin/library/:id", soloAdmin, async (req, res) => {
+app.delete("/api/admin/library/:id", adminODirectivo, async (req, res) => {
   try {
     const { id } = req.params;
 
     const { data: documento } = await supabaseAdmin
       .from("documents_library")
-      .select("drive_url")
+      .select("drive_url, created_by")
       .eq("id", id)
       .single();
+
+    if (req.profile.rol === "directivo" && documento?.created_by !== req.profile.id) {
+      return res.status(403).json({
+        error: "Solo podés borrar documentos que vos mismo cargaste."
+      });
+    }
 
     const { error } = await supabaseAdmin
       .from("documents_library")
@@ -1020,11 +1076,16 @@ app.get("/api/announcements", usuarioLogueado, async (req, res) => {
       rolesPermitidos = ["todos", "docente"];
     }
 
-    const { data, error } = await supabaseAdmin
+    let query = supabaseAdmin
       .from("announcements")
       .select("*")
-      .in("rol_visible", rolesPermitidos)
       .order("created_at", { ascending: false });
+
+    query = rol === "directivo"
+      ? query.or(`rol_visible.in.(${rolesPermitidos.join(",")}),created_by.eq.${req.profile.id}`)
+      : query.in("rol_visible", rolesPermitidos);
+
+    const { data, error } = await query;
 
     if (error) {
       return res.status(500).json({
@@ -1041,12 +1102,14 @@ app.get("/api/announcements", usuarioLogueado, async (req, res) => {
   }
 });
 
-app.post("/api/admin/announcements", soloAdmin, async (req, res) => {
+app.post("/api/admin/announcements", adminODirectivo, async (req, res) => {
   try {
     const comunicado = {
       titulo: limpiarTexto(req.body.titulo),
       contenido: limpiarTexto(req.body.contenido),
-      rol_visible: limpiarTexto(req.body.rol_visible)
+      rol_visible: limpiarTexto(req.body.rol_visible),
+      created_by: req.profile.id,
+      created_by_name: nombreCompleto(req.profile)
     };
 
     if (
@@ -1089,9 +1152,27 @@ app.post("/api/admin/announcements", soloAdmin, async (req, res) => {
   }
 });
 
-app.delete("/api/admin/announcements/:id", soloAdmin, async (req, res) => {
+app.delete("/api/admin/announcements/:id", adminODirectivo, async (req, res) => {
   try {
     const { id } = req.params;
+
+    if (req.profile.rol === "directivo") {
+      const { data: existente, error: existenteError } = await supabaseAdmin
+        .from("announcements")
+        .select("created_by")
+        .eq("id", id)
+        .single();
+
+      if (existenteError) {
+        return res.status(500).json({ error: existenteError.message });
+      }
+
+      if (existente.created_by !== req.profile.id) {
+        return res.status(403).json({
+          error: "Solo podés borrar comunicados que vos mismo publicaste."
+        });
+      }
+    }
 
     const { error } = await supabaseAdmin
       .from("announcements")

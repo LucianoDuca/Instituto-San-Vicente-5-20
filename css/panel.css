@@ -251,6 +251,27 @@ body {
   transform: translateY(-2px);
 }
 
+.doc-owner-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.doc-owner-actions button {
+  flex: 1;
+  border-radius: 12px;
+  padding: 10px;
+  font-size: 0.82rem;
+}
+
+.ann-delete-btn {
+  display: block;
+  margin-top: 12px;
+  border-radius: 12px;
+  padding: 8px 14px;
+  font-size: 0.8rem;
+}
+
 .empty-text {
   grid-column: 1 / -1;
   padding: 24px;
@@ -367,6 +388,21 @@ body {
   align-items: center;
   margin-bottom: 14px;
   flex-wrap: wrap;
+}
+
+.doc-toolbar button {
+  border: 0;
+  border-radius: 14px;
+  padding: 13px 18px;
+  font-weight: 800;
+  cursor: pointer;
+  background: #0b4a78;
+  color: #fff;
+  white-space: nowrap;
+}
+
+.doc-toolbar button:hover {
+  background: #083756;
 }
 
 .doc-search {

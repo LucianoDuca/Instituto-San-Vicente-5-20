@@ -7,6 +7,7 @@
   <link rel="icon" href="assets/img/Sanvi Logos/logo.webp" type="image/png">
   <title>Panel Directivos | Instituto San Vicente</title>
   <link rel="stylesheet" href="css/index.css">
+  <link rel="stylesheet" href="css/panel-admin.css">
   <link rel="stylesheet" href="css/panel.css">
 </head>
 <body>
@@ -33,14 +34,102 @@
       </div>
 
       <div id="tab-comunicados" class="tab-panel active">
-        <div id="announcementsContainer" class="announcements-list"></div>
+        <div class="two-columns">
+          <div class="admin-card">
+            <h2>Publicar comunicado</h2>
+            <form id="createAnnouncementForm" class="admin-form">
+              <input type="text" name="titulo" placeholder="Título del comunicado" required />
+              <textarea name="contenido" placeholder="Contenido del comunicado" required></textarea>
+
+              <select name="rol_visible" required>
+                <option value="todos">Todos</option>
+                <option value="directivo">Directivos</option>
+                <option value="docente">Docentes</option>
+              </select>
+
+              <p id="announcementStatus" class="status"></p>
+              <button id="createAnnouncementBtn" type="submit">Publicar comunicado</button>
+            </form>
+          </div>
+
+          <div class="admin-card">
+            <div class="card-head">
+              <h2>Comunicados</h2>
+            </div>
+            <div id="announcementsContainer" class="announcements-list"></div>
+          </div>
+        </div>
       </div>
 
       <div id="tab-biblioteca" class="tab-panel">
 
         <div class="doc-toolbar">
+          <button type="button" id="toggleCreateDocumentBtn">Cargar documento</button>
           <input id="documentSearch" class="doc-search" type="search" placeholder="Buscar documento..." />
           <p id="docCount" class="doc-count"></p>
+        </div>
+
+        <div class="modal-overlay" id="documentModal">
+          <div class="modal-box">
+            <button type="button" class="modal-close" id="closeDocumentModalBtn" aria-label="Cerrar">✕</button>
+            <h2 id="documentFormTitle">Cargar documento</h2>
+
+            <form id="createDocumentForm" class="admin-form">
+              <input type="hidden" name="id" id="documentId" />
+              <input type="text" name="titulo" placeholder="Título del documento" required />
+              <textarea name="descripcion" placeholder="Descripción"></textarea>
+
+              <select name="categoria" required>
+                <option value="Decreto">Decreto</option>
+                <option value="Reglamento">Reglamento</option>
+                <option value="Planificación">Planificación</option>
+                <option value="Material docente">Material docente</option>
+                <option value="Circular">Circular</option>
+                <option value="Documento institucional">Documento institucional</option>
+              </select>
+
+              <select name="nivel" required>
+                <option value="General">General</option>
+                <option value="Inicial">Inicial</option>
+                <option value="Primario">Primario</option>
+                <option value="Secundario">Secundario</option>
+              </select>
+
+              <select name="area" required>
+                <option value="Institucional">Institucional</option>
+                <option value="Educación Física">Educación Física</option>
+                <option value="Inglés">Inglés</option>
+                <option value="Arte">Arte</option>
+                <option value="Matemática">Matemática</option>
+                <option value="Lengua">Lengua</option>
+                <option value="Ciencias">Ciencias</option>
+                <option value="Administración">Administración</option>
+              </select>
+
+              <select name="rol_visible" required>
+                <option value="todos">Todos</option>
+                <option value="directivo">Directivos</option>
+                <option value="docente">Docentes</option>
+              </select>
+
+              <div class="cs-upload-zone">
+                <input type="file" id="documentFileInput" class="cs-file-input" />
+                <label for="documentFileInput" class="cs-upload-label">
+                  <span id="documentUploadText">📎 Elegir archivo (imagen, PDF, Word, Excel...)</span>
+                </label>
+              </div>
+
+              <p class="hint">O pegá un enlace externo (ej. Google Drive) en vez de subir un archivo:</p>
+              <input type="url" name="drive_url" id="documentDriveUrl" placeholder="https://drive.google.com/..." />
+
+              <p id="documentStatus" class="status"></p>
+
+              <div class="form-actions">
+                <button id="createDocumentBtn" type="submit">Guardar documento</button>
+                <button id="cancelEditDocumentBtn" type="button" class="secondary hidden">Cancelar edición</button>
+              </div>
+            </form>
+          </div>
         </div>
 
         <div class="filters-grid">
