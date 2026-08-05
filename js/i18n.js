@@ -255,6 +255,11 @@ const translations = {
     "contact.map.iframeTitle": "Mapa Instituto San Vicente",
 
     "contact.hero.imgAlt": "Comunidad Instituto San Vicente",
+
+    "contact.enrollment.title": "Consultas sobre matrículas",
+    "contact.enrollment.text": "Si tu consulta está relacionada con el proceso de inscripción o matrícula, te pedimos que completes el formulario específico para que el equipo de administración pueda responderte con mayor rapidez.",
+    "contact.enrollment.button": "FORMULARIO",
+
     "contact.faq.kicker": "PREGUNTAS FRECUENTES",
     "contact.faq.title": "Lo que más nos consultan",
     "contact.faq.q1": "¿En qué horarios está abierta la institución para hablar con personal directivo?",
@@ -703,6 +708,11 @@ const translations = {
     "contact.map.iframeTitle": "Instituto San Vicente map",
 
     "contact.hero.imgAlt": "Instituto San Vicente community",
+
+    "contact.enrollment.title": "Enrollment inquiries",
+    "contact.enrollment.text": "If your inquiry is related to the enrollment or registration process, please fill out the specific form so the administration team can respond to you more quickly.",
+    "contact.enrollment.button": "FORM",
+
     "contact.faq.kicker": "FREQUENTLY ASKED QUESTIONS",
     "contact.faq.title": "What people ask us most",
     "contact.faq.q1": "What are the institution's office hours to speak with management?",
