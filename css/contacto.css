@@ -181,8 +181,19 @@
 .contact-grid {
   display: grid;
   grid-template-columns: minmax(0, 1.08fr) minmax(340px, 0.92fr);
+  grid-template-areas:
+    "form map"
+    "enroll enroll";
   gap: 22px;
   align-items: stretch;
+}
+
+.contact-form-box {
+  grid-area: form;
+}
+
+.contact-map-box {
+  grid-area: map;
 }
 
 .contact-form-box,
@@ -353,13 +364,8 @@
 /* =========================
    MATRÍCULAS / INSCRIPCIÓN
 ========================= */
-.contact-enrollment {
-  padding: 0 18px 40px;
-}
-
 .enrollment-box {
-  max-width: 1240px;
-  margin: 0 auto;
+  grid-area: enroll;
   background: var(--contact-card);
   border: 1px solid var(--contact-border);
   border-top: 4px solid var(--contact-red);
@@ -545,6 +551,10 @@
 
   .contact-grid {
     grid-template-columns: 1fr;
+    grid-template-areas:
+      "form"
+      "enroll"
+      "map";
   }
 
   .contact-map-frame iframe {
