@@ -1,5 +1,3 @@
 .vercel
 node_modules
 .env
-assets/videos/*.mp4
-assets/videos/video sanvi.mp4
