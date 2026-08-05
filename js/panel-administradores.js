@@ -197,7 +197,11 @@ async function cargarUsuarios() {
     usersCount.textContent = `(${usuariosAdmin.length})`;
     usersContainer.innerHTML = "";
 
+    const cantidadAdmins = usuariosAdmin.filter((u) => u.rol === "admin").length;
+
     usuariosAdmin.forEach((user) => {
+      const esUnicoAdmin = user.rol === "admin" && cantidadAdmins <= 1;
+
       const card = document.createElement("article");
       card.className = "item-card";
       card.innerHTML = `
@@ -215,7 +219,9 @@ async function cargarUsuarios() {
         </div>
         <div class="item-actions">
           <button class="edit-btn" data-id="${escaparHTML(user.id)}">Editar</button>
-          <button class="delete-btn" data-id="${escaparHTML(user.id)}">Borrar</button>
+          ${esUnicoAdmin
+            ? `<button class="delete-btn" disabled title="Es el único administrador del sistema, no se puede eliminar.">Borrar</button>`
+            : `<button class="delete-btn" data-id="${escaparHTML(user.id)}">Borrar</button>`}
         </div>
       `;
       usersContainer.appendChild(card);

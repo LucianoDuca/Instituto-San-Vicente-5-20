@@ -60,7 +60,7 @@ body{margin:0;font-family:Segoe UI,Arial,sans-serif;background:#eef3f7;color:#12
 .role{background:rgba(193,18,31,.1)!important;color:#c1121f!important}
 .item-actions{display:flex;flex-direction:column;gap:8px;min-width:90px}
 .item-actions button,.item-actions a{border:0;border-radius:12px;padding:10px;text-align:center;text-decoration:none;font-weight:900;cursor:pointer}
-.edit-btn{background:#0b4a78;color:#fff}.delete-btn{background:#c1121f;color:#fff}.open-link{background:#e8eef3;color:#0b3558}
+.edit-btn{background:#0b4a78;color:#fff}.delete-btn{background:#c1121f;color:#fff}.delete-btn:disabled{opacity:.5;cursor:not-allowed}.open-link{background:#e8eef3;color:#0b3558}
 .search-input{margin-bottom:14px}
 /* Hamburger */
 .hamburger-toggle{display:none;flex-direction:column;justify-content:center;gap:5px;width:40px;height:40px;background:none;border:none;cursor:pointer;padding:6px;border-radius:10px;flex-shrink:0}

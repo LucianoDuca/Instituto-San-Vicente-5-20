@@ -163,6 +163,18 @@ function rolValido(rol) {
   return ROLES_VALIDOS.includes(String(rol || "").trim());
 }
 
+async function esUnicoAdmin(id) {
+  const { count, error } = await supabaseAdmin
+    .from("profiles")
+    .select("id", { count: "exact", head: true })
+    .eq("rol", "admin")
+    .neq("id", id);
+
+  if (error) throw new Error(error.message);
+
+  return count === 0;
+}
+
 async function obtenerUsuarioDesdeToken(req) {
   const authHeader = req.headers.authorization || "";
   const token = authHeader.replace("Bearer ", "");
@@ -567,6 +579,12 @@ app.patch("/api/admin/users/:id", soloAdmin, async (req, res) => {
       });
     }
 
+    if (rol !== "admin" && await esUnicoAdmin(id)) {
+      return res.status(400).json({
+        error: "No se puede quitarle el rol de administrador al único administrador del sistema."
+      });
+    }
+
     const { error: authError } =
       await supabaseAdmin.auth.admin.updateUserById(id, {
         email
@@ -655,6 +673,24 @@ app.patch("/api/admin/users/:id/password", soloAdmin, async (req, res) => {
 app.delete("/api/admin/users/:id", soloAdmin, async (req, res) => {
   try {
     const { id } = req.params;
+
+    const { data: targetProfile, error: targetError } = await supabaseAdmin
+      .from("profiles")
+      .select("rol")
+      .eq("id", id)
+      .single();
+
+    if (targetError) {
+      return res.status(500).json({
+        error: targetError.message
+      });
+    }
+
+    if (targetProfile.rol === "admin" && await esUnicoAdmin(id)) {
+      return res.status(400).json({
+        error: "No se puede eliminar al único administrador del sistema."
+      });
+    }
 
     const { error } =
       await supabaseAdmin.auth.admin.deleteUser(id);

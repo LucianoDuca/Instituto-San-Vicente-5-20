@@ -7,7 +7,7 @@ function setStatus(message, type = "") {
   statusText.className = `change-password-status ${type}`;
 }
 
-async function obtenerToken() {
+async function obtenerSesion() {
   const { data, error } = await window.supabaseClient.auth.getSession();
 
   if (error || !data.session) {
@@ -15,12 +15,10 @@ async function obtenerToken() {
     return null;
   }
 
-  return data.session.access_token;
+  return data.session;
 }
 
-async function obtenerPerfil() {
-  const token = await obtenerToken();
-
+async function obtenerPerfil(token) {
   const response = await fetch("/api/me", {
     headers: {
       Authorization: `Bearer ${token}`
@@ -75,13 +73,16 @@ form.addEventListener("submit", async (event) => {
     passwordBtn.textContent = "Actualizando...";
     setStatus("");
 
-    const token = await obtenerToken();
+    const sesion = await obtenerSesion();
+    if (!sesion) return;
+
+    const email = sesion.user.email;
 
     const response = await fetch("/api/change-password", {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`
+        Authorization: `Bearer ${sesion.access_token}`
       },
       body: JSON.stringify({
         password: formData.password
@@ -94,9 +95,19 @@ form.addEventListener("submit", async (event) => {
       throw new Error(result.error || "No se pudo actualizar la contraseña");
     }
 
-    setStatus("Contraseña actualizada correctamente. Redirigiendo...", "success");
+    setStatus("Contraseña actualizada. Iniciando sesión...", "success");
 
-    const profile = await obtenerPerfil();
+    const { data: signInData, error: signInError } =
+      await window.supabaseClient.auth.signInWithPassword({
+        email,
+        password: formData.password
+      });
+
+    if (signInError || !signInData.session) {
+      throw new Error("La contraseña se actualizó, pero no se pudo iniciar sesión automáticamente. Ingresá con tu nueva contraseña.");
+    }
+
+    const profile = await obtenerPerfil(signInData.session.access_token);
 
     setTimeout(() => {
       redirigirSegunRol(profile.rol);
