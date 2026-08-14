@@ -2,6 +2,13 @@ const form = document.getElementById("contactForm");
 const statusText = document.getElementById("formStatus");
 const submitButton = document.getElementById("contactBtn");
 
+// Token antispam: se pide al cargar la página (los bots que postean directo no lo tienen)
+let contactoToken = null;
+fetch("/api/contacto-token")
+  .then((r) => r.json())
+  .then((d) => { contactoToken = d.token; })
+  .catch(() => {});
+
 function mostrarEstado(mensaje, tipo) {
   statusText.textContent = mensaje;
   statusText.className = `form-status ${tipo}`;
@@ -22,7 +29,9 @@ form.addEventListener("submit", async function (event) {
     correo: form.correo.value.trim(),
     telefono: form.telefono.value.trim(),
     asunto: form.asunto.value.trim(),
-    mensaje: form.mensaje.value.trim()
+    mensaje: form.mensaje.value.trim(),
+    website: form.website.value,
+    token: contactoToken
   };
 
   if (!datos.nombre || !datos.apellido || !datos.correo || !datos.mensaje) {

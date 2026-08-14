@@ -3,6 +3,7 @@ const multer = require("multer");
 const sharp = require("sharp");
 const { Resend } = require("resend");
 const { createClient } = require("@supabase/supabase-js");
+const crypto = require("crypto");
 require("dotenv").config();
 
 const app = express();
@@ -263,10 +264,58 @@ function nombreCompleto(profile) {
   return [profile.nombre, profile.apellido].filter(Boolean).join(" ").trim() || profile.email;
 }
 
-/* CONTACTO */
+/* CONTACTO — ANTISPAM */
+
+const CONTACTO_SECRET = process.env.CONTACTO_SECRET || crypto.randomBytes(24).toString("hex");
+
+function firmaContacto(ts) {
+  return crypto.createHmac("sha256", CONTACTO_SECRET).update(String(ts)).digest("hex").slice(0, 24);
+}
+
+// Token que solo se obtiene al cargar la página real (los bots que postean directo no lo tienen)
+app.get("/api/contacto-token", (req, res) => {
+  const ts = Date.now();
+  res.json({ token: ts + "." + firmaContacto(ts) });
+});
+
+function tokenContactoValido(token) {
+  if (!token || typeof token !== "string") return false;
+  const partes = token.split(".");
+  if (partes.length !== 2) return false;
+  const ts = parseInt(partes[0], 10);
+  if (!ts || partes[1] !== firmaContacto(ts)) return false;
+  const edad = Date.now() - ts;
+  return edad > 3000 && edad < 2 * 60 * 60 * 1000; // entre 3 segundos y 2 horas
+}
+
+// Límite simple de envíos por IP (en memoria)
+const contactoPorIp = new Map();
+function limiteContactoOk(ip) {
+  const ahora = Date.now();
+  const ventana = 10 * 60 * 1000; // 10 min
+  const maximo = 5;
+  const previos = (contactoPorIp.get(ip) || []).filter((t) => ahora - t < ventana);
+  previos.push(ahora);
+  contactoPorIp.set(ip, previos);
+  return previos.length <= maximo;
+}
 
 app.post("/api/contacto", async (req, res) => {
   try {
+    // Honeypot: si el campo trampa oculto viene lleno, es un bot. Simulamos éxito y no enviamos.
+    if (limpiarTexto(req.body.website)) {
+      return res.json({ ok: true });
+    }
+    // Token de página obligatorio (frena a los bots que postean directo al endpoint)
+    if (!tokenContactoValido(req.body.token)) {
+      return res.status(400).json({ error: "No se pudo validar el envío. Recargá la página e intentá de nuevo." });
+    }
+    // Límite por IP
+    const ip = (req.headers["x-forwarded-for"] || "").split(",")[0].trim() || req.socket.remoteAddress || "?";
+    if (!limiteContactoOk(ip)) {
+      return res.status(429).json({ error: "Demasiados envíos. Esperá unos minutos e intentá de nuevo." });
+    }
+
     const nombre = limpiarTexto(req.body.nombre);
     const apellido = limpiarTexto(req.body.apellido);
     const correo = limpiarTexto(req.body.correo);
