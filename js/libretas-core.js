@@ -434,10 +434,7 @@
   function progresoLibreta(nivel, cursoId, notasAlumno) {
     const mapa = notasAlumno || {};
     const requeridas = materiasDe(cursoId).map((m) => m.clave);
-    const conNota = requeridas.filter((c) => {
-      const d = mapa[c] || {};
-      return leerNumero(d.p1) !== null || leerNumero(d.e11) !== null;
-    });
+    const conNota = requeridas.filter((c) => Object.keys(mapa[c] || {}).length > 0);
     return { completas: conNota.length, total: requeridas.length };
   }
 

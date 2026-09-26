@@ -28,7 +28,10 @@
     invalidos: new Set(),
     cargando: false,
     alumnoLibreta: null,
-    editandoAlumno: null
+    editandoAlumno: null,
+    filtroAlumno: "",
+    guardadoEn: null,
+    errorGuardado: false
   };
 
   /* ---------- Utilidades ---------- */
@@ -79,8 +82,92 @@
     return estado.sucios.size > 0;
   }
 
-  function confirmarDescarte() {
-    return !hayCambios() || window.confirm("Tenés cambios sin guardar. ¿Querés descartarlos?");
+  const ICONO = {
+    notas: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>',
+    alumnos: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.9"/><path d="M16 3.1a4 4 0 0 1 0 7.8"/></svg>',
+    libretas: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z"/><path d="M14 2v6h6"/><path d="M8 13h8M8 17h5"/></svg>',
+    check: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>',
+    descargar: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M7 10l5 5 5-5"/><path d="M12 15V3"/></svg>',
+    mas: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>',
+    buscar: '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>',
+    izq: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg>',
+    der: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg>',
+    info: '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>'
+  };
+
+  /* ---------- Avisos y confirmaciones ---------- */
+
+  function toast(texto, tipo) {
+    let caja = document.getElementById("lbToasts");
+    if (!caja) {
+      caja = document.createElement("div");
+      caja.id = "lbToasts";
+      caja.className = "lb-toasts";
+      caja.setAttribute("role", "status");
+      document.body.appendChild(caja);
+    }
+    const t = document.createElement("div");
+    t.className = "lb-toast " + (tipo || "");
+    t.textContent = texto;
+    caja.appendChild(t);
+    setTimeout(() => t.classList.add("salir"), 3800);
+    setTimeout(() => t.remove(), 4300);
+  }
+
+  function confirmar({ titulo, mensaje, ok, peligro }) {
+    return new Promise((resolve) => {
+      const overlay = document.createElement("div");
+      overlay.className = "lb-modal";
+      overlay.innerHTML = `
+        <div class="lb-modal-box" role="dialog" aria-modal="true">
+          <h3>${esc(titulo)}</h3>
+          <p>${esc(mensaje)}</p>
+          <div class="lb-modal-actions">
+            <button class="lb-btn sec" data-r="0">Cancelar</button>
+            <button class="lb-btn ${peligro ? "rojo" : "verde"}" data-r="1">${esc(ok || "Aceptar")}</button>
+          </div>
+        </div>`;
+      const cerrar = (valor) => {
+        overlay.remove();
+        document.removeEventListener("keydown", tecla);
+        resolve(valor);
+      };
+      const tecla = (e) => { if (e.key === "Escape") cerrar(false); };
+      overlay.addEventListener("click", (e) => {
+        if (e.target === overlay) cerrar(false);
+        const b = e.target.closest("[data-r]");
+        if (b) cerrar(b.dataset.r === "1");
+      });
+      document.addEventListener("keydown", tecla);
+      document.body.appendChild(overlay);
+      overlay.querySelector('[data-r="0"]').focus();
+    });
+  }
+
+  /* ---------- Guardado automático ---------- */
+
+  let temporizador = null;
+  let guardando = false;
+
+  function programarAutoguardado() {
+    clearTimeout(temporizador);
+    if (!hayCambios() || estado.invalidos.size) return;
+    temporizador = setTimeout(() => guardar(true), 1200);
+  }
+
+  async function asegurarGuardado() {
+    clearTimeout(temporizador);
+    if (estado.invalidos.size) {
+      toast("Corregí los valores marcados en rojo antes de cambiar de pantalla.", "err");
+      return false;
+    }
+    let intentos = 0;
+    while ((hayCambios() || guardando) && !estado.errorGuardado && intentos < 6) {
+      if (!guardando) await guardar(true);
+      else await new Promise((r) => setTimeout(r, 250));
+      intentos++;
+    }
+    return !hayCambios();
   }
 
   function mostrarMensaje(el, texto, tipo) {
@@ -98,13 +185,6 @@
     const cat = cats.find((c) => c.id === estado.categoria) || cats[0];
     if (!cat) return null;
     return cat.hojas.find((h) => h.clave === estado.hoja) || cat.hojas[0];
-  }
-
-  function tieneDatos(clave) {
-    return estado.alumnos.some((a) => {
-      const d = (estado.notas[a.id] || {})[clave];
-      return d && Object.keys(d).length > 0;
-    });
   }
 
   /* ---------- Carga de datos ---------- */
@@ -148,13 +228,19 @@
   function montarBase() {
     root.innerHTML = `
       <div class="lb">
-        <div class="lb-card">
-          <div class="lb-toolbar">
-            <div class="lb-toolbar-left" id="lbNiveles"></div>
-            <div class="lb-toolbar-right" id="lbFiltros"></div>
+        <div class="lb-card lb-hero">
+          <div class="lb-hero-info">
+            <span class="lb-eyebrow" id="lbEyebrow"></span>
+            <h2 class="lb-title" id="lbTitulo"></h2>
+            <p class="lb-hero-sub" id="lbResumen"></p>
+          </div>
+          <div class="lb-hero-controls">
+            <div class="lb-seg" id="lbNiveles"></div>
+            <div class="lb-seg" id="lbCursos"></div>
+            <select class="lb-select" id="lbAnio" aria-label="Año lectivo"></select>
           </div>
         </div>
-        <div class="lb-tabs" id="lbVistas"></div>
+        <div class="lb-tabs" id="lbVistas" role="tablist"></div>
         <div id="lbContenido"></div>
       </div>`;
 
@@ -162,6 +248,9 @@
     root.addEventListener("keydown", onKeydown);
     root.addEventListener("click", onClick);
     root.addEventListener("change", onChange);
+    root.addEventListener("focusin", (e) => {
+      if (e.target.matches("input.lb-in")) e.target.select();
+    });
     window.addEventListener("beforeunload", (e) => {
       if (hayCambios()) {
         e.preventDefault();
@@ -178,30 +267,39 @@
 
   function renderToolbar() {
     const permitidos = nivelesPermitidos();
-    document.getElementById("lbNiveles").innerHTML = ["Inicial", "Primario", "Secundario"]
+    const cfgNivel = core.nivelDe(estado.nivel);
+    const curso = core.cursoDe(estado.nivel, estado.curso);
+
+    document.getElementById("lbEyebrow").textContent = "Libretas · Año lectivo " + estado.anio;
+    document.getElementById("lbTitulo").textContent = `${cfgNivel.label}${curso ? " · " + curso.label : ""}`;
+    document.getElementById("lbResumen").textContent = estado.cargando
+      ? "Cargando..."
+      : `${estado.alumnos.length} alumno${estado.alumnos.length === 1 ? "" : "s"} · Se aprueba con ${core.APROBADO} o más`;
+
+    const mostrarNiveles = permitidos.length > 1;
+    const segNiveles = document.getElementById("lbNiveles");
+    segNiveles.style.display = mostrarNiveles ? "" : "none";
+    segNiveles.innerHTML = ["Inicial", "Primario", "Secundario"]
       .filter((n) => permitidos.includes(n))
       .map((n) => {
         const cfg = core.nivelDe(n);
         const activo = n === estado.nivel ? " active" : "";
         return cfg.disponible
-          ? `<button class="lb-chip${activo}" data-accion="nivel" data-valor="${n}">${cfg.label}</button>`
-          : `<button class="lb-chip" disabled>${cfg.label}<small>Próximamente</small></button>`;
+          ? `<button class="${activo.trim()}" data-accion="nivel" data-valor="${n}">${cfg.label.replace("Nivel ", "")}</button>`
+          : `<button disabled title="Próximamente">${cfg.label.replace("Nivel ", "")}</button>`;
       }).join("");
+
+    document.getElementById("lbCursos").innerHTML = cfgNivel.cursos.map((c) =>
+      `<button class="${c.id === estado.curso ? "active" : ""}" data-accion="curso" data-valor="${c.id}">${esc(c.label)}</button>`
+    ).join("");
 
     const anios = [];
     for (let a = core.anioLectivoActual() + 1; a >= core.anioLectivoActual() - 3; a--) anios.push(a);
-    const cursos = core.nivelDe(estado.nivel).cursos;
-    document.getElementById("lbFiltros").innerHTML = `
-      <select class="lb-select" id="lbAnio" aria-label="Año lectivo">
-        ${anios.map((a) => `<option value="${a}"${a === estado.anio ? " selected" : ""}>Año lectivo ${a}</option>`).join("")}
-      </select>
-      <select class="lb-select" id="lbCurso" aria-label="Curso">
-        ${cursos.map((c) => `<option value="${c.id}"${c.id === estado.curso ? " selected" : ""}>${esc(c.label)}</option>`).join("")}
-      </select>`;
+    document.getElementById("lbAnio").innerHTML = anios.map((a) => `<option value="${a}"${a === estado.anio ? " selected" : ""}>Año ${a}</option>`).join("");
 
     document.getElementById("lbVistas").innerHTML = [
-      ["notas", "Cargar notas"], ["alumnos", "Alumnos"], ["libretas", "Libretas"]
-    ].map(([id, label]) => `<button class="lb-tab${estado.vista === id ? " active" : ""}" data-accion="vista" data-valor="${id}">${label}</button>`).join("");
+      ["notas", "Cargar notas", ICONO.notas], ["alumnos", "Alumnos", ICONO.alumnos], ["libretas", "Libretas", ICONO.libretas]
+    ].map(([id, label, icono]) => `<button role="tab" class="lb-tab${estado.vista === id ? " active" : ""}" data-accion="vista" data-valor="${id}">${icono}<span>${label}</span></button>`).join("");
   }
 
   function renderContenido() {
@@ -223,7 +321,26 @@
   /* ---------- Vista: cargar notas ---------- */
 
   function sinAlumnos() {
-    return `<div class="lb-card"><p class="lb-empty">Todavía no hay alumnos cargados en este curso.<br>Andá a la pestaña <b>Alumnos</b> para agregarlos.</p></div>`;
+    return `<div class="lb-card"><div class="lb-vacio">
+      <div class="lb-vacio-icono">${ICONO.alumnos}</div>
+      <h3>Todavía no hay alumnos en este curso</h3>
+      <p>Agregá la lista del curso para empezar a cargar notas y armar las libretas.</p>
+      <button class="lb-btn verde" data-accion="vista" data-valor="alumnos">${ICONO.mas}<span>Agregar alumnos</span></button>
+    </div></div>`;
+  }
+
+  function progresoHoja(clave) {
+    const total = estado.alumnos.length;
+    const con = estado.alumnos.filter((a) => {
+      const d = (estado.notas[a.id] || {})[clave];
+      return d && Object.keys(d).length > 0;
+    }).length;
+    return { con, total, nivel: con === 0 ? "vacio" : con === total ? "completo" : "parcial" };
+  }
+
+  function chipHoja(h, activa) {
+    const p = progresoHoja(h.clave);
+    return `<button class="lb-chip prog-${p.nivel}${activa ? " active" : ""}" data-accion="hoja" data-valor="${h.clave}" title="${p.con} de ${p.total} alumnos con datos"><i class="lb-dot"></i>${esc(h.label)}</button>`;
   }
 
   function renderNotas(cont) {
@@ -238,46 +355,75 @@
     const hoja = cat.hojas.find((h) => h.clave === estado.hoja);
 
     const chipsCat = cats.map((c) =>
-      `<button class="lb-chip${c.id === estado.categoria ? " active" : ""}" data-accion="categoria" data-valor="${c.id}">${esc(c.label)}</button>`
+      `<button class="lb-seg-btn${c.id === estado.categoria ? " active" : ""}" data-accion="categoria" data-valor="${c.id}">${esc(c.label)}</button>`
     ).join("");
 
     const chipsHoja = cat.hojas.length > 1
-      ? `<div class="lb-sub-chips">${cat.hojas.map((h) =>
-          `<button class="lb-chip${h.clave === hoja.clave ? " active" : ""}${tieneDatos(h.clave) ? " has-data" : ""}" data-accion="hoja" data-valor="${h.clave}">${esc(h.label)}</button>`
-        ).join("")}</div>`
+      ? `<div class="lb-sub-chips" id="lbChipsHoja">${cat.hojas.map((h) => chipHoja(h, h.clave === hoja.clave)).join("")}</div>`
       : "";
 
     cont.innerHTML = `
       <div class="lb-card">
-        <div class="lb-sub-chips">${chipsCat}</div>
+        <div class="lb-cats">${chipsCat}</div>
         ${chipsHoja}
-        <h2>${esc(hoja.label)}</h2>
+        <div class="lb-sheet-head">
+          <div>
+            <h3>${esc(hoja.label)}</h3>
+            <p class="lb-progress-txt" id="lbProgresoTxt"></p>
+          </div>
+          <div class="lb-progress" aria-hidden="true"><span id="lbProgresoBarra"></span></div>
+        </div>
+        <p class="lb-hint">${ICONO.info}<span>Escribí las notas: se guardan solas. Con <kbd>Enter</kbd> o <kbd>↓</kbd> pasás al alumno de abajo. Podés usar coma o punto.</span></p>
         ${ayudaHoja(hoja)}
         <div class="lb-grid-wrap">${htmlGrid(hoja)}</div>
-        <div class="lb-savebar">
-          <span id="lbEstadoCambios"></span>
-          <div class="lb-savebar-actions">
-            <button class="lb-btn sec" data-accion="descartar">Descartar</button>
-            <button class="lb-btn verde" data-accion="guardar" id="lbGuardar">Guardar cambios</button>
-          </div>
+        <div class="lb-statusbar">
+          <span class="lb-status" id="lbEstado"></span>
+          <button class="lb-btn chico sec" data-accion="guardar" id="lbGuardar">Guardar ahora</button>
         </div>
-        <p class="lb-msg" id="lbMsgGuardar"></p>
       </div>`;
     actualizarBarra();
+    actualizarProgreso();
+  }
+
+  function actualizarProgreso() {
+    const hoja = hojaActual();
+    if (!hoja) return;
+    const p = progresoHoja(hoja.clave);
+    const txt = document.getElementById("lbProgresoTxt");
+    const barra = document.getElementById("lbProgresoBarra");
+    if (txt) txt.textContent = `${p.con} de ${p.total} alumnos con datos cargados`;
+    if (barra) barra.style.width = (p.total ? Math.round((p.con / p.total) * 100) : 0) + "%";
+    root.querySelectorAll("#lbChipsHoja .lb-chip").forEach((chip) => {
+      const pp = progresoHoja(chip.dataset.valor);
+      chip.classList.remove("prog-vacio", "prog-parcial", "prog-completo");
+      chip.classList.add("prog-" + pp.nivel);
+      chip.title = `${pp.con} de ${pp.total} alumnos con datos`;
+    });
   }
 
   function ayudaHoja(hoja) {
+    const detalle = (contenido) =>
+      `<details class="lb-details"><summary>¿Cómo se calcula esta planilla?</summary><div>${contenido}</div></details>`;
     if (hoja.tipo === "materia") {
-      return `<p class="lb-help">Los promedios se calculan solos: PROCON 20% + EV1 40% + EV2 40%. Aprobado desde 7. Con nota de Diciembre ≥ 7 se corrigen las evaluaciones desaprobadas (se muestra en verde). Podés escribir con coma o con punto. La <b>nota final</b> se calcula sola; si escribís un valor ahí, ese valor manda.</p>`;
+      return detalle(`<ul>
+        <li><b>Promedio de cada cuatrimestre:</b> PROCON 20% + EV1 40% + EV2 40%. Se calcula cuando las dos evaluaciones están aprobadas (7 o más).</li>
+        <li><b>Diciembre:</b> si la nota es 7 o más, las evaluaciones desaprobadas se corrigen con el promedio entre esa evaluación y Diciembre (mínimo 7). La corrección se ve en verde debajo de la nota original.</li>
+        <li><b>Febrero:</b> si un cuatrimestre quedó desaprobado y la nota de Febrero es 7 o más, se promedia con ese cuatrimestre.</li>
+        <li><b>Nota final:</b> promedio de los dos cuatrimestres. Se calcula sola, pero si escribís un valor en esa celda, ese valor manda.</li>
+      </ul>`);
     }
     if (hoja.tipo === "ing-general") {
-      return `<p class="lb-help">Los promedios de Inglés salen de las notas de las cinco habilidades. La nota final es el promedio de los dos cuatrimestres (podés escribir una nota final manual).</p>`;
+      return detalle(`<ul>
+        <li><b>Average:</b> promedio de las cinco habilidades en cada cuatrimestre (se calcula cuando están las cinco).</li>
+        <li><b>Nota final:</b> promedio de los dos cuatrimestres. Podés escribir una nota final manual.</li>
+        <li>Los comentarios aparecen en la libreta, debajo del bloque de Inglés.</li>
+      </ul>`);
     }
     if (hoja.tipo === "asistencia") {
-      return `<p class="lb-help">Cargá las cantidades del cuatrimestre. Los totales se calculan solos.</p>`;
+      return detalle(`<p>Cargá las cantidades de cada cuatrimestre. Los totales se calculan solos.</p>`);
     }
     if (hoja.tipo === "devolucion") {
-      return `<p class="lb-help">Texto que aparece al pie de la libreta.</p>`;
+      return detalle(`<p>Este texto aparece al pie de la libreta, en el recuadro "Devolución anual".</p>`);
     }
     return "";
   }
@@ -350,14 +496,33 @@
   }
 
   function actualizarBarra() {
-    const span = document.getElementById("lbEstadoCambios");
+    const span = document.getElementById("lbEstado");
     const btn = document.getElementById("lbGuardar");
     if (!span || !btn) return;
-    const n = estado.sucios.size;
-    span.textContent = estado.invalidos.size
-      ? `Hay ${estado.invalidos.size} valor(es) inválido(s). Corregilos para poder guardar.`
-      : n ? `${n} planilla(s) de alumnos con cambios sin guardar` : "Todo guardado";
-    btn.disabled = n === 0 || estado.invalidos.size > 0;
+    let clase = "ok";
+    let html;
+    if (estado.invalidos.size) {
+      clase = "err";
+      html = `Hay ${estado.invalidos.size} valor${estado.invalidos.size === 1 ? "" : "es"} inválido${estado.invalidos.size === 1 ? "" : "s"}: corregilo${estado.invalidos.size === 1 ? "" : "s"} para poder guardar`;
+    } else if (guardando) {
+      clase = "trabajando";
+      html = "Guardando...";
+    } else if (estado.errorGuardado) {
+      clase = "err";
+      html = "No se pudo guardar. Revisá tu conexión y tocá “Guardar ahora”";
+    } else if (hayCambios()) {
+      clase = "pendiente";
+      html = "Cambios sin guardar: se guardan solos en un momento";
+    } else {
+      const hora = estado.guardadoEn
+        ? " · " + estado.guardadoEn.toLocaleTimeString("es-AR", { hour: "2-digit", minute: "2-digit" })
+        : "";
+      html = `${ICONO.check}<span>Todo guardado${hora}</span>`;
+    }
+    span.className = "lb-status " + clase;
+    span.innerHTML = clase === "ok" ? html : `<span>${html}</span>`;
+    btn.style.display = hayCambios() ? "" : "none";
+    btn.disabled = guardando || estado.invalidos.size > 0;
   }
 
   function refrescarFila(alumnoId, clave) {
@@ -420,8 +585,11 @@
       el.classList.toggle("baja", n !== null && !Number.isNaN(n) && n < core.APROBADO);
     }
 
+    estado.errorGuardado = false;
     refrescarFila(a, c);
     actualizarBarra();
+    actualizarProgreso();
+    programarAutoguardado();
   }
 
   function onKeydown(e) {
@@ -440,18 +608,19 @@
     }
   }
 
-  async function onChange(e) {
-    const el = e.target;
-    if (el.id === "lbAnio" || el.id === "lbCurso") {
-      if (!confirmarDescarte()) {
-        renderToolbar();
-        return;
-      }
-      if (el.id === "lbAnio") estado.anio = parseInt(el.value, 10);
-      else estado.curso = el.value;
-      estado.hoja = null;
-      await cargarCurso();
+  async function cambiarContexto(cambios) {
+    if (!(await asegurarGuardado())) {
+      renderToolbar();
+      return;
     }
+    Object.assign(estado, cambios);
+    estado.hoja = null;
+    estado.filtroAlumno = "";
+    await cargarCurso();
+  }
+
+  async function onChange(e) {
+    if (e.target.id === "lbAnio") await cambiarContexto({ anio: parseInt(e.target.value, 10) });
   }
 
   async function onClick(e) {
@@ -461,11 +630,9 @@
     const valor = btn.dataset.valor;
 
     if (accion === "nivel") {
-      if (valor === estado.nivel || !confirmarDescarte()) return;
-      estado.nivel = valor;
-      estado.curso = core.nivelDe(valor).cursos[0].id;
-      estado.hoja = null;
-      await cargarCurso();
+      if (valor !== estado.nivel) await cambiarContexto({ nivel: valor, curso: core.nivelDe(valor).cursos[0].id });
+    } else if (accion === "curso") {
+      if (valor !== estado.curso) await cambiarContexto({ curso: valor });
     } else if (accion === "vista") {
       estado.vista = valor;
       render();
@@ -478,8 +645,14 @@
       renderContenido();
     } else if (accion === "guardar") {
       await guardar();
-    } else if (accion === "descartar") {
-      if (hayCambios() && window.confirm("¿Descartar todos los cambios sin guardar?")) await cargarCurso();
+    } else if (accion === "libreta-anterior" || accion === "libreta-siguiente") {
+      const lista = alumnosFiltrados();
+      const i = lista.findIndex((a) => a.id === estado.alumnoLibreta);
+      const destino = lista[i + (accion === "libreta-anterior" ? -1 : 1)];
+      if (destino) {
+        estado.alumnoLibreta = destino.id;
+        renderContenido();
+      }
     } else if (accion === "agregar-alumnos") {
       await agregarAlumnos();
     } else if (accion === "editar-alumno") {
@@ -503,32 +676,43 @@
   }
 
   async function guardar() {
-    const msg = document.getElementById("lbMsgGuardar");
-    const btn = document.getElementById("lbGuardar");
-    if (!hayCambios()) return;
+    if (guardando || !hayCambios() || estado.invalidos.size) return;
+    clearTimeout(temporizador);
+    guardando = true;
+    estado.errorGuardado = false;
+    actualizarBarra();
+
     const items = Array.from(estado.sucios).map((k) => {
       const [alumnoId, clave] = k.split("|");
-      return { alumno_id: alumnoId, clave, datos: (estado.notas[alumnoId] || {})[clave] || {} };
+      return { alumno_id: alumnoId, clave, datos: copia((estado.notas[alumnoId] || {})[clave]) };
     });
-    btn.disabled = true;
-    mostrarMensaje(msg, "Guardando...", "");
+
     try {
       await api("/api/libretas/notas", { method: "PUT", body: JSON.stringify({ items }) });
       items.forEach((it) => {
-        (estado.base[it.alumno_id] = estado.base[it.alumno_id] || {})[it.clave] = copia(it.datos);
-        if (!Object.keys(it.datos).length) {
-          delete estado.notas[it.alumno_id][it.clave];
-          delete estado.base[it.alumno_id][it.clave];
+        const actual = (estado.notas[it.alumno_id] || {})[it.clave] || {};
+        const base = (estado.base[it.alumno_id] = estado.base[it.alumno_id] || {});
+        if (Object.keys(it.datos).length) base[it.clave] = copia(it.datos);
+        else delete base[it.clave];
+        if (igual(actual, it.datos)) {
+          estado.sucios.delete(claveSucia(it.alumno_id, it.clave));
+          if (!Object.keys(actual).length) delete estado.notas[it.alumno_id][it.clave];
         }
       });
-      estado.sucios.clear();
-      renderContenido();
-      mostrarMensaje(document.getElementById("lbMsgGuardar"), "Cambios guardados correctamente", "ok");
+      estado.guardadoEn = new Date();
+      root.querySelectorAll(".lb-in.sucio, .lb-texto.sucio").forEach((el) => {
+        if (!cambiado(el.dataset.a, el.dataset.c, el.dataset.k)) el.classList.remove("sucio");
+      });
     } catch (error) {
-      const detalle = error.detalle && error.detalle[0] ? " " + error.detalle[0].errores.join(", ") : "";
-      mostrarMensaje(msg, error.message + detalle, "err");
-      btn.disabled = false;
+      estado.errorGuardado = true;
+      const detalle = error.detalle && error.detalle[0] ? ": " + error.detalle[0].errores.join(", ") : "";
+      toast(error.message + detalle, "err");
     }
+
+    guardando = false;
+    actualizarBarra();
+    actualizarProgreso();
+    if (hayCambios() && !estado.errorGuardado) programarAutoguardado();
   }
 
   /* ---------- Vista: alumnos ---------- */
@@ -576,7 +760,7 @@
           <button class="lb-btn chico sec" data-accion="cancelar-alumno">Cancelar</button></td></tr>`;
       }
       return `<tr>
-        <td>${i + 1}</td><td><b>${esc(a.apellido)}</b></td><td>${esc(a.nombre)}</td><td>${esc(a.dni)}</td><td></td>
+        <td>${i + 1}</td><td><b>${esc(a.apellido)}</b></td><td>${esc(a.nombre)}</td><td>${esc(a.dni)}</td><td>${esc((core.cursoDe(estado.nivel, a.curso) || {}).label)}</td>
         <td style="white-space:nowrap"><button class="lb-btn chico sec" data-accion="editar-alumno" data-valor="${a.id}">Editar</button>
         <button class="lb-btn chico rojo" data-accion="eliminar-alumno" data-valor="${a.id}">Eliminar</button></td></tr>`;
     }).join("");
@@ -624,8 +808,8 @@
         method: "POST",
         body: JSON.stringify({ anio: estado.anio, nivel: estado.nivel, curso: estado.curso, alumnos: lista })
       });
+      toast(`${lista.length} alumno${lista.length === 1 ? "" : "s"} agregado${lista.length === 1 ? "" : "s"}`, "ok");
       await cargarCurso();
-      mostrarMensaje(document.getElementById("lbMsgAlumnos"), `${lista.length} alumno(s) agregado(s)`, "ok");
     } catch (error) {
       mostrarMensaje(msg, error.message, "err");
     }
@@ -645,18 +829,26 @@
       estado.editandoAlumno = null;
       await cargarCurso();
     } catch (error) {
-      window.alert(error.message);
+      toast(error.message, "err");
     }
   }
 
   async function eliminarAlumno(id) {
     const a = estado.alumnos.find((x) => x.id === id);
-    if (!a || !window.confirm(`¿Eliminar a ${a.apellido}, ${a.nombre}? Se borran también todas sus notas. Esta acción no se puede deshacer.`)) return;
+    if (!a) return;
+    const ok = await confirmar({
+      titulo: `¿Eliminar a ${a.apellido}, ${a.nombre}?`,
+      mensaje: "Se borran también todas sus notas. Esta acción no se puede deshacer.",
+      ok: "Sí, eliminar",
+      peligro: true
+    });
+    if (!ok) return;
     try {
       await api("/api/libretas/alumnos/" + id, { method: "DELETE" });
+      toast("Alumno eliminado", "ok");
       await cargarCurso();
     } catch (error) {
-      window.alert(error.message);
+      toast(error.message, "err");
     }
   }
 
@@ -668,29 +860,58 @@
     return core.armarLibreta(estado.nivel, estado.curso, alumno, estado.notas[alumnoId], estado.anio);
   }
 
+  function alumnosFiltrados() {
+    const q = estado.filtroAlumno.trim().toLowerCase();
+    if (!q) return estado.alumnos;
+    return estado.alumnos.filter((a) => `${a.apellido} ${a.nombre}`.toLowerCase().includes(q));
+  }
+
+  function htmlListaLibretas(lista) {
+    if (!lista.length) return `<p class="lb-empty" style="padding:14px">Ningún alumno coincide con la búsqueda.</p>`;
+    return lista.map((a) => {
+      const p = core.progresoLibreta(estado.nivel, estado.curso, estado.notas[a.id]);
+      const insignia = `<em class="lb-badge ${p.completas === p.total ? "ok" : "warn"}" title="${p.completas} de ${p.total} materias con notas cargadas">${p.completas}/${p.total}</em>`;
+      return `<button class="${a.id === estado.alumnoLibreta ? "active" : ""}" data-accion="ver-libreta" data-valor="${a.id}"><span>${esc(a.apellido)}, ${esc(a.nombre)}</span>${insignia}</button>`;
+    }).join("");
+  }
+
   function renderLibretas(cont) {
     if (!estado.alumnos.length) {
       cont.innerHTML = sinAlumnos();
       return;
     }
-    const lista = estado.alumnos.map((a) => {
-      const p = core.progresoLibreta(estado.nivel, estado.curso, estado.notas[a.id]);
-      return `<button class="${a.id === estado.alumnoLibreta ? "active" : ""}" data-accion="ver-libreta" data-valor="${a.id}"><span>${esc(a.apellido)}, ${esc(a.nombre)}</span><small>${p.completas}/${p.total}</small></button>`;
-    }).join("");
+    const lista = alumnosFiltrados();
+    const idx = lista.findIndex((a) => a.id === estado.alumnoLibreta);
+    const actual = estado.alumnos.find((a) => a.id === estado.alumnoLibreta);
 
     cont.innerHTML = `
-      ${hayCambios() ? `<div class="lb-card"><p class="lb-msg err">Tenés cambios sin guardar en la pestaña "Cargar notas": las libretas muestran también esos cambios, pero no se van a conservar hasta que los guardes.</p></div>` : ""}
       <div class="lb-libretas">
-        <div class="lb-card"><h2>Alumnos</h2><div class="lb-lista">${lista}</div></div>
+        <div class="lb-card lb-lateral">
+          <div class="lb-buscar">${ICONO.buscar}<input type="search" id="lbBuscar" placeholder="Buscar alumno..." value="${esc(estado.filtroAlumno)}" autocomplete="off"></div>
+          <div class="lb-lista" id="lbLista2">${htmlListaLibretas(lista)}</div>
+        </div>
         <div class="lb-card">
           <div class="lb-actions">
-            <button class="lb-btn verde" data-accion="pdf-alumno">Descargar PDF de este alumno</button>
-            <button class="lb-btn" data-accion="pdf-curso">Descargar PDF de todo el curso</button>
-            <span class="lb-msg" id="lbMsgPdf"></span>
+            <div class="lb-nav">
+              <button class="lb-btn sec icono" data-accion="libreta-anterior" aria-label="Alumno anterior"${idx <= 0 ? " disabled" : ""}>${ICONO.izq}</button>
+              <span class="lb-nav-txt">${actual ? esc(actual.apellido + ", " + actual.nombre) : ""}</span>
+              <button class="lb-btn sec icono" data-accion="libreta-siguiente" aria-label="Alumno siguiente"${idx < 0 || idx >= lista.length - 1 ? " disabled" : ""}>${ICONO.der}</button>
+            </div>
+            <div class="lb-actions-der">
+              <button class="lb-btn verde" data-accion="pdf-alumno">${ICONO.descargar}<span>PDF de este alumno</span></button>
+              <button class="lb-btn" data-accion="pdf-curso">${ICONO.descargar}<span>PDF de todo el curso</span></button>
+            </div>
           </div>
+          <p class="lb-msg" id="lbMsgPdf"></p>
           <div class="lb-visor" id="lbVisor"><div class="lb-visor-escala" id="lbEscala">${htmlLibreta(modeloLibreta(estado.alumnoLibreta))}</div></div>
+          <p class="lb-hint">${ICONO.info}<span>Así se va a ver el PDF. Si falta algún dato, volvé a "Cargar notas": se guarda solo y la libreta se actualiza.</span></p>
         </div>
       </div>`;
+
+    document.getElementById("lbBuscar").addEventListener("input", (e) => {
+      estado.filtroAlumno = e.target.value;
+      document.getElementById("lbLista2").innerHTML = htmlListaLibretas(alumnosFiltrados());
+    });
     ajustarHoja(document.querySelector("#lbEscala .lb-hoja"));
     ajustarVisor();
   }
@@ -851,7 +1072,7 @@
     const msg = document.getElementById("lbMsgPdf");
     const modelos = ids.map(modeloLibreta).filter(Boolean);
     if (!modelos.length) return;
-    const original = boton.textContent;
+    const original = boton.innerHTML;
     const inicio = Date.now();
     boton.disabled = true;
     const stage = document.createElement("div");
@@ -895,7 +1116,7 @@
     } finally {
       stage.remove();
       boton.disabled = false;
-      boton.textContent = original;
+      boton.innerHTML = original;
     }
   }
 
