@@ -1,6 +1,23 @@
 const core = require("../js/libretas-core.js");
+require("../js/libretas-secundaria.js");
+require("../js/libretas-primaria.js");
+require("../js/libretas-inicial.js");
+
+const multer = require("multer");
+const sharp = require("sharp");
+const crypto = require("crypto");
 
 const NIVELES = ["Inicial", "Primario", "Secundario"];
+const BUCKET = "libretas";
+const CAMPOS_TEXTO = ["docentes", "docentes1", "docentes2"];
+const CAMPOS_FIRMAS = ["firmasDocentes", "firmasDirector", "firmas1", "firmas2"];
+const ARCHIVO_FIRMA = /^[\w.-]+\.(png|jpg|jpeg|webp)$/i;
+
+const subida = multer({
+  storage: multer.memoryStorage(),
+  limits: { fileSize: 8 * 1024 * 1024 },
+  fileFilter: (req, file, cb) => (file.mimetype.startsWith("image/") ? cb(null, true) : cb(new Error("Solo se aceptan imágenes")))
+});
 const MAX_ALUMNOS_POR_CARGA = 200;
 const MAX_ITEMS_NOTAS = 600;
 
@@ -278,7 +295,7 @@ function registrarLibretas(app, { supabaseAdmin, usuarioLogueado, nombreCompleto
           continue;
         }
 
-        const resultado = core.normalizarDatos(clave, item.datos);
+        const resultado = core.normalizarDatos(clave, item.datos, alumno.nivel, alumno.curso);
         if (!resultado.ok) {
           errores.push({ alumno_id: alumno.id, clave, errores: resultado.errores });
           continue;
@@ -293,7 +310,7 @@ function registrarLibretas(app, { supabaseAdmin, usuarioLogueado, nombreCompleto
           alumno_id: alumno.id,
           clave,
           datos: resultado.datos,
-          calculado: core.calcularClave(clave, resultado.datos, null),
+          calculado: core.calcularClave(clave, resultado.datos, null, alumno.nivel, alumno.curso),
           updated_at: new Date().toISOString(),
           updated_by: req.user.id,
           updated_by_name: nombreCompleto(req.profile)
@@ -317,6 +334,126 @@ function registrarLibretas(app, { supabaseAdmin, usuarioLogueado, nombreCompleto
       return res.status(500).json({ error: error.message });
     }
   });
+  supabaseAdmin.storage.listBuckets().then(async ({ data }) => {
+    if (!data || !data.some((b) => b.name === BUCKET)) {
+      await supabaseAdmin.storage.createBucket(BUCKET, { public: true });
+    }
+  }).catch((error) => console.error("No se pudo verificar el bucket de libretas:", error.message));
+
+  function soloAdminODirectivo(req, res) {
+    if (req.profile.rol !== "admin" && req.profile.rol !== "directivo") {
+      res.status(403).json({ error: "Solo administradores o directivos pueden hacer esto." });
+      return false;
+    }
+    return true;
+  }
+
+  function limpiarConfig(datos) {
+    const out = {};
+    const origen = datos && typeof datos === "object" ? datos : {};
+    CAMPOS_TEXTO.forEach((k) => {
+      if (typeof origen[k] === "string" && origen[k].trim()) out[k] = limpiar(origen[k], 200);
+    });
+    CAMPOS_FIRMAS.forEach((k) => {
+      if (!Array.isArray(origen[k])) return;
+      const lista = origen[k]
+        .map((v) => String(v || "").trim())
+        .filter((v) => v.length <= 500 && (/^https:\/\//.test(v) || ARCHIVO_FIRMA.test(v)))
+        .slice(0, 6);
+      out[k] = lista;
+    });
+    return out;
+  }
+
+  app.get("/api/libretas/config", usuarioLogueado, async (req, res) => {
+    try {
+      const ctx = leerContexto(req, res);
+      if (!ctx) return;
+      const { data, error } = await supabaseAdmin
+        .from("lib_cursos_config")
+        .select("datos")
+        .eq("anio_lectivo", ctx.anio)
+        .eq("nivel", ctx.nivel)
+        .eq("curso", ctx.curso)
+        .maybeSingle();
+      if (error) return res.status(500).json({ error: error.message });
+      return res.json({ datos: data ? data.datos : {} });
+    } catch (error) {
+      return res.status(500).json({ error: error.message });
+    }
+  });
+
+  app.put("/api/libretas/config", usuarioLogueado, async (req, res) => {
+    try {
+      if (!soloAdminODirectivo(req, res)) return;
+      const anio = anioValido(req.body.anio);
+      const nivel = String(req.body.nivel || "");
+      const curso = String(req.body.curso || "");
+      if (!anio) return res.status(400).json({ error: "Año lectivo inválido" });
+      if (!verificarNivel(req, res, nivel)) return;
+      if (!core.cursoDe(nivel, curso)) return res.status(400).json({ error: "Curso inválido" });
+
+      const datos = limpiarConfig(req.body.datos);
+      const { error } = await supabaseAdmin.from("lib_cursos_config").upsert(
+        {
+          anio_lectivo: anio,
+          nivel,
+          curso,
+          datos,
+          updated_at: new Date().toISOString(),
+          updated_by: req.user.id,
+          updated_by_name: nombreCompleto(req.profile)
+        },
+        { onConflict: "anio_lectivo,nivel,curso" }
+      );
+      if (error) return res.status(500).json({ error: error.message });
+      return res.json({ ok: true, datos });
+    } catch (error) {
+      return res.status(500).json({ error: error.message });
+    }
+  });
+
+  app.post(
+    "/api/libretas/imagen",
+    usuarioLogueado,
+    (req, res, next) => subida.single("archivo")(req, res, (err) => (err ? res.status(400).json({ error: err.message }) : next())),
+    async (req, res) => {
+      try {
+        if (!req.file) return res.status(400).json({ error: "No se recibió ninguna imagen" });
+        const tipo = String(req.body.tipo || "");
+        let ruta;
+        let buffer;
+        let contentType;
+
+        if (tipo === "firma") {
+          if (!soloAdminODirectivo(req, res)) return;
+          buffer = await sharp(req.file.buffer).resize({ width: 600, withoutEnlargement: true }).png().toBuffer();
+          contentType = "image/png";
+          ruta = `firmas/${crypto.randomUUID()}.png`;
+        } else if (tipo === "foto") {
+          const id = String(req.body.alumno_id || "");
+          if (!UUID.test(id)) return res.status(400).json({ error: "Alumno inválido" });
+          const { data: alumno, error } = await supabaseAdmin.from("lib_alumnos").select("id, nivel").eq("id", id).maybeSingle();
+          if (error) return res.status(500).json({ error: error.message });
+          if (!alumno) return res.status(404).json({ error: "Alumno no encontrado" });
+          if (!nivelesPermitidos(req.profile).includes(alumno.nivel)) return res.status(403).json({ error: "Sin permiso sobre este alumno" });
+          buffer = await sharp(req.file.buffer).rotate().resize({ width: 1400, height: 1400, fit: "inside", withoutEnlargement: true }).jpeg({ quality: 82 }).toBuffer();
+          contentType = "image/jpeg";
+          ruta = `fotos/${id}/${crypto.randomUUID()}.jpg`;
+        } else {
+          return res.status(400).json({ error: "Tipo de imagen inválido" });
+        }
+
+        const { error: errorSubida } = await supabaseAdmin.storage.from(BUCKET).upload(ruta, buffer, { contentType, upsert: false });
+        if (errorSubida) return res.status(500).json({ error: errorSubida.message });
+        const { data } = supabaseAdmin.storage.from(BUCKET).getPublicUrl(ruta);
+        return res.status(201).json({ url: data.publicUrl });
+      } catch (error) {
+        return res.status(500).json({ error: error.message });
+      }
+    }
+  );
+
 }
 
 module.exports = { registrarLibretas };

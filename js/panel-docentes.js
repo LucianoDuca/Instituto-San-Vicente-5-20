@@ -50,7 +50,11 @@ async function fetchLibretas(url, options = {}) {
   if (!token) return null;
   return fetch(url, {
     ...options,
-    headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}`, ...(options.headers || {}) }
+    headers: {
+      ...(options.body instanceof FormData ? {} : { "Content-Type": "application/json" }),
+      Authorization: `Bearer ${token}`,
+      ...(options.headers || {})
+    }
   });
 }
 

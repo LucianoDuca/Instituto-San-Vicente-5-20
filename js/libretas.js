@@ -3,14 +3,6 @@
 
   const core = window.LibretasCore;
 
-  const FIRMA = { nombre: "PABLO CESAR GARRAZA", cargo: "FIRMA DIRECTIVO" };
-  const IMG = {
-    esquinaSup: "assets/libretas/esquina-superior.png",
-    esquinaInf: "assets/libretas/esquina-inferior.png",
-    logo: "assets/img/Sanvi Logos/logo.webp",
-    firma: "assets/libretas/firma.png"
-  };
-
   let ctx = null;
   let root = null;
 
@@ -30,6 +22,9 @@
     alumnoLibreta: null,
     editandoAlumno: null,
     filtroAlumno: "",
+    alumnoFicha: null,
+    configCurso: {},
+    borradorConfig: null,
     guardadoEn: null,
     errorGuardado: false
   };
@@ -209,6 +204,15 @@
           estado.base[a.id][clave] = copia(filas[clave].datos);
         });
       });
+      if (estado.nivel !== "Secundario") {
+        try {
+          const cfg = await api("/api/libretas/config?" + q.toString());
+          estado.configCurso[claveConfig()] = cfg.datos || {};
+        } catch (errorConfig) {
+          estado.configCurso[claveConfig()] = {};
+        }
+      }
+      estado.borradorConfig = null;
       if (!estado.alumnoLibreta || !estado.alumnos.some((a) => a.id === estado.alumnoLibreta)) {
         estado.alumnoLibreta = estado.alumnos.length ? estado.alumnos[0].id : null;
       }
@@ -274,7 +278,7 @@
     document.getElementById("lbTitulo").textContent = `${cfgNivel.label}${curso ? " · " + curso.label : ""}`;
     document.getElementById("lbResumen").textContent = estado.cargando
       ? "Cargando..."
-      : `${estado.alumnos.length} alumno${estado.alumnos.length === 1 ? "" : "s"} · Se aprueba con ${core.APROBADO} o más`;
+      : `${estado.alumnos.length} alumno${estado.alumnos.length === 1 ? "" : "s"}${cfgNivel.resumen ? " · " + cfgNivel.resumen(estado.curso) : ""}`;
 
     const mostrarNiveles = permitidos.length > 1;
     const segNiveles = document.getElementById("lbNiveles");
@@ -373,9 +377,9 @@
           </div>
           <div class="lb-progress" aria-hidden="true"><span id="lbProgresoBarra"></span></div>
         </div>
-        <p class="lb-hint">${ICONO.info}<span>Escribí las notas: se guardan solas. Con <kbd>Enter</kbd> o <kbd>↓</kbd> pasás al alumno de abajo. Podés usar coma o punto.</span></p>
+        <p class="lb-hint">${ICONO.info}<span>${hoja.formulario ? "Elegí un alumno y completá sus indicadores: se guardan solos." : "Escribí las notas: se guardan solas. Con <kbd>Enter</kbd> o <kbd>↓</kbd> pasás al alumno de abajo. Podés usar coma o punto."}</span></p>
         ${ayudaHoja(hoja)}
-        <div class="lb-grid-wrap">${htmlGrid(hoja)}</div>
+        ${hoja.formulario ? htmlFicha(hoja) : `<div class="lb-grid-wrap">${htmlGrid(hoja)}</div>`}
         <div class="lb-statusbar">
           <span class="lb-status" id="lbEstado"></span>
           <button class="lb-btn chico sec" data-accion="guardar" id="lbGuardar">Guardar ahora</button>
@@ -425,7 +429,73 @@
     if (hoja.tipo === "devolucion") {
       return detalle(`<p>Este texto aparece al pie de la libreta, en el recuadro "Devolución anual".</p>`);
     }
+    if (hoja.tipo === "pri1-materia" || hoja.tipo === "pri1-ingles" || hoja.tipo === "pri1-ingles-avg") {
+      const esIngles = hoja.tipo !== "pri1-materia";
+      return detalle(esIngles
+        ? `<p>Elegí <b>EX</b> (excelente), <b>VG</b> (muy bueno), <b>G</b> (bueno) o <b>IP</b> (en proceso). El guion "-" indica que no corresponde en ese período.</p>`
+        : `<p>Elegí <b>ML</b> (muy logrado, 10-9), <b>L</b> (logrado, 8-7), <b>EP</b> (en proceso, 6-5) o <b>NR</b> (necesita reforzar, 4 o menos). El guion "-" indica que la materia no corresponde en ese trimestre.</p>`);
+    }
+    if (hoja.tipo === "pri1-procon") {
+      return detalle(`<p>Cargá la nota numérica de cada trimestre: en la libreta se muestra automáticamente como concepto (10-9 ML, 8-7 L, 6-5 EP, 4 o menos NR). Diciembre, Febrero y nota final se eligen a mano.</p>`);
+    }
+    if (hoja.tipo === "pri2-materia") {
+      return detalle(`<ul>
+        <li>Cargá la nota de cada trimestre (o un guion "-" si no corresponde). Se aprueba con 6 o más.</li>
+        <li><b>Nota final:</b> si los trimestres están cargados y todos aprobados, se calcula sola como el promedio. Si escribís un valor en esa celda, ese valor manda (por ejemplo, después de Diciembre o Febrero).</li>
+      </ul>`);
+    }
+    if (hoja.tipo === "pri-asis") {
+      return detalle(`<p>Cargá los días hábiles, las inasistencias y las tardanzas de cada trimestre. El total se suma solo (inasistencias + tardanzas); si necesitás otro valor, escribilo en la celda "Total".</p>`);
+    }
+    if (hoja.tipo === "pri-dev") {
+      return detalle(`<p>Escribí la devolución de cada trimestre. Aparece en la libreta, en el recuadro "Devolución / Comments".</p>`);
+    }
+    if (hoja.tipo === "pri-fin") {
+      return detalle(`<p>Completá el cierre del año. Marcá <b>las firmas</b> de cada trimestre cuando ya esté entregada la libreta de ese período: solo así aparecen las firmas del docente y del director en la última página.</p>`);
+    }
     return "";
+  }
+
+  function htmlFicha(hoja) {
+    if (!estado.alumnos.some((a) => a.id === estado.alumnoFicha)) estado.alumnoFicha = estado.alumnos[0].id;
+    const alumno = estado.alumnos.find((a) => a.id === estado.alumnoFicha);
+    const datos = (estado.notas[alumno.id] || {})[hoja.clave] || {};
+    const cols = core.columnasDe(hoja.tipo);
+    const colDe = (key) => cols.find((c) => c.key === key);
+
+    const lista = estado.alumnos.map((a) => {
+      const d = (estado.notas[a.id] || {})[hoja.clave] || {};
+      const n = Object.keys(d).length;
+      return `<button class="${a.id === alumno.id ? "active" : ""}" data-accion="ficha-alumno" data-valor="${a.id}"><span>${esc(a.apellido)}, ${esc(a.nombre)}</span><em class="lb-badge ${n ? "ok" : "warn"}">${n ? n : "—"}</em></button>`;
+    }).join("");
+
+    const control = (id, tipo, etapa) => {
+      const key = `${id}_${etapa}`;
+      const col = colDe(key);
+      const base = `data-a="${alumno.id}" data-c="${hoja.clave}" data-k="${key}"`;
+      const sucio = cambiado(alumno.id, hoja.clave, key) ? " sucio" : "";
+      if (!col) return "";
+      if (col.tipo === "concepto") {
+        const opciones = [""].concat(col.opciones).map((o) => `<option value="${esc(o)}"${datos[key] === o ? " selected" : ""}>${esc(o)}</option>`).join("");
+        return `<select class="lb-in lb-sel${sucio}" ${base}>${opciones}</select>`;
+      }
+      return `<input class="lb-in${sucio}" type="text" autocomplete="off" ${base} value="${esc(datos[key])}">`;
+    };
+
+    const bloques = hoja.area.bloques.map((b) => {
+      const filas = b.filas.map(([id, label, tipo, subs]) => {
+        if (subs && subs.length) {
+          return subs.map(([sid, slabel], i) => `<tr>${i === 0 ? `<td class="eti" rowspan="${subs.length}">${esc(label)}</td>` : ""}<td class="sub">${esc(slabel)}</td><td class="val">${control(`${id}_${sid}`, tipo, 1)}</td><td class="val">${control(`${id}_${sid}`, tipo, 2)}</td></tr>`).join("");
+        }
+        return `<tr><td class="eti" colspan="2">${esc(label)}</td><td class="val">${control(id, tipo, 1)}</td><td class="val">${control(id, tipo, 2)}</td></tr>`;
+      }).join("");
+      return `${b.titulo ? `<h4>${esc(b.titulo)}</h4>` : ""}<table class="lb-rub"><thead><tr><th colspan="2">Indicador</th><th>1ª Etapa</th><th>2ª Etapa</th></tr></thead><tbody>${filas}</tbody></table>`;
+    }).join("");
+
+    return `<div class="lb-ficha">
+      <div class="lb-ficha-lista">${lista}</div>
+      <div class="lb-ficha-form"><h3 class="lb-ficha-nombre">${esc(alumno.apellido)}, ${esc(alumno.nombre)}</h3>${bloques}</div>
+    </div>`;
   }
 
   function htmlGrid(hoja) {
@@ -445,7 +515,7 @@
 
     const filas = estado.alumnos.map((al, i) => {
       const datos = (estado.notas[al.id] || {})[hoja.clave] || {};
-      const calc = core.calcularClave(hoja.clave, datos, estado.notas[al.id]);
+      const calc = core.calcularClave(hoja.clave, datos, estado.notas[al.id], estado.nivel, estado.curso);
       const celdas = cols.map((c) => htmlCelda(al, hoja, c, datos, calc)).join("");
       return `<tr data-fila="${al.id}"><td class="lb-alumno"><span class="lb-num">${i + 1}</span>${esc(al.apellido)}, ${esc(al.nombre)}</td>${celdas}</tr>`;
     }).join("");
@@ -455,29 +525,53 @@
 
   function valorDerivado(col, calc) {
     const v = calc[col.key];
-    if (v === null || v === undefined) return "";
+    if (v === null || v === undefined || v === "") return "";
     return col.decimales === null || col.decimales === undefined ? String(v) : core.fmt(v, col.decimales);
+  }
+
+  function minimoAprobado(col) {
+    return col.aprobado || core.APROBADO;
+  }
+
+  function formatoAuto(col, v) {
+    if (v === null || v === undefined) return "";
+    return col.decimales === null ? String(v) : core.fmt(v, col.decimales === undefined ? 2 : col.decimales);
   }
 
   function htmlCelda(al, hoja, col, datos, calc) {
     const base = `data-a="${al.id}" data-c="${hoja.clave}" data-k="${col.key}"`;
     if (col.tipo === "derivado") {
       const v = valorDerivado(col, calc);
-      const baja = v !== "" && col.decimales !== null && parseFloat(v) < core.APROBADO ? " baja" : "";
+      const baja = v !== "" && col.decimales !== null && col.decimales !== undefined && parseFloat(v) < minimoAprobado(col) ? " baja" : "";
       return `<td class="lb-derivado${baja}" ${base} data-der="1">${esc(v)}</td>`;
     }
+    const sucio = cambiado(al.id, hoja.clave, col.key) ? " sucio" : "";
     if (col.tipo === "texto") {
-      const ancho = hoja.tipo === "devolucion" ? " ancho" : "";
-      const sucio = estado.sucios.has(claveSucia(al.id, hoja.clave)) && cambiado(al.id, hoja.clave, col.key) ? " sucio" : "";
-      return `<td><textarea class="lb-texto${ancho}${sucio}" rows="2" ${base}>${esc(datos[col.key])}</textarea></td>`;
+      const largo = ["devolucion", "pri-dev", "ini-libre", "ini-obs"].includes(hoja.tipo);
+      const ancho = largo ? " ancho" : col.max && col.max <= 40 ? " corto" : "";
+      const filas = hoja.tipo === "ini-libre" ? 9 : col.max && col.max <= 40 ? 1 : 2;
+      return `<td><textarea class="lb-texto${ancho}${sucio}" rows="${filas}" ${base}>${esc(datos[col.key])}</textarea></td>`;
     }
-    const placeholder = col.auto && calc[col.auto] !== null && calc[col.auto] !== undefined ? core.fmt(calc[col.auto], col.decimales || 2) : "";
+    if (col.tipo === "concepto") {
+      const opciones = [""].concat(col.opciones).map((o) => `<option value="${esc(o)}"${datos[col.key] === o ? " selected" : ""}>${esc(o)}</option>`).join("");
+      return `<td><select class="lb-in lb-sel${sucio}" ${base}>${opciones}</select></td>`;
+    }
+    if (col.tipo === "foto") {
+      const url = datos[col.key];
+      return `<td class="lb-foto-td">${url ? `<img class="lb-foto-mini" src="${esc(url)}" alt="">` : `<span class="lb-sin-foto">Sin foto</span>`}
+        <div class="lb-foto-acc"><label class="lb-btn chico sec">${url ? "Cambiar" : "Subir foto"}<input type="file" accept="image/*" hidden data-foto="1" ${base}></label>
+        ${url ? `<button class="lb-btn chico rojo" data-accion="quitar-foto" ${base}>Quitar</button>` : ""}</div></td>`;
+    }
+    if (col.tipo === "check") {
+      return `<td><input type="checkbox" class="lb-check${sucio}" ${base}${datos[col.key] === "1" ? " checked" : ""}></td>`;
+    }
+    const placeholder = col.auto ? formatoAuto(col, calc[col.auto]) : "";
     const sub = col.sub ? `<span class="lb-sub" data-sub="${col.sub}" ${base}>${subTexto(calc[col.sub])}</span>` : "";
     const clases = ["lb-in"];
-    if (cambiado(al.id, hoja.clave, col.key)) clases.push("sucio");
+    if (sucio) clases.push("sucio");
     if (estado.invalidos.has(campoId(al.id, hoja.clave, col.key))) clases.push("invalido");
     const n = core.leerNumero(datos[col.key]);
-    if (col.tipo === "nota" && n !== null && !Number.isNaN(n) && n < core.APROBADO) clases.push("baja");
+    if (col.tipo === "nota" && n !== null && !Number.isNaN(n) && n < minimoAprobado(col)) clases.push("baja");
     return `<td><input class="${clases.join(" ")}" type="text" inputmode="decimal" autocomplete="off" ${base} value="${esc(datos[col.key])}" placeholder="${esc(placeholder)}">${sub}</td>`;
   }
 
@@ -527,8 +621,8 @@
 
   function refrescarFila(alumnoId, clave) {
     const datos = (estado.notas[alumnoId] || {})[clave] || {};
-    const calc = core.calcularClave(clave, datos, estado.notas[alumnoId]);
-    const cols = core.columnasDe(core.tipoDeClave(clave));
+    const calc = core.calcularClave(clave, datos, estado.notas[alumnoId], estado.nivel, estado.curso);
+    const cols = core.columnasDe(core.tipoDeClave(clave, estado.nivel, estado.curso));
     const tr = root.querySelector(`tr[data-fila="${alumnoId}"]`);
     if (!tr) return;
     cols.forEach((col) => {
@@ -537,7 +631,7 @@
         if (td) {
           const v = valorDerivado(col, calc);
           td.textContent = v;
-          td.classList.toggle("baja", v !== "" && col.decimales !== null && parseFloat(v) < core.APROBADO);
+          td.classList.toggle("baja", v !== "" && col.decimales !== null && col.decimales !== undefined && parseFloat(v) < minimoAprobado(col));
         }
       }
       if (col.sub) {
@@ -546,7 +640,7 @@
       }
       if (col.auto) {
         const inp = tr.querySelector(`input[data-k="${col.key}"]`);
-        if (inp) inp.placeholder = calc[col.auto] !== null && calc[col.auto] !== undefined ? core.fmt(calc[col.auto], col.decimales || 2) : "";
+        if (inp) inp.placeholder = formatoAuto(col, calc[col.auto]);
       }
     });
   }
@@ -555,18 +649,23 @@
 
   function onInput(e) {
     const el = e.target;
-    if (!el.matches("input[data-a], textarea[data-a]")) return;
+    if (el.matches("input[data-cfg]")) {
+      borradorConfig()[el.dataset.cfg] = el.value;
+      return;
+    }
+    if (!el.matches("input[data-a], textarea[data-a], select[data-a]")) return;
     const { a, c, k } = el.dataset;
-    const col = core.columnasDe(core.tipoDeClave(c)).find((x) => x.key === k);
+    const col = core.columnasDe(core.tipoDeClave(c, estado.nivel, estado.curso)).find((x) => x.key === k);
     if (!col) return;
 
     const fila = ((estado.notas[a] = estado.notas[a] || {})[c] = estado.notas[a][c] || {});
-    const valor = col.tipo === "texto" ? el.value : el.value.trim();
+    let valor = col.tipo === "texto" ? el.value : el.value.trim();
+    if (col.tipo === "check") valor = el.checked ? "1" : "";
     if (valor === "") delete fila[k];
-    else fila[k] = col.tipo === "texto" ? valor : valor.replace(",", ".");
+    else fila[k] = col.tipo === "texto" || col.tipo === "concepto" || col.tipo === "check" ? valor : valor.replace(",", ".");
 
     let invalido = false;
-    if (col.tipo !== "texto" && valor !== "") {
+    if ((col.tipo === "nota" || col.tipo === "entero") && valor !== "" && !(col.guion && valor === "-")) {
       const n = core.leerNumero(valor);
       invalido = Number.isNaN(n) || (col.tipo === "nota" && n > 10) || (col.tipo === "entero" && n > 999);
     }
@@ -582,7 +681,7 @@
 
     if (col.tipo === "nota") {
       const n = core.leerNumero(valor);
-      el.classList.toggle("baja", n !== null && !Number.isNaN(n) && n < core.APROBADO);
+      el.classList.toggle("baja", n !== null && !Number.isNaN(n) && n < minimoAprobado(col));
     }
 
     estado.errorGuardado = false;
@@ -619,8 +718,41 @@
     await cargarCurso();
   }
 
+  function establecerValor(a, c, k, valor) {
+    const fila = ((estado.notas[a] = estado.notas[a] || {})[c] = estado.notas[a][c] || {});
+    if (valor) fila[k] = valor;
+    else delete fila[k];
+    const clave = claveSucia(a, c);
+    if (igual(fila, (estado.base[a] || {})[c] || {})) estado.sucios.delete(clave);
+    else estado.sucios.add(clave);
+    renderContenido();
+    programarAutoguardado();
+  }
+
+  async function subirFoto(input) {
+    const archivo = input.files && input.files[0];
+    if (!archivo) return;
+    const { a, c, k } = input.dataset;
+    const fd = new FormData();
+    fd.append("archivo", archivo);
+    fd.append("tipo", "foto");
+    fd.append("alumno_id", a);
+    toast("Subiendo foto...", "");
+    try {
+      const r = await api("/api/libretas/imagen", { method: "POST", body: fd });
+      establecerValor(a, c, k, r.url);
+      toast("Foto subida", "ok");
+    } catch (error) {
+      toast(error.message, "err");
+    }
+    input.value = "";
+  }
+
   async function onChange(e) {
+    if (e.target.matches("input[type=file][data-foto]")) return subirFoto(e.target);
+    if (e.target.matches("input[type=file][data-firma]")) return subirFirma(e.target);
     if (e.target.id === "lbAnio") await cambiarContexto({ anio: parseInt(e.target.value, 10) });
+    else if (e.target.matches("select[data-a], input[type=checkbox][data-a]")) onInput(e);
   }
 
   async function onClick(e) {
@@ -642,6 +774,16 @@
       renderContenido();
     } else if (accion === "hoja") {
       estado.hoja = valor;
+      renderContenido();
+    } else if (accion === "quitar-foto") {
+      establecerValor(btn.dataset.a, btn.dataset.c, btn.dataset.k, "");
+    } else if (accion === "quitar-firma") {
+      borradorConfig()[btn.dataset.campo].splice(parseInt(btn.dataset.indice, 10), 1);
+      renderConfigCurso();
+    } else if (accion === "guardar-config") {
+      await guardarConfig();
+    } else if (accion === "ficha-alumno") {
+      estado.alumnoFicha = valor;
       renderContenido();
     } else if (accion === "guardar") {
       await guardar();
@@ -746,6 +888,94 @@
     return texto.split(/\r?\n/).map((l) => l.trim()).filter(Boolean).map(parsearLinea);
   }
 
+  function definicionNivel() {
+    return core.nivelDe(estado.nivel);
+  }
+
+  function puedeConfigurar() {
+    const p = ctx.perfil || {};
+    if (estado.nivel === "Secundario") return false;
+    if (p.rol !== "admin" && p.rol !== "directivo") return false;
+    const c = core.cursoDe(estado.nivel, estado.curso);
+    return !(estado.nivel === "Inicial" && c && c.sala < 4);
+  }
+
+  function camposConfig() {
+    if (estado.nivel === "Primario") {
+      return {
+        textos: [["docentes", "Docentes del curso"]],
+        firmas: [["firmasDocentes", "Firmas de los docentes"], ["firmasDirector", "Firmas de dirección"]]
+      };
+    }
+    return {
+      textos: [["docentes1", "Docentes 1ª etapa"], ["docentes2", "Docentes 2ª etapa"]],
+      firmas: [["firmas1", "Firmas docentes 1ª etapa"], ["firmas2", "Firmas docentes 2ª etapa"], ["firmasDirector", "Firmas de dirección"]]
+    };
+  }
+
+  function borradorConfig() {
+    if (!estado.borradorConfig) {
+      const guardada = configCurso();
+      const defecto = (definicionNivel().CURSOS_DEFECTO || {})[estado.curso] || {};
+      const campos = camposConfig();
+      const b = {};
+      campos.textos.forEach(([k]) => (b[k] = guardada[k] !== undefined ? guardada[k] : defecto[k] || ""));
+      campos.firmas.forEach(([k]) => (b[k] = (guardada[k] || defecto[k] || []).slice()));
+      estado.borradorConfig = b;
+    }
+    return estado.borradorConfig;
+  }
+
+  function htmlConfigCurso() {
+    const b = borradorConfig();
+    const campos = camposConfig();
+    const textos = campos.textos.map(([k, etq]) => `<label class="lb-campo"><span>${esc(etq)}</span><input type="text" data-cfg="${k}" value="${esc(b[k])}" maxlength="200" placeholder="Ej: Apellido Nombre - Apellido Nombre"></label>`).join("");
+    const firmas = campos.firmas.map(([k, etq]) => `<div class="lb-campo"><span>${esc(etq)}</span>
+      <div class="lb-firmas-lista">${b[k].map((f, i) => `<div class="lb-firma-item"><img src="${esc(window.LibretasHojas.firmaSrc(f))}" alt="" onerror="this.style.opacity=.25"><button class="lb-btn chico rojo" data-accion="quitar-firma" data-campo="${k}" data-indice="${i}">Quitar</button></div>`).join("")}
+      ${b[k].length < 6 ? `<label class="lb-btn chico sec lb-subir">${ICONO.mas}<span>Agregar firma</span><input type="file" accept="image/*" hidden data-firma="${k}"></label>` : ""}</div></div>`).join("");
+    return `<h2>Datos del curso</h2>
+      <p class="lb-help">Aparecen en la portada y en las firmas de la libreta. Subí la firma sobre fondo blanco o transparente.</p>
+      <div class="lb-form">${textos}${firmas}<button class="lb-btn verde" data-accion="guardar-config">Guardar datos del curso</button></div>`;
+  }
+
+  function renderConfigCurso() {
+    const cont = document.getElementById("lbConfigCurso");
+    if (cont) cont.innerHTML = htmlConfigCurso();
+  }
+
+  async function subirFirma(input) {
+    const archivo = input.files && input.files[0];
+    if (!archivo) return;
+    const campo = input.dataset.firma;
+    const fd = new FormData();
+    fd.append("archivo", archivo);
+    fd.append("tipo", "firma");
+    toast("Subiendo firma...", "");
+    try {
+      const r = await api("/api/libretas/imagen", { method: "POST", body: fd });
+      borradorConfig()[campo].push(r.url);
+      renderConfigCurso();
+      toast("Firma subida: recordá guardar los datos del curso", "ok");
+    } catch (error) {
+      toast(error.message, "err");
+    }
+    input.value = "";
+  }
+
+  async function guardarConfig() {
+    try {
+      const datos = Object.assign({}, borradorConfig());
+      await api("/api/libretas/config", {
+        method: "PUT",
+        body: JSON.stringify({ anio: estado.anio, nivel: estado.nivel, curso: estado.curso, datos })
+      });
+      estado.configCurso[claveConfig()] = datos;
+      toast("Datos del curso guardados", "ok");
+    } catch (error) {
+      toast(error.message, "err");
+    }
+  }
+
   function renderAlumnos(cont) {
     const filas = estado.alumnos.map((a, i) => {
       if (estado.editandoAlumno === a.id) {
@@ -783,6 +1013,7 @@
             <button class="lb-btn verde" data-accion="agregar-alumnos">Agregar a este curso</button>
           </div>
         </div>
+        ${puedeConfigurar() ? `<div class="lb-card lb-config" id="lbConfigCurso">${htmlConfigCurso()}</div>` : ""}
       </div>`;
 
     const ta = document.getElementById("lbLista");
@@ -857,7 +1088,7 @@
   function modeloLibreta(alumnoId) {
     const alumno = estado.alumnos.find((a) => a.id === alumnoId);
     if (!alumno) return null;
-    return core.armarLibreta(estado.nivel, estado.curso, alumno, estado.notas[alumnoId], estado.anio);
+    return core.armarLibreta(estado.nivel, estado.curso, alumno, estado.notas[alumnoId], estado.anio, configCurso());
   }
 
   function alumnosFiltrados() {
@@ -903,7 +1134,7 @@
             </div>
           </div>
           <p class="lb-msg" id="lbMsgPdf"></p>
-          <div class="lb-visor" id="lbVisor"><div class="lb-visor-escala" id="lbEscala">${htmlLibreta(modeloLibreta(estado.alumnoLibreta))}</div></div>
+          <div class="lb-visor" id="lbVisor"><div class="lb-visor-escala" id="lbEscala">${htmlPila(estado.alumnoLibreta)}</div></div>
           <p class="lb-hint">${ICONO.info}<span>Así se va a ver el PDF. Si falta algún dato, volvé a "Cargar notas": se guarda solo y la libreta se actualiza.</span></p>
         </div>
       </div>`;
@@ -912,8 +1143,21 @@
       estado.filtroAlumno = e.target.value;
       document.getElementById("lbLista2").innerHTML = htmlListaLibretas(alumnosFiltrados());
     });
-    ajustarHoja(document.querySelector("#lbEscala .lb-hoja"));
+    document.querySelectorAll("#lbEscala .lb-hoja").forEach(ajustarHoja);
     ajustarVisor();
+  }
+
+  function htmlPila(alumnoId) {
+    const hojas = window.LibretasHojas.htmlHojas(modeloLibreta(alumnoId));
+    return `<div class="lb-pila">${hojas.join("")}</div>`;
+  }
+
+  function claveConfig() {
+    return estado.nivel + "|" + estado.curso + "|" + estado.anio;
+  }
+
+  function configCurso() {
+    return (estado.configCurso && estado.configCurso[claveConfig()]) || {};
   }
 
   function ajustarVisor() {
@@ -921,30 +1165,14 @@
     const escala = document.getElementById("lbEscala");
     if (!visor || !escala) return;
     const ancho = visor.clientWidth - 28;
-    const hoja = escala.firstElementChild;
-    if (!hoja) return;
-    const w = hoja.offsetWidth || 1123;
-    const h = hoja.offsetHeight || 794;
+    const pila = escala.firstElementChild;
+    if (!pila) return;
+    const w = pila.offsetWidth || 1123;
+    const h = pila.offsetHeight || 794;
     const s = Math.min(1, ancho / w);
     escala.style.transform = `scale(${s})`;
     escala.style.width = w + "px";
     visor.style.height = Math.round(h * s + 28) + "px";
-  }
-
-  /* ---------- Diseño de la libreta ---------- */
-
-  function celda(texto, clase, extra) {
-    return `<td${clase ? ` class="${clase}"` : ""}${extra ? " " + extra : ""}>${texto}</td>`;
-  }
-
-  function colgroup() {
-    const anchos = [20, 52, 14, 14, 14, 16, 3, 14, 14, 14, 16, 3, 11, 11, 3, 17];
-    return `<colgroup>${anchos.map((w) => `<col style="width:${w}mm">`).join("")}</colgroup>`;
-  }
-
-  function celdaEv(orig, act) {
-    if (act !== null && act !== undefined) return `<span class="lb-orig">(${esc(orig)})</span> ${core.fmt(act, 2)}`;
-    return esc(orig);
   }
 
   function ajustarHoja(hoja) {
@@ -958,87 +1186,6 @@
       cuerpo.style.transform = `scale(${k.toFixed(4)})`;
       cuerpo.style.transformOrigin = "top left";
     }
-  }
-
-  function htmlLibreta(vm) {
-    if (!vm) return "";
-    const f1 = (n) => core.fmt(n, 1);
-    const f2 = (n) => core.fmt(n, 2);
-    const sb = celda("", "sb");
-
-    const filasMat = vm.materias.map((m, i) => `<tr>
-      ${i === 0 ? celda("ESPACIOS<br>CURRICULARES", "rojo", `rowspan="${vm.materias.length}"`) : ""}
-      ${celda(esc(m.label), "izq rojo2")}
-      ${celda(esc(m.p1))}${celda(celdaEv(m.e11, m.a11))}${celda(celdaEv(m.e12, m.a12))}${celda(f1(m.pm1))}${sb}
-      ${celda(esc(m.p2))}${celda(celdaEv(m.e21, m.a21))}${celda(celdaEv(m.e22, m.a22))}${celda(f2(m.pm2))}${sb}
-      ${celda(esc(m.dic), "celeste")}${celda(esc(m.feb), "celeste")}${sb}
-      ${celda(f2(m.fin), "nf")}</tr>`).join("");
-
-    const tablaMaterias = `<table class="lb-t">${colgroup()}
-      <tr>${sb}${sb}${celda("PRIMER CUATRIMESTRE", "tit", 'colspan="4"')}${sb}${celda("SEGUNDO CUATRIMESTRE", "tit", 'colspan="4"')}${sb}${celda("MESAS DE<br>EXAMENES", "tit", 'colspan="2"')}${sb}${celda("NOTA<br>FINAL", "hnf", 'rowspan="2"')}</tr>
-      <tr>${sb}${sb}${celda("PROCON", "h-naranja")}${celda("EV1", "h-ev")}${celda("EV2", "h-ev")}${celda("PROMEDIO", "h-naranja")}${sb}${celda("PROCON", "h-naranja")}${celda("EV1", "h-ev")}${celda("EV2", "h-ev")}${celda("PROMEDIO", "h-naranja")}${sb}${celda("DIC")}${celda("FEB")}${sb}</tr>
-      ${filasMat}</table>`;
-
-    const ing = vm.ingles;
-    const filasIng = ing.habilidades.map((h, i) => `<tr>
-      ${i === 0 ? celda("ENGLISH", "azul", 'rowspan="6"') : ""}
-      ${celda(esc(h.label), "izq azul")}
-      ${celda(esc(h.p1))}${sb}${sb}${celda(esc(h.n1))}${sb}
-      ${celda(esc(h.p2))}${sb}${sb}${celda(esc(h.n2))}${sb}${sb}${sb}${sb}${sb}</tr>`).join("");
-
-    const tablaIngles = `<table class="lb-t">${colgroup()}${filasIng}
-      <tr>${celda("AVERAGE", "izq azul")}${sb}${sb}${sb}${celda(f2(ing.avg1), "celeste")}${sb}${sb}${sb}${sb}${celda(f2(ing.avg2), "celeste")}${sb}${celda(esc(ing.dic), "celeste")}${celda(esc(ing.feb), "celeste")}${sb}${celda(f2(ing.fin), "nf")}</tr></table>`;
-
-    const tablaComentarios = `<table class="lb-t">${colgroup()}<tr>
-      ${celda("COMENTARIOS", "azul", 'style="font-size:10px"')}
-      ${celda(esc(ing.com1), "texto", 'colspan="5" style="font-size:9px"')}${sb}
-      ${celda(esc(ing.com2), "texto", 'colspan="9" style="font-size:9px"')}</tr></table>`;
-
-    const filasEce = vm.electivos.map((e, i) => `<tr>
-      ${i === 0 ? celda("ECE<br>ESPACIOS CURRICULARES<br>ELECTIVOS", "rojo", `rowspan="${vm.electivos.length}"`) : ""}
-      ${celda(esc(e.label), "izq rojo2")}
-      ${celda(esc(e.p1))}${sb}${sb}${sb}${sb}${celda(esc(e.p2))}${sb}${sb}${sb}${sb}${sb}${sb}${sb}${sb}</tr>`).join("");
-    const tablaEce = vm.electivos.length ? `<table class="lb-t">${colgroup()}${filasEce}</table>` : "";
-
-    const tablaGeneral = `<table class="lb-t">${colgroup()}<tr>
-      ${celda("PROMEDIO ANUAL GENERAL", "izq lb-anual", 'colspan="15"')}${celda(f2(vm.promedioAnual), "nf", 'style="font-weight:700"')}</tr>
-      <tr>${celda("DEVOLUCION ANUAL", "rojo", 'colspan="2" style="white-space:nowrap"')}${celda(esc(vm.devolucion), "texto", 'colspan="14" style="font-size:9px"')}</tr></table>`;
-
-    const a = vm.asistencia;
-    const tablaAsistencia = `<table class="lb-t" style="width:140mm;font-size:10px">
-      <tr>${celda("", "sb", 'colspan="2"')}${celda("PRIMER CUATRIMESTRE", "claro")}${celda("SEGUNDO CUATRIMESTRE", "claro")}</tr>
-      <tr>${celda("ASISTENCIA", "claro", 'rowspan="4"')}${celda("Inasistencias Justificadas", "izq")}${celda(esc(a.ij1))}${celda(esc(a.ij2))}</tr>
-      <tr>${celda("Inasistencias Injustificadas", "izq")}${celda(esc(a.ii1))}${celda(esc(a.ii2))}</tr>
-      <tr>${celda("Tardanzas Justificadas", "izq")}${celda(esc(a.tj1))}${celda(esc(a.tj2))}</tr>
-      <tr>${celda("Tardanzas Injustificadas", "izq")}${celda(esc(a.ti1))}${celda(esc(a.ti2))}</tr>
-      <tr>${celda("", "sb")}${celda("Total", "claro izq")}${celda(a.t1 === null ? "" : String(a.t1), "claro")}${celda(a.t2 === null ? "" : String(a.t2), "claro")}</tr></table>`;
-
-    const img = (src, clase) => `<img class="${clase}" src="${src}" alt="" crossorigin="anonymous" onerror="this.classList.add('lb-sin-img')">`;
-
-    return `<div class="lb-hoja">
-      ${img(IMG.esquinaSup, "lb-esq-sup")}
-      <header class="lb-cab">
-        <div class="lb-cab-izq"><span>${esc(vm.anio)}</span></div>
-        <div class="lb-cab-centro"><h2>INFORME ACADEMICO</h2></div>
-        <div class="lb-cab-der"><h3>ESTUDIANTE: <span class="lb-nombre">${esc(vm.alumno.nombreCompleto)}</span></h3><h3>${esc(vm.curso.titulo)}</h3></div>
-      </header>
-      <div class="lb-cuerpo">
-        ${tablaMaterias}${tablaIngles}${tablaComentarios}${tablaEce}${tablaGeneral}
-        <div class="lb-pie">
-          ${tablaAsistencia}
-          ${img(IMG.logo, "lb-logo")}
-          <div class="lb-firma">${img(IMG.firma, "lb-firma-img")}<span class="nom">${esc(FIRMA.nombre)}</span><span class="cargo">${esc(FIRMA.cargo)}</span></div>
-        </div>
-      </div>
-      <div class="lb-ref">
-        <h3>REFERENCIAS</h3>
-        <span><b>PROCON:</b>CONSIDERA ASPECTOS DEL ESTUDIANTE RELACIONADOS AL COMPORTAMIENTO Y LA CONVIVENCIA Y ASPECTOS ACADÉMICOS ORIENTADOS AL TRABAJO EN CLASE.</span>
-        <span><b>EV:</b>EVALUACIONES</span>
-        <span><b>EV1:</b>EVALUACION 1er BIMESTRE.</span>
-        <span><b>EV2:</b>EVALUACION 2do BIMESTRE.</span>
-      </div>
-      ${img(IMG.esquinaInf, "lb-esq-inf")}
-    </div>`;
   }
 
   /* ---------- Exportación a PDF ---------- */
@@ -1084,18 +1231,23 @@
       const { jsPDF } = window.jspdf;
       const pdf = new jsPDF({ orientation: "landscape", unit: "mm", format: "a4" });
 
+      let paginas = 0;
       for (let i = 0; i < modelos.length; i++) {
         mostrarMensaje(msg, `Generando libreta ${i + 1} de ${modelos.length}...`, "");
-        stage.innerHTML = htmlLibreta(modelos[i]);
-        const hoja = stage.firstElementChild;
-        await esperarImagenes(hoja);
-        ajustarHoja(hoja);
-        const canvas = await window.html2canvas(hoja, {
-          scale: 2, useCORS: true, backgroundColor: "#ffffff", logging: false,
-          scrollX: 0, scrollY: 0, windowWidth: hoja.offsetWidth, windowHeight: hoja.offsetHeight
-        });
-        if (i > 0) pdf.addPage();
-        pdf.addImage(canvas.toDataURL("image/jpeg", 0.95), "JPEG", 0, 0, 297, 210);
+        const hojas = window.LibretasHojas.htmlHojas(modelos[i]);
+        for (const html of hojas) {
+          stage.innerHTML = html;
+          const hoja = stage.firstElementChild;
+          await esperarImagenes(hoja);
+          ajustarHoja(hoja);
+          const canvas = await window.html2canvas(hoja, {
+            scale: modelos.length > 1 ? 1.6 : 2, useCORS: true, backgroundColor: "#ffffff", logging: false,
+            scrollX: 0, scrollY: 0, windowWidth: hoja.offsetWidth, windowHeight: hoja.offsetHeight
+          });
+          if (paginas > 0) pdf.addPage();
+          pdf.addImage(canvas.toDataURL("image/jpeg", modelos.length > 1 ? 0.88 : 0.92), "JPEG", 0, 0, 297, 210);
+          paginas++;
+        }
       }
 
       const curso = core.cursoDe(estado.nivel, estado.curso).label;
@@ -1135,5 +1287,5 @@
     cargarCurso();
   }
 
-  window.LibretasUI = { mount, htmlLibreta };
+  window.LibretasUI = { mount, htmlHojas: (vm) => window.LibretasHojas.htmlHojas(vm) };
 })();

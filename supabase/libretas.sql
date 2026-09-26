@@ -38,3 +38,18 @@ create index if not exists lib_notas_alumno_idx on public.lib_notas (alumno_id);
 
 alter table public.lib_alumnos enable row level security;
 alter table public.lib_notas enable row level security;
+
+-- Datos por curso (docentes y firmas) para las libretas de Primaria e Inicial.
+create table if not exists public.lib_cursos_config (
+  id uuid primary key default gen_random_uuid(),
+  anio_lectivo integer not null,
+  nivel text not null check (nivel in ('Inicial', 'Primario', 'Secundario')),
+  curso text not null,
+  datos jsonb not null default '{}'::jsonb,
+  updated_at timestamptz not null default now(),
+  updated_by uuid,
+  updated_by_name text,
+  unique (anio_lectivo, nivel, curso)
+);
+
+alter table public.lib_cursos_config enable row level security;

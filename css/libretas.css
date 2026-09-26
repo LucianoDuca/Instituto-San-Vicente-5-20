@@ -158,6 +158,29 @@ table.lb-grid{border-collapse:separate;border-spacing:0;width:100%;font-size:.86
 @media(max-width:1100px){.lb-two,.lb-libretas{grid-template-columns:minmax(0,1fr)}.lb-lista{max-height:220px}}
 @media(max-width:640px){.lb-card{padding:16px}.lb-title{font-size:1.3rem!important}.lb-grid th.lb-alumno,.lb-grid td.lb-alumno{min-width:150px}.lb-progress{width:100%}.lb-tab span{display:none}.lb-tab{padding:12px 16px}}
 
+/* Configuración del curso y fotos */
+.lb-config{grid-column:1/-1}
+.lb-campo{display:grid;gap:6px}
+.lb-campo>span{font-weight:700;font-size:.82rem;color:#3c556c}
+.lb-campo input[type=text]{border:1px solid #d5e1ec;border-radius:12px;padding:11px 14px;font:inherit;background:#f8fbfd;outline:none;width:100%}
+.lb-campo input[type=text]:focus{border-color:#0b4a78;box-shadow:0 0 0 4px rgba(11,74,120,.12)}
+.lb-firmas-lista{display:flex;flex-wrap:wrap;gap:12px;align-items:flex-end}
+.lb-firma-item{display:grid;gap:6px;justify-items:center;border:1px solid #dbe5ee;border-radius:12px;padding:8px;background:#fff}
+.lb-firma-item img{height:56px;max-width:150px;object-fit:contain}
+.lb-subir{cursor:pointer}
+.lb-foto-td{min-width:150px}
+.lb-foto-mini{height:64px;max-width:120px;object-fit:cover;border-radius:8px;display:block;margin:0 auto 6px}
+.lb-sin-foto{display:block;color:#8fa0b0;font-size:.76rem;font-weight:700;margin-bottom:6px}
+.lb-foto-acc{display:flex;gap:6px;justify-content:center;flex-wrap:wrap}
+.lb-foto-acc .lb-btn{cursor:pointer}
+
+/* Celdas de selección y firmas */
+.lb-in.lb-sel{width:74px;padding:7px 2px;cursor:pointer;text-align-last:center}
+.lb-check{width:20px;height:20px;cursor:pointer;accent-color:#15803d}
+.lb-texto.corto{width:190px;min-height:34px}
+.lb-pila{display:grid;gap:16px;width:1123px}
+.lb-pila>*{box-shadow:0 4px 14px rgba(16,32,51,.18)}
+
 /* ===== Diseño de la libreta (A4 apaisado) ===== */
 .lb-hoja{position:relative;width:297mm;height:210mm;box-sizing:border-box;padding:8px 12px 0 14mm;background:#fff;overflow:hidden;font-family:'Roboto Condensed','Arial Narrow',Arial,sans-serif;color:#000}
 .lb-hoja *{box-sizing:border-box}
@@ -203,3 +226,156 @@ table.lb-grid{border-collapse:separate;border-spacing:0;width:100%;font-size:.86
 .lb-sin-img{display:none}
 .lb-orig{font-size:8px;color:#555;margin-right:1px}
 
+
+/* ===== Libreta de Primaria (A4 apaisado) ===== */
+.lbp-hoja{position:relative;width:297mm;height:210mm;box-sizing:border-box;padding:10px 15px;background:#fff;overflow:hidden;font-family:'Montserrat',Arial,sans-serif;color:#000}
+.lbp-hoja *{box-sizing:border-box}
+.lbp-hoja img{display:block}
+.lbp-fila{display:flex;margin-bottom:20px}
+.lbp-caja{border:3px solid #0048a4;align-self:flex-start}
+.lbp-caja.lbp-espacios{margin-right:0}
+.lbp-t{border-collapse:collapse;font-family:'Oswald',Arial,sans-serif}
+.lbp-t td{padding:7px 5px;text-align:center;font-size:13px;position:relative;color:#000}
+.lbp-ancho{width:12mm}
+.lbp-alto-cab{height:150px}
+.lbp-alto-cab-asis{height:120px}
+.lbp-alto-celda{height:42px}
+.lbp-alto-asis{height:46px}
+.lbp-titulo{font-weight:700;font-size:14px;background:#8fb0d9;color:#0048a4;height:36px!important;font-family:'Oswald',Arial,sans-serif}
+.lbp-titulo.lbp-chico{font-size:11px}
+.lbp-girado{transform:rotate(-90deg);transform-origin:left top;white-space:nowrap;width:max-content;position:absolute;bottom:-14px;left:10px;color:#0048a4;font-family:'Oswald',Arial,sans-serif;font-weight:700;font-size:14px}
+.lbp-girado.lbp-subir{left:5px}
+.lbp-girado.lbp-bajar{left:20px}
+.lbp-neg{font-weight:700;font-size:14px;color:#0048a4}
+.lbp-neg p{line-height:13px;font-size:11px;margin:0}
+.lbp-br1{border-right:1px solid #0048a4}
+.lbp-br3{border-right:3px solid #0048a4}
+.lbp-bl3{border-left:3px solid #0048a4}
+.lbp-bl{border-left:3px solid #0048a4}
+.lbp-bb{border-bottom:1px solid #0048a4}
+.lbp-bi{border-bottom:3px solid #0048a4}
+.lbp-bs3{border-top:3px solid #0048a4}
+.lbp-ingles{margin-left:6px}
+.lbp-promtrim{margin-left:6px}
+.lbp-refs{margin-left:15px;width:140px;font-size:12px;font-weight:700;color:#0048a4;align-self:stretch}
+.lbp-refs table{border-collapse:collapse;height:100%;width:100%;font-family:'Oswald',Arial,sans-serif}
+.lbp-refs table td{border:1px solid #0048a4;padding:4px;text-align:center;font-size:12px}
+.lbp-asis{margin-right:20px}
+.lbp-devol{width:100%}
+.lbp-centrar{text-align:center;line-height:36px;margin:0;font-size:14px}
+.lbp-observaciones{border:3px solid #0048a4;font-size:11px}
+.lbp-obs{padding:5px 10px;border-bottom:3px solid #0048a4;height:85px;position:relative;overflow:hidden}
+.lbp-obs.lbp-sin-borde{border-bottom:0}
+.lbp-obs p{padding-left:25px;margin:0;line-height:1.35}
+.lbp-girado-h{transform:rotate(-90deg);transform-origin:left top;white-space:nowrap;position:absolute;bottom:-14px;left:10px;color:#0048a4;font-size:12px;font-family:'Oswald',Arial,sans-serif;margin:0}
+
+/* Portada */
+.lbp-portada{padding:10px 15px}
+.lbp-fondo{width:100%;border:1px solid #ccc;height:200mm;overflow:hidden}
+.lbp-fondo-img{width:100%;height:200mm}
+.lbp-poster{width:130mm;position:absolute;top:60px;left:50px}
+.lbp-info-alumno{position:absolute;top:60px;right:50px;width:430px;text-align:center;color:#0048a4}
+.lbp-logo-portada{width:100px;margin:0 auto}
+.lbp-info-alumno h2{color:#fb2214;font-family:'Roboto Condensed',Arial,sans-serif;margin:8px 0 4px;font-size:1.5rem}
+.lbp-info-alumno h3{font-weight:400;margin:0 0 4px;font-size:1.1rem}
+.lbp-info-alumno h3 span{font-weight:700}
+.lbp-info-alumno p{font-size:12px;margin:0}
+.lbp-datos{text-align:left;margin-top:30px;font-family:'Oswald',Arial,sans-serif}
+.lbp-entrada{margin-bottom:13px;display:flex;font-size:14px}
+.lbp-entrada span{font-family:'Oswald',Arial,sans-serif}
+.lbp-box{border-bottom:3px dotted #000;flex-grow:1;display:inline-block}
+.lbp-box span{color:#000;margin-left:10px;display:inline-block;font-weight:700;font-size:15px}
+.lbp-label{font-weight:700;flex-grow:0}
+.lbp-pie-portada{color:#fff;width:370px;margin:200px auto 0 55px;text-align:left}
+.lbp-frase{font-family:'Just Another Hand',cursive;text-align:center;font-size:24px;letter-spacing:1px;margin:0!important;color:#fff}
+.lbp-pie-cols{display:flex;font-size:10px;justify-content:space-between;margin-top:10px}
+.lbp-pie-cols>div{width:48%}
+.lbp-pie-cols span{display:block;padding:1px 0;color:#fff}
+.lbp-face{width:15px;display:inline-block!important;vertical-align:middle;margin-right:4px}
+
+/* Última página */
+.lbp-finales{border-collapse:collapse;color:#0048a4;margin-bottom:20px}
+.lbp-finales td{border:2px solid #0048a4;padding:5px;font-family:'Oswald',Arial,sans-serif;text-align:center;font-size:14px}
+.lbp-c1{width:30mm}.lbp-c2,.lbp-c3{width:70mm}
+.lbp-c4{width:120mm;text-align:center}
+.lbp-sup{vertical-align:top;padding:0!important}
+.lbp-cert{width:449px}
+.lbp-enc{background:#8fb0d9;color:#0048a4;font-size:18px!important;font-weight:700}
+.lbp-alto-trim{height:30mm;font-weight:700}
+.lbp-rallado{background:#8fb0d9}
+.lbp-izq{text-align:left!important}
+.lbp-firma{max-height:110px;width:115px;display:inline-block!important}
+.lbp-firma-dire{width:100px}
+.lbp-firmas-finales .lbp-f1{width:50mm;font-weight:700}
+.lbp-firmas-finales .lbp-f2{width:110mm;font-weight:700}
+.lbp-logo-final{width:100px;margin:0 auto}
+.lbp-centro-firmas{height:124px}
+
+/* ===== Libreta de Inicial (A4 apaisado) ===== */
+.lbi-hoja{position:relative;width:297mm;height:210mm;box-sizing:border-box;padding:12mm 12mm 8mm;background:#fff;overflow:hidden;font-family:'Montserrat',Arial,sans-serif;color:#1c2b3a}
+.lbi-hoja *{box-sizing:border-box}
+.lbi-hoja img{display:block}
+.lbi-banda-sup{position:absolute;top:0;left:0;right:0;height:16mm;background:linear-gradient(90deg,#083656,#1a56a8)}
+.lbi-banda-sup.lbi-fina{height:5mm}
+.lbi-portada{padding:0}
+.lbi-portada-cuerpo{position:absolute;top:24mm;left:0;right:0;text-align:center}
+.lbi-logo-grande{width:34mm;margin:0 auto 4mm}
+.lbi-portada h1{margin:0;color:#e8342a;font-family:'Roboto Condensed',Arial,sans-serif;font-size:34px;letter-spacing:1px}
+.lbi-portada h2{margin:4px 0 0;font-weight:400;color:#083656;font-size:20px}
+.lbi-portada h2 span{font-weight:700}
+.lbi-loc{margin:2px 0 0;font-size:12px;color:#1a56a8}
+.lbi-nivel{margin:6mm 0 0;font-family:'Oswald',Arial,sans-serif;font-size:22px;letter-spacing:4px;color:#1a56a8}
+.lbi-datos{width:170mm;margin:10mm auto 0;text-align:left;font-family:'Oswald',Arial,sans-serif}
+.lbi-dato{display:flex;align-items:baseline;gap:8px;border-bottom:2px dotted #333;margin-bottom:8px;padding-bottom:2px;font-size:15px}
+.lbi-dato span{color:#1a56a8;font-weight:700;font-size:13px}
+.lbi-dato b{margin-right:14px}
+.lbi-sep{margin-left:10px}
+.lbi-frase{font-family:'Just Another Hand',cursive;font-size:26px;color:#e8342a;margin:8mm 0 0;letter-spacing:1px}
+.lbi-pie-portada{position:absolute;left:0;right:0;bottom:0;height:22mm;background:#083656;color:#fff;display:flex;justify-content:space-between;align-items:center;padding:0 16mm;font-size:10px}
+.lbi-pie-portada span{display:block;padding:1px 0;color:#fff}
+.lbi-titulo-hoja{margin:4mm 0 6mm;font-family:'Oswald',Arial,sans-serif;color:#083656;font-size:16px;font-weight:600}
+.lbi-informe{border:2px solid #1a56a8;border-radius:10px;padding:10mm;height:168mm;font-size:13px;line-height:1.6;white-space:pre-wrap}
+.lbi-grid2{display:grid;grid-template-columns:1fr 1fr;gap:8mm;margin-top:3mm}
+.lbi-grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:6mm;margin-top:3mm}
+.lbi-areas{align-items:start}
+.lbi-caja{border:1.5px solid #1a56a8;border-radius:8px;overflow:hidden;margin-bottom:6mm}
+.lbi-caja-tit{background:#1a56a8;color:#fff;text-align:center;font-weight:700;padding:6px;font-size:12px;letter-spacing:.5px}
+.lbi-refs{display:grid;grid-template-columns:1fr 1fr;gap:6mm;padding:8px 10px}
+.lbi-refs table{border-collapse:collapse;width:100%;font-size:11px}
+.lbi-refs td{padding:3px 4px;border-bottom:1px solid #e3ebf2}
+.lbi-refs-sub{display:grid;grid-template-columns:1fr 1fr;text-align:center;font-size:9px;font-weight:700;color:#1a56a8;padding:0 10px 8px}
+.lbi-foto-caja{height:92mm;display:flex;align-items:center;justify-content:center;background:#f3f7fb;border-bottom:1px solid #d5dee8}
+.lbi-foto{max-width:100%;max-height:92mm;object-fit:contain}
+.lbi-obs-texto{padding:10px;font-size:11px;line-height:1.55;height:64mm;white-space:pre-wrap;overflow:hidden}
+.lbi-area{border:1.5px solid #c9d3de;border-radius:8px;overflow:hidden}
+.lbi-area-tit{color:#fff;font-weight:700;text-align:center;padding:5px;font-size:12px;letter-spacing:.5px}
+.lbi-t{width:100%;border-collapse:collapse;font-size:10.5px}
+.lbi-t td{border:1px solid #d5dee8;padding:3px 6px;vertical-align:middle}
+.lbi-cab td{text-align:center;font-weight:700;font-size:9px;background:#f3f7fb}
+.lbi-blq td{font-weight:700;background:#f3f7fb;font-size:10px;letter-spacing:.3px}
+.lbi-desc{line-height:1.25}
+.lbi-sub{width:22mm;color:#3c556c}
+.lbi-nota{text-align:center;font-weight:700;width:12mm;font-size:11.5px}
+.lbi-firmas td,.lbi-asis td{text-align:center;font-size:10px;padding:5px}
+.lbi-firmas .lbi-desc,.lbi-asis .lbi-desc{text-align:left;font-weight:700}
+.lbi-firma{height:36px;display:inline-block!important;margin:2px}
+.lbi-total td{font-weight:700;background:#f3f7fb}
+
+/* Formulario por alumno (Inicial) */
+.lb-ficha{display:grid;grid-template-columns:250px minmax(0,1fr);gap:16px;align-items:start}
+.lb-ficha-lista{display:grid;gap:6px;max-height:70vh;overflow:auto;padding-right:4px}
+.lb-ficha-lista button{display:flex;justify-content:space-between;align-items:center;gap:8px;text-align:left;border:1px solid transparent;border-radius:12px;padding:10px 12px;background:#f8fbfd;cursor:pointer;font:inherit;font-weight:700;font-size:.82rem;color:#0b3558}
+.lb-ficha-lista button:hover{background:#eef5fb}
+.lb-ficha-lista button.active{background:#0b4a78;color:#fff}
+.lb-ficha-form h4{margin:18px 0 8px;color:#0b4a78;font-size:.82rem;letter-spacing:.06em}
+.lb-ficha-form h4:first-child{margin-top:0}
+.lb-ficha-nombre{margin:0 0 12px;font-size:1.05rem;color:#0b3558}
+.lb-rub{width:100%;border-collapse:collapse;font-size:.86rem}
+.lb-rub th{background:#0b3558;color:#fff;font-size:.72rem;padding:8px;text-align:center}
+.lb-rub th:first-child{text-align:left}
+.lb-rub td{padding:6px 8px;border-bottom:1px solid #edf2f6;vertical-align:middle}
+.lb-rub td.eti{color:#27425c;font-weight:600;line-height:1.35}
+.lb-rub td.sub{color:#5a7085;font-weight:600;width:130px}
+.lb-rub td.val{width:96px;text-align:center}
+.lb-rub tr:hover td{background:#f4f8fb}
+@media(max-width:1100px){.lb-ficha{grid-template-columns:minmax(0,1fr)}.lb-ficha-lista{max-height:200px}}
