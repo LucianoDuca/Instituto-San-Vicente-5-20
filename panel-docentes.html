@@ -8,6 +8,10 @@
   <title>Panel Docentes | Instituto San Vicente</title>
   <link rel="stylesheet" href="css/index.css">
   <link rel="stylesheet" href="css/panel.css">
+  <link rel="stylesheet" href="css/libretas.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@400;700&display=swap">
 </head>
 <body>
 
@@ -30,6 +34,7 @@
         <button class="tab-btn" data-tab="biblioteca">
           Biblioteca <span class="tab-badge" id="docsBadge"></span>
         </button>
+        <button class="tab-btn" data-tab="libretas">Libretas</button>
       </div>
 
       <div id="tab-comunicados" class="tab-panel active">
@@ -87,11 +92,17 @@
 
       </div>
 
+      <div id="tab-libretas" class="tab-panel">
+        <div id="libretasRoot"></div>
+      </div>
+
     </section>
   </main>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="js/supabase-config.js"></script>
+  <script src="js/libretas-core.js"></script>
+  <script src="js/libretas.js"></script>
   <script src="js/panel-docentes.js"></script>
 
 </body>

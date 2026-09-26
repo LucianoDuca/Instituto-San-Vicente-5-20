@@ -125,6 +125,13 @@ navButtons.forEach((button) => {
     document.getElementById(sectionName).classList.add("active");
     sectionTitle.textContent = button.textContent;
 
+    if (sectionName === "libretas") {
+      window.LibretasUI.mount(document.getElementById("libretasRoot"), {
+        fetchAuth,
+        perfil: { rol: "admin", nivel: "General" }
+      });
+    }
+
     adminShell.classList.remove("sidebar-open");
   });
 });

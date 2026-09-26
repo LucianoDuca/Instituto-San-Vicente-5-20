@@ -7,6 +7,10 @@
   <link rel="icon" href="assets/img/Sanvi Logos/logo.webp" type="image/png" />
   <title>Panel Administradores | Instituto San Vicente</title>
   <link rel="stylesheet" href="css/panel-admin.css" />
+  <link rel="stylesheet" href="css/libretas.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@400;700&display=swap" />
 </head>
 <body>
 
@@ -27,6 +31,7 @@
       <button class="nav-btn" data-section="biblioteca">Biblioteca</button>
       <button class="nav-btn" data-section="comunicados">Comunicados</button>
       <button class="nav-btn nav-btn--gallery" data-section="edicion-galeria">Edición Galería</button>
+      <button class="nav-btn" data-section="libretas">Libretas</button>
       <a class="nav-link-external" href="https://libretas.institutosanvicente.com" target="_blank" rel="noopener noreferrer">Acceder a libretas (Viejo)</a>
     </nav>
 
@@ -300,11 +305,17 @@
 
     </section>
 
+    <section id="libretas" class="admin-section">
+      <div id="libretasRoot"></div>
+    </section>
+
   </section>
 </main>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="js/supabase-config.js"></script>
+<script src="js/libretas-core.js"></script>
+<script src="js/libretas.js"></script>
 <script src="js/panel-administradores.js"></script>
 </body>
 </html>

@@ -13,6 +13,9 @@ app.use(express.json({ limit: "200kb" }));
 
 app.get("/club-sanvi/", (req, res) => res.redirect(301, "https://clubsanvi.institutosanvicente.com/"));
 
+app.use("/server", (req, res) => res.status(404).end());
+app.use("/supabase", (req, res) => res.status(404).end());
+
 app.use(express.static(__dirname));
 
 const resend = new Resend(process.env.RESEND_API_KEY);
@@ -263,6 +266,8 @@ async function adminODirectivo(req, res, next) {
 function nombreCompleto(profile) {
   return [profile.nombre, profile.apellido].filter(Boolean).join(" ").trim() || profile.email;
 }
+
+require("./server/libretas").registrarLibretas(app, { supabaseAdmin, usuarioLogueado, nombreCompleto });
 
 /* CONTACTO — ANTISPAM */
 

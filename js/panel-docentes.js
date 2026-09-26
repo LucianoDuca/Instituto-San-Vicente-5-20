@@ -11,6 +11,7 @@ const commsBadge = document.getElementById("commsBadge");
 const docsBadge = document.getElementById("docsBadge");
 
 let documentos = [];
+let miPerfil = null;
 
 function escaparHTML(str) {
   return String(str ?? "")
@@ -40,8 +41,27 @@ document.querySelectorAll(".tab-btn").forEach((btn) => {
     document.querySelectorAll(".tab-panel").forEach((p) => p.classList.remove("active"));
     btn.classList.add("active");
     document.getElementById(`tab-${btn.dataset.tab}`).classList.add("active");
+    if (btn.dataset.tab === "libretas") abrirLibretas();
   });
 });
+
+async function fetchLibretas(url, options = {}) {
+  const token = await obtenerToken();
+  if (!token) return null;
+  return fetch(url, {
+    ...options,
+    headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}`, ...(options.headers || {}) }
+  });
+}
+
+async function abrirLibretas() {
+  if (!miPerfil) {
+    const response = await fetchLibretas("/api/me");
+    if (!response) return;
+    miPerfil = (await response.json()).profile;
+  }
+  window.LibretasUI.mount(document.getElementById("libretasRoot"), { fetchAuth: fetchLibretas, perfil: miPerfil });
+}
 
 /* Auth */
 
@@ -71,6 +91,7 @@ async function cargarPerfil() {
     window.location.href = "login.html";
     return;
   }
+  miPerfil = result.profile;
   userInfo.textContent = `${result.profile.nombre || "Docente"} ${result.profile.apellido || ""} · ${result.profile.area || "Área no definida"}`;
 }
 
