@@ -285,7 +285,7 @@
         <p class="lbi-loc">Juana Koslay - San Luis</p>
         <p class="lbi-nivel">NIVEL INICIAL</p>
         <div class="lbi-datos">
-          <div class="lbi-dato"><span>ALUMNO/A:</span><b>${esc(vm.alumno.nombreCompleto)}</b></div>
+          <div class="lbi-dato"><span>ESTUDIANTE:</span><b>${esc(vm.alumno.nombreCompleto)}</b></div>
           <div class="lbi-dato"><span>DNI:</span><b>${esc(vm.alumno.dni)}</b></div>
           <div class="lbi-dato"><span>SALA:</span><b>${esc(vm.sala)}</b><span class="lbi-sep">SECCIÓN:</span><b>${esc(seccion)}</b><span class="lbi-sep">AÑO:</span><b>${esc(vm.anio)}</b></div>
         </div>

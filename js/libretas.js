@@ -278,7 +278,7 @@
     document.getElementById("lbTitulo").textContent = `${cfgNivel.label}${curso ? " · " + curso.label : ""}`;
     document.getElementById("lbResumen").textContent = estado.cargando
       ? "Cargando..."
-      : `${estado.alumnos.length} alumno${estado.alumnos.length === 1 ? "" : "s"}${cfgNivel.resumen ? " · " + cfgNivel.resumen(estado.curso) : ""}`;
+      : `${estado.alumnos.length} estudiante${estado.alumnos.length === 1 ? "" : "s"}${cfgNivel.resumen ? " · " + cfgNivel.resumen(estado.curso) : ""}`;
 
     const mostrarNiveles = permitidos.length > 1;
     const segNiveles = document.getElementById("lbNiveles");
@@ -302,7 +302,7 @@
     document.getElementById("lbAnio").innerHTML = anios.map((a) => `<option value="${a}"${a === estado.anio ? " selected" : ""}>Año ${a}</option>`).join("");
 
     document.getElementById("lbVistas").innerHTML = [
-      ["notas", "Cargar notas", ICONO.notas], ["alumnos", "Alumnos", ICONO.alumnos], ["libretas", "Libretas", ICONO.libretas]
+      ["notas", "Cargar notas", ICONO.notas], ["alumnos", "Estudiantes", ICONO.alumnos], ["libretas", "Libretas", ICONO.libretas]
     ].map(([id, label, icono]) => `<button role="tab" class="lb-tab${estado.vista === id ? " active" : ""}" data-accion="vista" data-valor="${id}">${icono}<span>${label}</span></button>`).join("");
   }
 
@@ -327,9 +327,9 @@
   function sinAlumnos() {
     return `<div class="lb-card"><div class="lb-vacio">
       <div class="lb-vacio-icono">${ICONO.alumnos}</div>
-      <h3>Todavía no hay alumnos en este curso</h3>
+      <h3>Todavía no hay estudiantes en este curso</h3>
       <p>Agregá la lista del curso para empezar a cargar notas y armar las libretas.</p>
-      <button class="lb-btn verde" data-accion="vista" data-valor="alumnos">${ICONO.mas}<span>Agregar alumnos</span></button>
+      <button class="lb-btn verde" data-accion="vista" data-valor="alumnos">${ICONO.mas}<span>Agregar estudiantes</span></button>
     </div></div>`;
   }
 
@@ -344,7 +344,7 @@
 
   function chipHoja(h, activa) {
     const p = progresoHoja(h.clave);
-    return `<button class="lb-chip prog-${p.nivel}${activa ? " active" : ""}" data-accion="hoja" data-valor="${h.clave}" title="${p.con} de ${p.total} alumnos con datos"><i class="lb-dot"></i>${esc(h.label)}</button>`;
+    return `<button class="lb-chip prog-${p.nivel}${activa ? " active" : ""}" data-accion="hoja" data-valor="${h.clave}" title="${p.con} de ${p.total} estudiantes con datos"><i class="lb-dot"></i>${esc(h.label)}</button>`;
   }
 
   function renderNotas(cont) {
@@ -377,7 +377,7 @@
           </div>
           <div class="lb-progress" aria-hidden="true"><span id="lbProgresoBarra"></span></div>
         </div>
-        <p class="lb-hint">${ICONO.info}<span>${hoja.formulario ? "Elegí un alumno y completá sus indicadores: se guardan solos." : "Escribí las notas: se guardan solas. Con <kbd>Enter</kbd> o <kbd>↓</kbd> pasás al alumno de abajo. Podés usar coma o punto."}</span></p>
+        <p class="lb-hint">${ICONO.info}<span>${hoja.formulario ? "Elegí un estudiante y completá sus indicadores: se guardan solos." : "Escribí las notas: se guardan solas. Con <kbd>Enter</kbd> o <kbd>↓</kbd> pasás al estudiante de abajo. Podés usar coma o punto."}</span></p>
         ${ayudaHoja(hoja)}
         ${hoja.formulario ? htmlFicha(hoja) : `<div class="lb-grid-wrap">${htmlGrid(hoja)}</div>`}
         <div class="lb-statusbar">
@@ -395,13 +395,13 @@
     const p = progresoHoja(hoja.clave);
     const txt = document.getElementById("lbProgresoTxt");
     const barra = document.getElementById("lbProgresoBarra");
-    if (txt) txt.textContent = `${p.con} de ${p.total} alumnos con datos cargados`;
+    if (txt) txt.textContent = `${p.con} de ${p.total} estudiantes con datos cargados`;
     if (barra) barra.style.width = (p.total ? Math.round((p.con / p.total) * 100) : 0) + "%";
     root.querySelectorAll("#lbChipsHoja .lb-chip").forEach((chip) => {
       const pp = progresoHoja(chip.dataset.valor);
       chip.classList.remove("prog-vacio", "prog-parcial", "prog-completo");
       chip.classList.add("prog-" + pp.nivel);
-      chip.title = `${pp.con} de ${pp.total} alumnos con datos`;
+      chip.title = `${pp.con} de ${pp.total} estudiantes con datos`;
     });
   }
 
@@ -509,7 +509,7 @@
 
     const thead = `
       <thead>
-        <tr><th class="lb-alumno" rowspan="2">Alumno</th>${grupos.map((g) => `<th colspan="${g.span}">${esc(g.label)}</th>`).join("")}</tr>
+        <tr><th class="lb-alumno" rowspan="2">Estudiante</th>${grupos.map((g) => `<th colspan="${g.span}">${esc(g.label)}</th>`).join("")}</tr>
         <tr>${cols.map((c) => `<th>${esc(c.label)}</th>`).join("")}</tr>
       </thead>`;
 
@@ -857,7 +857,7 @@
     if (hayCambios() && !estado.errorGuardado) programarAutoguardado();
   }
 
-  /* ---------- Vista: alumnos ---------- */
+  /* ---------- Vista: estudiantes ---------- */
 
   function parsearLinea(linea) {
     const limpiarDni = (v) => String(v || "").replace(/[.\s]/g, "");
@@ -998,14 +998,14 @@
     cont.innerHTML = `
       <div class="lb-two">
         <div class="lb-card">
-          <h2>Alumnos de ${esc(core.cursoDe(estado.nivel, estado.curso).label)} · ${estado.anio} <span class="list-counter">(${estado.alumnos.length})</span></h2>
+          <h2>Estudiantes de ${esc(core.cursoDe(estado.nivel, estado.curso).label)} · ${estado.anio} <span class="list-counter">(${estado.alumnos.length})</span></h2>
           ${estado.alumnos.length
             ? `<table class="lb-table"><thead><tr><th>#</th><th>Apellido</th><th>Nombre</th><th>DNI</th><th>Curso</th><th></th></tr></thead><tbody>${filas}</tbody></table>`
-            : `<p class="lb-empty">Todavía no hay alumnos en este curso.</p>`}
+            : `<p class="lb-empty">Todavía no hay estudiantes en este curso.</p>`}
         </div>
         <div class="lb-card">
-          <h2>Agregar alumnos</h2>
-          <p class="lb-help">Pegá la lista, un alumno por línea: <b>APELLIDO, NOMBRE</b> (con coma). Si copiás desde Excel con columnas Apellido / Nombre / DNI también funciona.</p>
+          <h2>Agregar estudiantes</h2>
+          <p class="lb-help">Pegá la lista, un estudiante por línea: <b>APELLIDO, NOMBRE</b> (con coma). Si copiás desde Excel con columnas Apellido / Nombre / DNI también funciona.</p>
           <div class="lb-form">
             <textarea id="lbLista" placeholder="GARCIA, JUAN PABLO&#10;LOPEZ RUIZ, MARIA; 45123456"></textarea>
             <div id="lbPrevia"></div>
@@ -1029,7 +1029,7 @@
   async function agregarAlumnos() {
     const msg = document.getElementById("lbMsgAlumnos");
     const lista = parsearLista(document.getElementById("lbLista").value);
-    if (!lista.length) return mostrarMensaje(msg, "Pegá al menos un alumno", "err");
+    if (!lista.length) return mostrarMensaje(msg, "Pegá al menos un estudiante", "err");
     if (lista.some((l) => !l.apellido || !l.nombre)) {
       return mostrarMensaje(msg, "Cada línea necesita apellido y nombre (usá una coma para separarlos)", "err");
     }
@@ -1039,7 +1039,7 @@
         method: "POST",
         body: JSON.stringify({ anio: estado.anio, nivel: estado.nivel, curso: estado.curso, alumnos: lista })
       });
-      toast(`${lista.length} alumno${lista.length === 1 ? "" : "s"} agregado${lista.length === 1 ? "" : "s"}`, "ok");
+      toast(`${lista.length} estudiante${lista.length === 1 ? "" : "s"} agregado${lista.length === 1 ? "" : "s"}`, "ok");
       await cargarCurso();
     } catch (error) {
       mostrarMensaje(msg, error.message, "err");
@@ -1076,7 +1076,7 @@
     if (!ok) return;
     try {
       await api("/api/libretas/alumnos/" + id, { method: "DELETE" });
-      toast("Alumno eliminado", "ok");
+      toast("Estudiante eliminado", "ok");
       await cargarCurso();
     } catch (error) {
       toast(error.message, "err");
@@ -1098,7 +1098,7 @@
   }
 
   function htmlListaLibretas(lista) {
-    if (!lista.length) return `<p class="lb-empty" style="padding:14px">Ningún alumno coincide con la búsqueda.</p>`;
+    if (!lista.length) return `<p class="lb-empty" style="padding:14px">Ningún estudiante coincide con la búsqueda.</p>`;
     return lista.map((a) => {
       const p = core.progresoLibreta(estado.nivel, estado.curso, estado.notas[a.id]);
       const insignia = `<em class="lb-badge ${p.completas === p.total ? "ok" : "warn"}" title="${p.completas} de ${p.total} materias con notas cargadas">${p.completas}/${p.total}</em>`;
@@ -1118,18 +1118,18 @@
     cont.innerHTML = `
       <div class="lb-libretas">
         <div class="lb-card lb-lateral">
-          <div class="lb-buscar">${ICONO.buscar}<input type="search" id="lbBuscar" placeholder="Buscar alumno..." value="${esc(estado.filtroAlumno)}" autocomplete="off"></div>
+          <div class="lb-buscar">${ICONO.buscar}<input type="search" id="lbBuscar" placeholder="Buscar estudiante..." value="${esc(estado.filtroAlumno)}" autocomplete="off"></div>
           <div class="lb-lista" id="lbLista2">${htmlListaLibretas(lista)}</div>
         </div>
         <div class="lb-card">
           <div class="lb-actions">
             <div class="lb-nav">
-              <button class="lb-btn sec icono" data-accion="libreta-anterior" aria-label="Alumno anterior"${idx <= 0 ? " disabled" : ""}>${ICONO.izq}</button>
+              <button class="lb-btn sec icono" data-accion="libreta-anterior" aria-label="Estudiante anterior"${idx <= 0 ? " disabled" : ""}>${ICONO.izq}</button>
               <span class="lb-nav-txt">${actual ? esc(actual.apellido + ", " + actual.nombre) : ""}</span>
-              <button class="lb-btn sec icono" data-accion="libreta-siguiente" aria-label="Alumno siguiente"${idx < 0 || idx >= lista.length - 1 ? " disabled" : ""}>${ICONO.der}</button>
+              <button class="lb-btn sec icono" data-accion="libreta-siguiente" aria-label="Estudiante siguiente"${idx < 0 || idx >= lista.length - 1 ? " disabled" : ""}>${ICONO.der}</button>
             </div>
             <div class="lb-actions-der">
-              <button class="lb-btn verde" data-accion="pdf-alumno">${ICONO.descargar}<span>PDF de este alumno</span></button>
+              <button class="lb-btn verde" data-accion="pdf-alumno">${ICONO.descargar}<span>PDF de este estudiante</span></button>
               <button class="lb-btn" data-accion="pdf-curso">${ICONO.descargar}<span>PDF de todo el curso</span></button>
             </div>
           </div>

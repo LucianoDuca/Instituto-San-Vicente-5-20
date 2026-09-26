@@ -106,9 +106,9 @@ function registrarLibretas(app, { supabaseAdmin, usuarioLogueado, nombreCompleto
       if (!core.cursoDe(nivel, curso)) return res.status(400).json({ error: "Curso inválido" });
 
       const lista = Array.isArray(req.body.alumnos) ? req.body.alumnos : [];
-      if (!lista.length) return res.status(400).json({ error: "No hay alumnos para cargar" });
+      if (!lista.length) return res.status(400).json({ error: "No hay estudiantes para cargar" });
       if (lista.length > MAX_ALUMNOS_POR_CARGA) {
-        return res.status(400).json({ error: `Máximo ${MAX_ALUMNOS_POR_CARGA} alumnos por carga` });
+        return res.status(400).json({ error: `Máximo ${MAX_ALUMNOS_POR_CARGA} estudiantes por carga` });
       }
 
       const filas = [];
@@ -116,7 +116,7 @@ function registrarLibretas(app, { supabaseAdmin, usuarioLogueado, nombreCompleto
         const apellido = limpiar(item.apellido, 80);
         const nombre = limpiar(item.nombre, 80);
         if (!apellido || !nombre) {
-          return res.status(400).json({ error: "Cada alumno necesita apellido y nombre" });
+          return res.status(400).json({ error: "Cada estudiante necesita apellido y nombre" });
         }
         filas.push({
           anio_lectivo: anio,
@@ -144,7 +144,7 @@ function registrarLibretas(app, { supabaseAdmin, usuarioLogueado, nombreCompleto
 
   async function cargarAlumnoPermitido(req, res) {
     if (!UUID.test(req.params.id)) {
-      res.status(400).json({ error: "Identificador de alumno inválido" });
+      res.status(400).json({ error: "Identificador de estudiante inválido" });
       return null;
     }
     const { data, error } = await supabaseAdmin
@@ -158,7 +158,7 @@ function registrarLibretas(app, { supabaseAdmin, usuarioLogueado, nombreCompleto
       return null;
     }
     if (!data) {
-      res.status(404).json({ error: "Alumno no encontrado" });
+      res.status(404).json({ error: "Estudiante no encontrado" });
       return null;
     }
     if (!nivelesPermitidos(req.profile).includes(data.nivel)) {
@@ -265,7 +265,7 @@ function registrarLibretas(app, { supabaseAdmin, usuarioLogueado, nombreCompleto
       }
 
       const ids = [...new Set(items.map((i) => String(i.alumno_id || "")))];
-      if (ids.some((id) => !UUID.test(id))) return res.status(400).json({ error: "Identificador de alumno inválido" });
+      if (ids.some((id) => !UUID.test(id))) return res.status(400).json({ error: "Identificador de estudiante inválido" });
       const { data: alumnos, error: alumnosError } = await supabaseAdmin
         .from("lib_alumnos")
         .select("id, nivel, curso")
@@ -283,11 +283,11 @@ function registrarLibretas(app, { supabaseAdmin, usuarioLogueado, nombreCompleto
         const alumno = porId.get(String(item.alumno_id));
         const clave = String(item.clave || "");
         if (!alumno) {
-          errores.push({ alumno_id: item.alumno_id, clave, errores: ["Alumno no encontrado"] });
+          errores.push({ alumno_id: item.alumno_id, clave, errores: ["Estudiante no encontrado"] });
           continue;
         }
         if (!permitidos.includes(alumno.nivel) || !core.nivelDe(alumno.nivel).disponible) {
-          errores.push({ alumno_id: alumno.id, clave, errores: ["Sin permiso sobre este alumno"] });
+          errores.push({ alumno_id: alumno.id, clave, errores: ["Sin permiso sobre este estudiante"] });
           continue;
         }
         if (!core.clavesValidas(alumno.nivel, alumno.curso).has(clave)) {
@@ -432,11 +432,11 @@ function registrarLibretas(app, { supabaseAdmin, usuarioLogueado, nombreCompleto
           ruta = `firmas/${crypto.randomUUID()}.png`;
         } else if (tipo === "foto") {
           const id = String(req.body.alumno_id || "");
-          if (!UUID.test(id)) return res.status(400).json({ error: "Alumno inválido" });
+          if (!UUID.test(id)) return res.status(400).json({ error: "Estudiante inválido" });
           const { data: alumno, error } = await supabaseAdmin.from("lib_alumnos").select("id, nivel").eq("id", id).maybeSingle();
           if (error) return res.status(500).json({ error: error.message });
-          if (!alumno) return res.status(404).json({ error: "Alumno no encontrado" });
-          if (!nivelesPermitidos(req.profile).includes(alumno.nivel)) return res.status(403).json({ error: "Sin permiso sobre este alumno" });
+          if (!alumno) return res.status(404).json({ error: "Estudiante no encontrado" });
+          if (!nivelesPermitidos(req.profile).includes(alumno.nivel)) return res.status(403).json({ error: "Sin permiso sobre este estudiante" });
           buffer = await sharp(req.file.buffer).rotate().resize({ width: 1400, height: 1400, fit: "inside", withoutEnlargement: true }).jpeg({ quality: 82 }).toBuffer();
           contentType = "image/jpeg";
           ruta = `fotos/${id}/${crypto.randomUUID()}.jpg`;

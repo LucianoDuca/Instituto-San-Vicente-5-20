@@ -51,7 +51,7 @@ const translations = {
     "home.beginnings.card5.title": "Nuestra esencia",
     "home.beginnings.card5.text": "Creemos en una educación que forme personas autónomas, creativas, comprometidas y capaces de transformar su realidad.",
     "home.beginnings.photo1Alt": "Apertura institucional del Instituto San Vicente",
-    "home.beginnings.photo2Alt": "Primeros alumnos y familias",
+    "home.beginnings.photo2Alt": "Primeros estudiantes y familias",
     "home.beginnings.photo3Alt": "Acto de presentación institucional",
     "home.beginnings.photo4Alt": "Espacios iniciales del Instituto San Vicente",
 
@@ -190,7 +190,7 @@ const translations = {
 
 
 
-    "kinder.slider.image1Alt": "Alumnos de Kínder en actividad educativa",
+    "kinder.slider.image1Alt": "Estudiantes de Kínder en actividad educativa",
     "kinder.slider.image2Alt": "Espacios de aprendizaje del Nivel Inicial",
     "kinder.slider.image3Alt": "Jornada recreativa del Nivel Inicial",
     "kinder.slider.image4Alt": "Actividades de juego y exploración",
@@ -203,7 +203,7 @@ const translations = {
 
 
 
-    "primary.slider.image1Alt": "Alumnos de Primaria en actividad educativa",
+    "primary.slider.image1Alt": "Estudiantes de Primaria en actividad educativa",
     "primary.slider.image2Alt": "Espacios de aprendizaje del Nivel Primario",
     "primary.slider.image3Alt": "Jornada recreativa del Nivel Primario",
     "primary.slider.image4Alt": "Actividades educativas y de exploración",
@@ -399,7 +399,7 @@ const translations = {
     "primary.proposal.title": "Aprender y crecer",
     "primary.proposal.text": "El Nivel Primario del Instituto San Vicente funciona de lunes a viernes de 8:00 a 16:00 hs, dentro de una propuesta educativa moderna y actualizada a los tiempos de hoy.",
     "primary.proposal.point1": "La institución propone un recorrido donde los/las estudiantes puedan desarrollar actividades académicas, deportivas, artísticas, culturales y emocionales en un entorno agradable, pensado para disfrutar cada experiencia.",
-    "primary.proposal.point2": "Acompañamos la autonomía, la libertad responsable, el respeto, la apertura al encuentro con los demás y el pensamiento riguroso, fortaleciendo el desarrollo integral de cada Estudiante.",
+    "primary.proposal.point2": "Acompañamos la autonomía, la libertad responsable, el respeto, la apertura al encuentro con los demás y el pensamiento riguroso, fortaleciendo el desarrollo integral de cada estudiante.",
     "primary.proposal.point3": "Nuestra propuesta integra inglés, deportes, arte, educación emocional y cultura, promoviendo una formación integral desde los primeros años de escolaridad.",
 
     "primary.exp.title": "Experiencias que enriquecen su formación",
