@@ -263,9 +263,9 @@
     "4S": {
       docentes1: "Marianella Sasso - Romina Pallero",
       docentes2: "Marianella Sasso - Romina Pallero",
-      firmas1: ["firma-sasso.png", "firma-pallero.png"],
-      firmas2: ["firma-sasso.png", "firma-pallero.png"],
-      firmasDirector: ["firma-matilde.png"]
+      firmas1: [],
+      firmas2: [],
+      firmasDirector: []
     }
   };
 
