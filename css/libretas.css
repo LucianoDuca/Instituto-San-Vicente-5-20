@@ -154,6 +154,12 @@ table.lb-grid{border-collapse:separate;border-spacing:0;width:100%;font-size:.86
 .lb-modal-box h3{margin:0 0 8px;color:#0b3558;font-size:1.15rem}
 .lb-modal-box p{margin:0 0 20px;color:#5a7085;line-height:1.5}
 .lb-modal-actions{display:flex;gap:10px;justify-content:flex-end}
+.lb-btn-tutorial{background:#f4b400;color:#0b3558}.lb-btn-tutorial:hover:not(:disabled){background:#e0a500}
+.lb-btn-tutorial svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.lb-modal-box.lb-tutorial{max-width:860px}
+.lb-video{position:relative;aspect-ratio:16/9;margin:0 0 18px;border-radius:12px;overflow:hidden;background:#000}
+.lb-video iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.lb-modal-actions a.lb-btn{text-decoration:none}
 
 @media(max-width:1100px){.lb-two,.lb-libretas{grid-template-columns:minmax(0,1fr)}.lb-lista{max-height:220px}}
 @media(max-width:640px){.lb-card{padding:16px}.lb-title{font-size:1.3rem!important}.lb-grid th.lb-alumno,.lb-grid td.lb-alumno{min-width:150px}.lb-progress{width:100%}.lb-tab span{display:none}.lb-tab{padding:12px 16px}}

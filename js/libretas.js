@@ -3,6 +3,9 @@
 
   const core = window.LibretasCore;
 
+  // Link de YouTube del tutorial para docentes (watch, youtu.be o shorts). Vacío = "próximamente".
+  const TUTORIAL_URL = "https://youtu.be/_ajnR9jSASA";
+
   let ctx = null;
   let root = null;
 
@@ -139,6 +142,39 @@
     });
   }
 
+  function idYoutube(url) {
+    const m = String(url || "").match(/(?:youtu\.be\/|[?&]v=|\/embed\/|\/shorts\/)([\w-]{11})/);
+    return m ? m[1] : null;
+  }
+
+  function abrirTutorial() {
+    const id = idYoutube(TUTORIAL_URL);
+    const overlay = document.createElement("div");
+    overlay.className = "lb-modal";
+    overlay.innerHTML = `
+      <div class="lb-modal-box lb-tutorial" role="dialog" aria-modal="true" aria-label="Tutorial">
+        <h3>Cómo cargar las notas</h3>
+        ${id
+          ? `<div class="lb-video"><iframe src="https://www.youtube-nocookie.com/embed/${id}?rel=0" title="Tutorial: cómo cargar las notas" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>`
+          : "<p>El video tutorial va a estar disponible muy pronto.</p>"}
+        <div class="lb-modal-actions">
+          ${id ? `<a class="lb-btn sec" href="https://www.youtube.com/watch?v=${id}" target="_blank" rel="noopener noreferrer">Abrir en YouTube</a>` : ""}
+          <button class="lb-btn" data-cerrar>Cerrar</button>
+        </div>
+      </div>`;
+    const cerrar = () => {
+      overlay.remove();
+      document.removeEventListener("keydown", tecla);
+    };
+    const tecla = (e) => { if (e.key === "Escape") cerrar(); };
+    overlay.addEventListener("click", (e) => {
+      if (e.target === overlay || e.target.closest("[data-cerrar]")) cerrar();
+    });
+    document.addEventListener("keydown", tecla);
+    document.body.appendChild(overlay);
+    overlay.querySelector("[data-cerrar]").focus();
+  }
+
   /* ---------- Guardado automático ---------- */
 
   let temporizador = null;
@@ -242,6 +278,7 @@
             <div class="lb-seg" id="lbNiveles"></div>
             <div class="lb-seg" id="lbCursos"></div>
             <select class="lb-select" id="lbAnio" aria-label="Año lectivo"></select>
+            ${(ctx.perfil || {}).rol === "docente" ? `<button class="lb-btn lb-btn-tutorial" data-accion="tutorial"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="m10 8 6 4-6 4Z"/></svg><span>Ver tutorial</span></button>` : ""}
           </div>
         </div>
         <div class="lb-tabs" id="lbVistas" role="tablist"></div>
@@ -761,7 +798,9 @@
     const accion = btn.dataset.accion;
     const valor = btn.dataset.valor;
 
-    if (accion === "nivel") {
+    if (accion === "tutorial") {
+      abrirTutorial();
+    } else if (accion === "nivel") {
       if (valor !== estado.nivel) await cambiarContexto({ nivel: valor, curso: core.nivelDe(valor).cursos[0].id });
     } else if (accion === "curso") {
       if (valor !== estado.curso) await cambiarContexto({ curso: valor });
