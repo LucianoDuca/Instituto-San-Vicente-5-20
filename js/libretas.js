@@ -29,8 +29,32 @@
     configCurso: {},
     borradorConfig: null,
     guardadoEn: null,
-    errorGuardado: false
+    errorGuardado: false,
+    modoMovil: leerPreferencia("lbModoMovil") || "estudiante"
   };
+
+  // En pantallas angostas las notas se cargan de a un estudiante por vez.
+  const MOVIL = window.matchMedia("(max-width: 760px)");
+
+  function esMovil() {
+    return MOVIL.matches;
+  }
+
+  function leerPreferencia(clave) {
+    try {
+      return window.localStorage.getItem(clave);
+    } catch (error) {
+      return null;
+    }
+  }
+
+  function guardarPreferencia(clave, valor) {
+    try {
+      window.localStorage.setItem(clave, valor);
+    } catch (error) {
+      /* sin almacenamiento: la preferencia dura hasta recargar */
+    }
+  }
 
   /* ---------- Utilidades ---------- */
 
@@ -299,6 +323,9 @@
       }
     });
     window.addEventListener("resize", ajustarVisor);
+    const alCambiarPantalla = () => { if (!estado.cargando) renderContenido(); };
+    if (MOVIL.addEventListener) MOVIL.addEventListener("change", alCambiarPantalla);
+    else MOVIL.addListener(alCambiarPantalla);
   }
 
   function render() {
@@ -334,6 +361,8 @@
       `<button class="${c.id === estado.curso ? "active" : ""}" data-accion="curso" data-valor="${c.id}">${esc(c.label)}</button>`
     ).join("");
 
+    root.querySelectorAll(".lb-hero .lb-seg").forEach(centrarActivo);
+
     const anios = [];
     for (let a = core.anioLectivoActual() + 1; a >= core.anioLectivoActual() - 3; a--) anios.push(a);
     document.getElementById("lbAnio").innerHTML = anios.map((a) => `<option value="${a}"${a === estado.anio ? " selected" : ""}>Año ${a}</option>`).join("");
@@ -341,6 +370,15 @@
     document.getElementById("lbVistas").innerHTML = [
       ["notas", "Cargar notas", ICONO.notas], ["alumnos", "Estudiantes", ICONO.alumnos], ["libretas", "Libretas", ICONO.libretas]
     ].map(([id, label, icono]) => `<button role="tab" class="lb-tab${estado.vista === id ? " active" : ""}" data-accion="vista" data-valor="${id}">${icono}<span>${label}</span></button>`).join("");
+  }
+
+  // En el celular las filas de botones se deslizan de costado: dejar visible el elegido.
+  function centrarActivo(fila) {
+    const activo = fila.querySelector(".active");
+    if (!activo || fila.scrollWidth <= fila.clientWidth) return;
+    const f = fila.getBoundingClientRect();
+    const a = activo.getBoundingClientRect();
+    fila.scrollLeft += a.left - f.left - (f.width - a.width) / 2;
   }
 
   function renderContenido() {
@@ -399,12 +437,44 @@
       `<button class="lb-seg-btn${c.id === estado.categoria ? " active" : ""}" data-accion="categoria" data-valor="${c.id}">${esc(c.label)}</button>`
     ).join("");
 
-    const chipsHoja = cat.hojas.length > 1
-      ? `<div class="lb-sub-chips" id="lbChipsHoja">${cat.hojas.map((h) => chipHoja(h, h.clave === hoja.clave)).join("")}</div>`
+    const movil = esMovil();
+    const porEstudiante = movil && (hoja.formulario || estado.modoMovil !== "tabla");
+
+    let chipsHoja = "";
+    if (cat.hojas.length > 1) {
+      chipsHoja = movil
+        ? `<label class="lb-elegir-hoja"><span>Planilla</span><select data-sel="hoja">${cat.hojas.map((h) => {
+            const p = progresoHoja(h.clave);
+            return `<option value="${h.clave}"${h.clave === hoja.clave ? " selected" : ""}>${esc(h.label)} · ${p.con}/${p.total}</option>`;
+          }).join("")}</select></label>`
+        : `<div class="lb-sub-chips" id="lbChipsHoja">${cat.hojas.map((h) => chipHoja(h, h.clave === hoja.clave)).join("")}</div>`;
+    }
+
+    let ayuda;
+    if (porEstudiante) ayuda = hoja.formulario
+      ? "Completá los indicadores de cada estudiante y pasá al siguiente con las flechas. Se guardan solos."
+      : core.columnasDe(hoja.tipo).some((c) => c.tipo === "nota")
+        ? "Completá las notas de cada estudiante y pasá al siguiente con las flechas. Se guardan solas. Podés usar coma o punto."
+        : "Completá los datos de cada estudiante y pasá al siguiente con las flechas. Se guardan solos.";
+    else ayuda = hoja.formulario
+      ? "Elegí un estudiante y completá sus indicadores: se guardan solos."
+      : "Escribí las notas: se guardan solas. Con <kbd>Enter</kbd> o <kbd>↓</kbd> pasás al estudiante de abajo. Podés usar coma o punto.";
+
+    const modos = movil && !hoja.formulario
+      ? `<div class="lb-modos" role="group" aria-label="Forma de ver la planilla">
+          <button class="${porEstudiante ? "active" : ""}" data-accion="modo-movil" data-valor="estudiante">Por estudiante</button>
+          <button class="${porEstudiante ? "" : "active"}" data-accion="modo-movil" data-valor="tabla">Tabla completa</button>
+        </div>`
       : "";
 
+    let cuerpo;
+    if (porEstudiante) cuerpo = hoja.formulario ? htmlFicha(hoja, false) : htmlTarjeta(hoja);
+    else cuerpo = hoja.formulario ? htmlFicha(hoja) : `<div class="lb-grid-wrap">${htmlGrid(hoja)}</div>`;
+
+    const navegacion = porEstudiante ? htmlNavAlumno() : "";
+
     cont.innerHTML = `
-      <div class="lb-card">
+      <div class="lb-card lb-notas${porEstudiante ? " lb-por-estudiante" : ""}">
         <div class="lb-cats">${chipsCat}</div>
         ${chipsHoja}
         <div class="lb-sheet-head">
@@ -414,16 +484,79 @@
           </div>
           <div class="lb-progress" aria-hidden="true"><span id="lbProgresoBarra"></span></div>
         </div>
-        <p class="lb-hint">${ICONO.info}<span>${hoja.formulario ? "Elegí un estudiante y completá sus indicadores: se guardan solos." : "Escribí las notas: se guardan solas. Con <kbd>Enter</kbd> o <kbd>↓</kbd> pasás al estudiante de abajo. Podés usar coma o punto."}</span></p>
+        ${modos}
+        <p class="lb-hint">${ICONO.info}<span>${ayuda}</span></p>
         ${ayudaHoja(hoja)}
-        ${hoja.formulario ? htmlFicha(hoja) : `<div class="lb-grid-wrap">${htmlGrid(hoja)}</div>`}
+        ${porEstudiante ? htmlElegirAlumno(hoja) : ""}
+        ${cuerpo}
         <div class="lb-statusbar">
+          ${navegacion}
           <span class="lb-status" id="lbEstado"></span>
           <button class="lb-btn chico sec" data-accion="guardar" id="lbGuardar">Guardar ahora</button>
         </div>
       </div>`;
     actualizarBarra();
     actualizarProgreso();
+    const filaCats = cont.querySelector(".lb-cats");
+    if (filaCats) centrarActivo(filaCats);
+  }
+
+  /* ---------- Carga por estudiante (celulares) ---------- */
+
+  function alumnoEnFicha() {
+    if (!estado.alumnos.some((a) => a.id === estado.alumnoFicha)) estado.alumnoFicha = estado.alumnos[0].id;
+    return estado.alumnos.find((a) => a.id === estado.alumnoFicha);
+  }
+
+  function htmlElegirAlumno(hoja) {
+    const actual = alumnoEnFicha();
+    const opciones = estado.alumnos.map((a, i) => {
+      const d = (estado.notas[a.id] || {})[hoja.clave] || {};
+      const marca = Object.keys(d).length ? " ✓" : "";
+      return `<option value="${a.id}"${a.id === actual.id ? " selected" : ""}>${i + 1}. ${esc(a.apellido)}, ${esc(a.nombre)}${marca}</option>`;
+    }).join("");
+    return `<label class="lb-elegir-alumno" id="lbElegirAlumno"><span>Estudiante</span><select data-sel="alumno" aria-label="Elegir estudiante">${opciones}</select></label>`;
+  }
+
+  function htmlNavAlumno() {
+    const i = estado.alumnos.findIndex((a) => a.id === estado.alumnoFicha);
+    return `<div class="lb-nav-alumno">
+      <button class="lb-btn sec" data-accion="alumno-anterior"${i <= 0 ? " disabled" : ""}>${ICONO.izq}<span>Anterior</span></button>
+      <span class="lb-nav-pos">${i + 1} de ${estado.alumnos.length}</span>
+      <button class="lb-btn" data-accion="alumno-siguiente"${i >= estado.alumnos.length - 1 ? " disabled" : ""}><span>Siguiente</span>${ICONO.der}</button>
+    </div>`;
+  }
+
+  function htmlTarjeta(hoja) {
+    const al = alumnoEnFicha();
+    const datos = (estado.notas[al.id] || {})[hoja.clave] || {};
+    const calc = core.calcularClave(hoja.clave, datos, estado.notas[al.id], estado.nivel, estado.curso);
+    const grupos = [];
+    core.columnasDe(hoja.tipo).forEach((c) => {
+      const ult = grupos[grupos.length - 1];
+      if (ult && ult.label === c.grupo) ult.cols.push(c);
+      else grupos.push({ label: c.grupo, cols: [c] });
+    });
+    const secciones = grupos.map((g) => `
+      <fieldset class="lb-grupo">
+        ${g.label ? `<legend>${esc(g.label)}</legend>` : ""}
+        <div class="lb-campos">${g.cols.map((c) => {
+          const ancho = c.tipo === "texto" || c.tipo === "foto" ? " ancho" : "";
+          return `<div class="lb-campo-nota${ancho}"><span class="lb-etq">${esc(c.label)}</span>${htmlCelda(al, hoja, c, datos, calc, "div")}</div>`;
+        }).join("")}</div>
+      </fieldset>`).join("");
+    return `<div class="lb-tarjeta" data-fila="${al.id}">${secciones}</div>`;
+  }
+
+  async function irAAlumno(desplazamiento) {
+    const i = estado.alumnos.findIndex((a) => a.id === estado.alumnoFicha);
+    const destino = estado.alumnos[i + desplazamiento];
+    if (!destino) return false;
+    estado.alumnoFicha = destino.id;
+    renderContenido();
+    const selector = document.getElementById("lbElegirAlumno");
+    if (selector && selector.getBoundingClientRect().top < 0) selector.scrollIntoView({ block: "start", behavior: "smooth" });
+    return true;
   }
 
   function actualizarProgreso() {
@@ -440,6 +573,13 @@
       chip.classList.add("prog-" + pp.nivel);
       chip.title = `${pp.con} de ${pp.total} estudiantes con datos`;
     });
+    const opcionHoja = root.querySelector(`select[data-sel="hoja"] option[value="${hoja.clave}"]`);
+    if (opcionHoja) opcionHoja.textContent = `${hoja.label} · ${p.con}/${p.total}`;
+    const opcionAlumno = root.querySelector(`select[data-sel="alumno"] option[value="${estado.alumnoFicha}"]`);
+    if (opcionAlumno) {
+      const d = (estado.notas[estado.alumnoFicha] || {})[hoja.clave] || {};
+      opcionAlumno.textContent = opcionAlumno.textContent.replace(/ ✓$/, "") + (Object.keys(d).length ? " ✓" : "");
+    }
   }
 
   function ayudaHoja(hoja) {
@@ -493,9 +633,8 @@
     return "";
   }
 
-  function htmlFicha(hoja) {
-    if (!estado.alumnos.some((a) => a.id === estado.alumnoFicha)) estado.alumnoFicha = estado.alumnos[0].id;
-    const alumno = estado.alumnos.find((a) => a.id === estado.alumnoFicha);
+  function htmlFicha(hoja, conLista = true) {
+    const alumno = alumnoEnFicha();
     const datos = (estado.notas[alumno.id] || {})[hoja.clave] || {};
     const cols = core.columnasDe(hoja.tipo);
     const colDe = (key) => cols.find((c) => c.key === key);
@@ -522,15 +661,15 @@
     const bloques = hoja.area.bloques.map((b) => {
       const filas = b.filas.map(([id, label, tipo, subs]) => {
         if (subs && subs.length) {
-          return subs.map(([sid, slabel], i) => `<tr>${i === 0 ? `<td class="eti" rowspan="${subs.length}">${esc(label)}</td>` : ""}<td class="sub">${esc(slabel)}</td><td class="val">${control(`${id}_${sid}`, tipo, 1)}</td><td class="val">${control(`${id}_${sid}`, tipo, 2)}</td></tr>`).join("");
+          return subs.map(([sid, slabel], i) => `<tr>${i === 0 ? `<td class="eti" rowspan="${subs.length}">${esc(label)}</td>` : ""}<td class="sub">${esc(slabel)}</td><td class="val" data-etapa="1ª etapa">${control(`${id}_${sid}`, tipo, 1)}</td><td class="val" data-etapa="2ª etapa">${control(`${id}_${sid}`, tipo, 2)}</td></tr>`).join("");
         }
-        return `<tr><td class="eti" colspan="2">${esc(label)}</td><td class="val">${control(id, tipo, 1)}</td><td class="val">${control(id, tipo, 2)}</td></tr>`;
+        return `<tr><td class="eti" colspan="2">${esc(label)}</td><td class="val" data-etapa="1ª etapa">${control(id, tipo, 1)}</td><td class="val" data-etapa="2ª etapa">${control(id, tipo, 2)}</td></tr>`;
       }).join("");
       return `${b.titulo ? `<h4>${esc(b.titulo)}</h4>` : ""}<table class="lb-rub"><thead><tr><th colspan="2">Indicador</th><th>1ª Etapa</th><th>2ª Etapa</th></tr></thead><tbody>${filas}</tbody></table>`;
     }).join("");
 
-    return `<div class="lb-ficha">
-      <div class="lb-ficha-lista">${lista}</div>
+    return `<div class="lb-ficha${conLista ? "" : " sin-lista"}">
+      ${conLista ? `<div class="lb-ficha-lista">${lista}</div>` : ""}
       <div class="lb-ficha-form"><h3 class="lb-ficha-nombre">${esc(alumno.apellido)}, ${esc(alumno.nombre)}</h3>${bloques}</div>
     </div>`;
   }
@@ -575,32 +714,32 @@
     return col.decimales === null ? String(v) : core.fmt(v, col.decimales === undefined ? 2 : col.decimales);
   }
 
-  function htmlCelda(al, hoja, col, datos, calc) {
+  function htmlCelda(al, hoja, col, datos, calc, tag = "td") {
     const base = `data-a="${al.id}" data-c="${hoja.clave}" data-k="${col.key}"`;
     if (col.tipo === "derivado") {
       const v = valorDerivado(col, calc);
       const baja = v !== "" && col.decimales !== null && col.decimales !== undefined && parseFloat(v) < minimoAprobado(col) ? " baja" : "";
-      return `<td class="lb-derivado${baja}" ${base} data-der="1">${esc(v)}</td>`;
+      return `<${tag} class="lb-derivado${baja}" ${base} data-der="1">${esc(v)}</${tag}>`;
     }
     const sucio = cambiado(al.id, hoja.clave, col.key) ? " sucio" : "";
     if (col.tipo === "texto") {
       const largo = ["devolucion", "pri-dev", "ini-libre", "ini-obs"].includes(hoja.tipo);
       const ancho = largo ? " ancho" : col.max && col.max <= 40 ? " corto" : "";
       const filas = hoja.tipo === "ini-libre" ? 9 : col.max && col.max <= 40 ? 1 : 2;
-      return `<td><textarea class="lb-texto${ancho}${sucio}" rows="${filas}" ${base}>${esc(datos[col.key])}</textarea></td>`;
+      return `<${tag}><textarea class="lb-texto${ancho}${sucio}" rows="${filas}" ${base}>${esc(datos[col.key])}</textarea></${tag}>`;
     }
     if (col.tipo === "concepto") {
       const opciones = [""].concat(col.opciones).map((o) => `<option value="${esc(o)}"${datos[col.key] === o ? " selected" : ""}>${esc(o)}</option>`).join("");
-      return `<td><select class="lb-in lb-sel${sucio}" ${base}>${opciones}</select></td>`;
+      return `<${tag}><select class="lb-in lb-sel${sucio}" ${base}>${opciones}</select></${tag}>`;
     }
     if (col.tipo === "foto") {
       const url = datos[col.key];
-      return `<td class="lb-foto-td">${url ? `<img class="lb-foto-mini" src="${esc(url)}" alt="">` : `<span class="lb-sin-foto">Sin foto</span>`}
+      return `<${tag} class="lb-foto-td">${url ? `<img class="lb-foto-mini" src="${esc(url)}" alt="">` : `<span class="lb-sin-foto">Sin foto</span>`}
         <div class="lb-foto-acc"><label class="lb-btn chico sec">${url ? "Cambiar" : "Subir foto"}<input type="file" accept="image/*" hidden data-foto="1" ${base}></label>
-        ${url ? `<button class="lb-btn chico rojo" data-accion="quitar-foto" ${base}>Quitar</button>` : ""}</div></td>`;
+        ${url ? `<button class="lb-btn chico rojo" data-accion="quitar-foto" ${base}>Quitar</button>` : ""}</div></${tag}>`;
     }
     if (col.tipo === "check") {
-      return `<td><input type="checkbox" class="lb-check${sucio}" ${base}${datos[col.key] === "1" ? " checked" : ""}></td>`;
+      return `<${tag}><input type="checkbox" class="lb-check${sucio}" ${base}${datos[col.key] === "1" ? " checked" : ""}></${tag}>`;
     }
     const placeholder = col.auto ? formatoAuto(col, calc[col.auto]) : "";
     const sub = col.sub ? `<span class="lb-sub" data-sub="${col.sub}" ${base}>${subTexto(calc[col.sub])}</span>` : "";
@@ -609,7 +748,7 @@
     if (estado.invalidos.has(campoId(al.id, hoja.clave, col.key))) clases.push("invalido");
     const n = core.leerNumero(datos[col.key]);
     if (col.tipo === "nota" && n !== null && !Number.isNaN(n) && n < minimoAprobado(col)) clases.push("baja");
-    return `<td><input class="${clases.join(" ")}" type="text" inputmode="decimal" autocomplete="off" ${base} value="${esc(datos[col.key])}" placeholder="${esc(placeholder)}">${sub}</td>`;
+    return `<${tag}><input class="${clases.join(" ")}" type="text" inputmode="${col.guion ? "text" : "decimal"}" enterkeyhint="next" autocomplete="off" ${base} value="${esc(datos[col.key])}" placeholder="${esc(placeholder)}">${sub}</${tag}>`;
   }
 
   function subTexto(v) {
@@ -643,7 +782,7 @@
       html = "No se pudo guardar. Revisá tu conexión y tocá “Guardar ahora”";
     } else if (hayCambios()) {
       clase = "pendiente";
-      html = "Cambios sin guardar: se guardan solos en un momento";
+      html = esMovil() ? "Guardando en un momento..." : "Cambios sin guardar: se guardan solos en un momento";
     } else {
       const hora = estado.guardadoEn
         ? " · " + estado.guardadoEn.toLocaleTimeString("es-AR", { hour: "2-digit", minute: "2-digit" })
@@ -652,7 +791,8 @@
     }
     span.className = "lb-status " + clase;
     span.innerHTML = clase === "ok" ? html : `<span>${html}</span>`;
-    btn.style.display = hayCambios() ? "" : "none";
+    // En el celular el botón solo aparece si falló el guardado automático, para no tapar la pantalla.
+    btn.style.display = hayCambios() && (!esMovil() || estado.errorGuardado) ? "" : "none";
     btn.disabled = guardando || estado.invalidos.size > 0;
   }
 
@@ -660,11 +800,11 @@
     const datos = (estado.notas[alumnoId] || {})[clave] || {};
     const calc = core.calcularClave(clave, datos, estado.notas[alumnoId], estado.nivel, estado.curso);
     const cols = core.columnasDe(core.tipoDeClave(clave, estado.nivel, estado.curso));
-    const tr = root.querySelector(`tr[data-fila="${alumnoId}"]`);
+    const tr = root.querySelector(`[data-fila="${alumnoId}"]`);
     if (!tr) return;
     cols.forEach((col) => {
       if (col.tipo === "derivado") {
-        const td = tr.querySelector(`td[data-k="${col.key}"]`);
+        const td = tr.querySelector(`[data-der][data-k="${col.key}"]`);
         if (td) {
           const v = valorDerivado(col, calc);
           td.textContent = v;
@@ -731,6 +871,21 @@
   function onKeydown(e) {
     const el = e.target;
     if (!el.matches("input.lb-in")) return;
+    const tarjeta = el.closest(".lb-tarjeta");
+    if (tarjeta) {
+      // En la tarjeta, Enter ("Siguiente" en el teclado del celular) pasa al próximo campo
+      // y desde el último salta al primer campo del estudiante siguiente.
+      if (e.key !== "Enter") return;
+      e.preventDefault();
+      const campos = Array.from(tarjeta.querySelectorAll("input.lb-in, select.lb-in"));
+      const sig = campos[campos.indexOf(el) + 1];
+      if (sig) sig.focus();
+      else irAAlumno(1).then((ok) => {
+        const primero = ok && root.querySelector(".lb-tarjeta input.lb-in, .lb-tarjeta select.lb-in");
+        if (primero) primero.focus();
+      });
+      return;
+    }
     if (e.key !== "Enter" && e.key !== "ArrowDown" && e.key !== "ArrowUp") return;
     e.preventDefault();
     const filas = Array.from(root.querySelectorAll("tbody tr[data-fila]"));
@@ -788,6 +943,14 @@
   async function onChange(e) {
     if (e.target.matches("input[type=file][data-foto]")) return subirFoto(e.target);
     if (e.target.matches("input[type=file][data-firma]")) return subirFirma(e.target);
+    if (e.target.matches("select[data-sel]")) {
+      const sel = e.target.dataset.sel;
+      if (sel === "hoja") estado.hoja = e.target.value;
+      else if (sel === "alumno") estado.alumnoFicha = e.target.value;
+      else if (sel === "libreta") estado.alumnoLibreta = e.target.value;
+      renderContenido();
+      return;
+    }
     if (e.target.id === "lbAnio") await cambiarContexto({ anio: parseInt(e.target.value, 10) });
     else if (e.target.matches("select[data-a], input[type=checkbox][data-a]")) onInput(e);
   }
@@ -823,6 +986,12 @@
       await guardarConfig();
     } else if (accion === "ficha-alumno") {
       estado.alumnoFicha = valor;
+      renderContenido();
+    } else if (accion === "alumno-anterior" || accion === "alumno-siguiente") {
+      await irAAlumno(accion === "alumno-anterior" ? -1 : 1);
+    } else if (accion === "modo-movil") {
+      estado.modoMovil = valor;
+      guardarPreferencia("lbModoMovil", valor);
       renderContenido();
     } else if (accion === "guardar") {
       await guardar();
@@ -1016,22 +1185,24 @@
   }
 
   function renderAlumnos(cont) {
+    // El servidor solo deja eliminar a admin y directivos: a los docentes no se les muestra el botón.
+    const puedeEliminar = ["admin", "directivo"].includes((ctx.perfil || {}).rol);
     const filas = estado.alumnos.map((a, i) => {
       if (estado.editandoAlumno === a.id) {
         const cursos = core.nivelDe(estado.nivel).cursos;
         return `<tr>
-          <td>${i + 1}</td>
-          <td><input id="edAp" value="${esc(a.apellido)}"></td>
-          <td><input id="edNo" value="${esc(a.nombre)}"></td>
-          <td><input id="edDni" value="${esc(a.dni)}"></td>
-          <td><select id="edCurso">${cursos.map((c) => `<option value="${c.id}"${c.id === a.curso ? " selected" : ""}>${esc(c.label)}</option>`).join("")}</select></td>
-          <td style="white-space:nowrap"><button class="lb-btn chico verde" data-accion="guardar-alumno" data-valor="${a.id}">Guardar</button>
+          <td class="lb-col-num">${i + 1}</td>
+          <td data-label="Apellido"><input id="edAp" value="${esc(a.apellido)}"></td>
+          <td data-label="Nombre"><input id="edNo" value="${esc(a.nombre)}"></td>
+          <td data-label="DNI"><input id="edDni" inputmode="numeric" value="${esc(a.dni)}"></td>
+          <td data-label="Curso"><select id="edCurso">${cursos.map((c) => `<option value="${c.id}"${c.id === a.curso ? " selected" : ""}>${esc(c.label)}</option>`).join("")}</select></td>
+          <td class="lb-col-acc"><button class="lb-btn chico verde" data-accion="guardar-alumno" data-valor="${a.id}">Guardar</button>
           <button class="lb-btn chico sec" data-accion="cancelar-alumno">Cancelar</button></td></tr>`;
       }
       return `<tr>
-        <td>${i + 1}</td><td><b>${esc(a.apellido)}</b></td><td>${esc(a.nombre)}</td><td>${esc(a.dni)}</td><td>${esc((core.cursoDe(estado.nivel, a.curso) || {}).label)}</td>
-        <td style="white-space:nowrap"><button class="lb-btn chico sec" data-accion="editar-alumno" data-valor="${a.id}">Editar</button>
-        <button class="lb-btn chico rojo" data-accion="eliminar-alumno" data-valor="${a.id}">Eliminar</button></td></tr>`;
+        <td class="lb-col-num">${i + 1}</td><td class="lb-col-movil"><b>${esc(a.apellido)}</b>, ${esc(a.nombre)}<small>${a.dni ? "DNI " + esc(a.dni) : "Sin DNI"}</small></td><td class="lb-col-pc"><b>${esc(a.apellido)}</b></td><td class="lb-col-pc">${esc(a.nombre)}</td><td class="lb-col-pc">${esc(a.dni)}</td><td class="lb-col-pc">${esc((core.cursoDe(estado.nivel, a.curso) || {}).label)}</td>
+        <td class="lb-col-acc"><button class="lb-btn chico sec" data-accion="editar-alumno" data-valor="${a.id}">Editar</button>
+        ${puedeEliminar ? `<button class="lb-btn chico rojo" data-accion="eliminar-alumno" data-valor="${a.id}">Eliminar</button>` : ""}</td></tr>`;
     }).join("");
 
     cont.innerHTML = `
@@ -1039,7 +1210,7 @@
         <div class="lb-card">
           <h2>Estudiantes de ${esc(core.cursoDe(estado.nivel, estado.curso).label)} · ${estado.anio} <span class="list-counter">(${estado.alumnos.length})</span></h2>
           ${estado.alumnos.length
-            ? `<table class="lb-table"><thead><tr><th>#</th><th>Apellido</th><th>Nombre</th><th>DNI</th><th>Curso</th><th></th></tr></thead><tbody>${filas}</tbody></table>`
+            ? `<table class="lb-table lb-tabla-alumnos"><thead><tr><th>#</th><th>Apellido</th><th>Nombre</th><th>DNI</th><th>Curso</th><th></th></tr></thead><tbody>${filas}</tbody></table>`
             : `<p class="lb-empty">Todavía no hay estudiantes en este curso.</p>`}
         </div>
         <div class="lb-card">
@@ -1150,17 +1321,27 @@
       cont.innerHTML = sinAlumnos();
       return;
     }
+    const movil = esMovil();
+    if (movil) estado.filtroAlumno = "";
     const lista = alumnosFiltrados();
     const idx = lista.findIndex((a) => a.id === estado.alumnoLibreta);
     const actual = estado.alumnos.find((a) => a.id === estado.alumnoLibreta);
 
+    const selector = movil
+      ? `<label class="lb-elegir-alumno"><span>Estudiante</span><select data-sel="libreta" aria-label="Elegir estudiante">${estado.alumnos.map((a, i) => {
+          const p = core.progresoLibreta(estado.nivel, estado.curso, estado.notas[a.id]);
+          return `<option value="${a.id}"${a.id === estado.alumnoLibreta ? " selected" : ""}>${i + 1}. ${esc(a.apellido)}, ${esc(a.nombre)} · ${p.completas}/${p.total}</option>`;
+        }).join("")}</select></label>`
+      : "";
+
     cont.innerHTML = `
       <div class="lb-libretas">
-        <div class="lb-card lb-lateral">
+        ${movil ? "" : `<div class="lb-card lb-lateral">
           <div class="lb-buscar">${ICONO.buscar}<input type="search" id="lbBuscar" placeholder="Buscar estudiante..." value="${esc(estado.filtroAlumno)}" autocomplete="off"></div>
           <div class="lb-lista" id="lbLista2">${htmlListaLibretas(lista)}</div>
-        </div>
+        </div>`}
         <div class="lb-card">
+          ${selector}
           <div class="lb-actions">
             <div class="lb-nav">
               <button class="lb-btn sec icono" data-accion="libreta-anterior" aria-label="Estudiante anterior"${idx <= 0 ? " disabled" : ""}>${ICONO.izq}</button>
@@ -1178,7 +1359,8 @@
         </div>
       </div>`;
 
-    document.getElementById("lbBuscar").addEventListener("input", (e) => {
+    const buscar = document.getElementById("lbBuscar");
+    if (buscar) buscar.addEventListener("input", (e) => {
       estado.filtroAlumno = e.target.value;
       document.getElementById("lbLista2").innerHTML = htmlListaLibretas(alumnosFiltrados());
     });
@@ -1211,6 +1393,7 @@
     const s = Math.min(1, ancho / w);
     escala.style.transform = `scale(${s})`;
     escala.style.width = w + "px";
+    escala.style.marginLeft = Math.max(0, (ancho - w * s) / 2) + "px";
     visor.style.height = Math.round(h * s + 28) + "px";
   }
 

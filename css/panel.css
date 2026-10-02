@@ -2,6 +2,13 @@
   box-sizing: border-box;
 }
 
+/* index.css pone overflow-x: hidden, que rompe los elementos "sticky" (barra inferior de Libretas).
+   clip corta igual el desborde horizontal sin convertir al body en contenedor de scroll. */
+html,
+body {
+  overflow-x: clip;
+}
+
 body {
   margin: 0;
   font-family: "Segoe UI", Arial, sans-serif;
@@ -318,8 +325,25 @@ body {
   }
 
   .panel-card {
-    padding: 22px;
+    padding: 20px 14px;
     border-radius: 22px;
+  }
+
+  .panel-tabs {
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .panel-tabs::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Más específico porque las reglas base de .tab-btn están más abajo en el archivo */
+  .panel-tabs .tab-btn {
+    flex: 1 0 auto;
+    justify-content: center;
+    padding: 12px 10px;
+    font-size: 0.9rem;
   }
 
   .documents-grid {
