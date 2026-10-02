@@ -22,8 +22,7 @@ const MAX_ALUMNOS_POR_CARGA = 200;
 const MAX_ITEMS_NOTAS = 600;
 
 function nivelesPermitidos(profile) {
-  if (profile.rol === "admin" || profile.rol === "directivo") return NIVELES;
-  if (profile.rol === "docente" && NIVELES.includes(profile.nivel)) return [profile.nivel];
+  if (["admin", "directivo", "docente"].includes(profile.rol)) return NIVELES;
   return [];
 }
 

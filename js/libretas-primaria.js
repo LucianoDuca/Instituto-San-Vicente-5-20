@@ -304,7 +304,12 @@
     if (ciclo === 2) {
       promTrimestral = {};
       FILAS.forEach((k) => {
-        const p = promedioDe(materias.map((m) => num(m.v[k])).concat([num(procon.v[k])]), 2);
+        const pMaterias = promedioDe(materias.map((m) => num(m.v[k])), 2);
+        const pProcon = num(procon.v[k]);
+        let p = null;
+        if (pMaterias !== null && pProcon !== null) p = core.redondear(pMaterias * 0.8 + pProcon * 0.2, 2);
+        else if (pMaterias !== null) p = pMaterias;
+        else if (pProcon !== null) p = pProcon;
         promTrimestral[k] = p === null ? "" : core.fmt(p, 2);
       });
     }

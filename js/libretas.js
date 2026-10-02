@@ -69,8 +69,8 @@
 
   function nivelesPermitidos() {
     const p = ctx.perfil || {};
-    if (p.rol === "admin" || p.rol === "directivo") return ["Inicial", "Primario", "Secundario"];
-    return ["Inicial", "Primario", "Secundario"].filter((n) => n === p.nivel);
+    if (["admin", "directivo", "docente"].includes(p.rol)) return ["Inicial", "Primario", "Secundario"];
+    return [];
   }
 
   function hayCambios() {
