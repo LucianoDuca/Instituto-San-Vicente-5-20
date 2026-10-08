@@ -238,6 +238,7 @@ async function cargarUsuarios() {
           <p class="item-date">Alta: ${formatFecha(user.created_at)}</p>
         </div>
         <div class="item-actions">
+          ${user.rol === "docente" ? `<button class="mat-btn" data-id="${escaparHTML(user.id)}">Materias</button>` : ""}
           <button class="edit-btn" data-id="${escaparHTML(user.id)}">Editar</button>
           ${esUnicoAdmin
             ? `<button class="delete-btn" disabled title="Es el único administrador del sistema, no se puede eliminar.">Borrar</button>`
@@ -251,6 +252,10 @@ async function cargarUsuarios() {
       button.addEventListener("click", () => {
         editarUsuario(button.dataset.id);
       });
+    });
+
+    document.querySelectorAll(".mat-btn").forEach((button) => {
+      button.addEventListener("click", () => abrirAsignaciones(button.dataset.id));
     });
 
     document.querySelectorAll(".delete-btn").forEach((button) => {
@@ -386,6 +391,264 @@ createUserForm.addEventListener("submit", async (event) => {
     createUserBtn.textContent = editando ? "Guardar cambios" : "Crear usuario";
   }
 });
+
+/* Ventanas flotantes del panel */
+
+function abrirModalAdmin(html, claseExtra) {
+  const overlay = document.createElement("div");
+  overlay.className = "modal-overlay open";
+  overlay.innerHTML = `<div class="modal-box ${claseExtra || ""}" role="dialog" aria-modal="true">
+    <button type="button" class="modal-close" data-cerrar aria-label="Cerrar">✕</button>${html}</div>`;
+  const cerrar = () => {
+    overlay.remove();
+    document.removeEventListener("keydown", tecla);
+  };
+  const tecla = (e) => { if (e.key === "Escape") cerrar(); };
+  overlay.addEventListener("mousedown", (e) => { if (e.target === overlay) cerrar(); });
+  overlay.addEventListener("click", (e) => { if (e.target.closest("[data-cerrar]")) cerrar(); });
+  document.addEventListener("keydown", tecla);
+  document.body.appendChild(overlay);
+  return { overlay, cerrar, box: overlay.querySelector(".modal-box") };
+}
+
+/* Materias asignadas a cada docente */
+
+async function abrirAsignaciones(id) {
+  const user = usuariosAdmin.find((u) => u.id === id);
+  if (!user) return;
+  const core = window.LibretasCore;
+  const nivel = user.nivel;
+  if (!["Inicial", "Primario", "Secundario"].includes(nivel)) {
+    alert("Primero elegí el nivel de este docente (botón Editar) y después asignale sus materias.");
+    return;
+  }
+
+  let seleccion = new Set();
+  try {
+    const response = await fetchAuth(`/api/admin/libretas/asignaciones/${id}`);
+    if (!response) return;
+    const result = await response.json();
+    if (!response.ok) throw new Error(result.error || "No se pudieron cargar las materias");
+    seleccion = new Set(result.asignaciones.map((a) => `${a.curso}|${a.clave}`));
+  } catch (error) {
+    alert(/lib_asignaciones|schema cache/i.test(error.message)
+      ? "Falta crear la tabla de asignaciones en Supabase (ejecutar supabase/libretas.sql)."
+      : error.message);
+    return;
+  }
+
+  const cursos = core.nivelDe(nivel).cursos;
+  const validas = new Map(cursos.map((c) => [c.id, new Set()]));
+  const filas = new Map();
+  cursos.forEach((c) => {
+    core.planillasDe(nivel, c.id).forEach((cat) => {
+      cat.hojas.forEach((hoja) => {
+        validas.get(c.id).add(hoja.clave);
+        const k = `${cat.id}|${hoja.clave}`;
+        if (!filas.has(k)) filas.set(k, { cat: cat.label, catId: cat.id, clave: hoja.clave, label: hoja.label });
+      });
+    });
+  });
+  const grupos = [];
+  filas.forEach((f) => {
+    let g = grupos.find((x) => x.id === f.catId);
+    if (!g) { g = { id: f.catId, label: f.cat, filas: [] }; grupos.push(g); }
+    g.filas.push(f);
+  });
+
+  const nombre = `${escaparHTML(user.nombre)} ${escaparHTML(user.apellido)}`.trim();
+  const cabecera = cursos.map((c) => `<th><button type="button" class="mat-col" data-col="${c.id}" title="Marcar o desmarcar todo ${escaparHTML(c.label)}">${escaparHTML(c.label)}</button></th>`).join("");
+  const cuerpo = grupos.map((g) => `
+    <tr class="mat-grupo"><td colspan="${cursos.length + 1}">${escaparHTML(g.label)}</td></tr>
+    ${g.filas.map((f) => `<tr>
+      <td class="mat-nombre"><button type="button" class="mat-fila" data-clave="${escaparHTML(f.clave)}" title="Marcar o desmarcar en todos los cursos">${escaparHTML(f.label)}</button></td>
+      ${cursos.map((c) => validas.get(c.id).has(f.clave)
+        ? `<td><input type="checkbox" data-curso="${c.id}" data-clave="${escaparHTML(f.clave)}"${seleccion.has(`${c.id}|${f.clave}`) ? " checked" : ""} aria-label="${escaparHTML(f.label)} en ${escaparHTML(c.label)}"></td>`
+        : `<td class="mat-na">·</td>`).join("")}
+    </tr>`).join("")}`).join("");
+
+  const { overlay, cerrar, box } = abrirModalAdmin(`
+    <h2>Materias de ${nombre}</h2>
+    <p class="muted">Nivel ${escaparHTML(nivel)}. Marcá en qué cursos da cada materia: solo esas planillas le van a aparecer para cargar notas. Tocá el nombre de un curso o de una materia para marcar toda la columna o toda la fila.</p>
+    <div class="mat-tabla-wrap"><table class="mat-tabla"><thead><tr><th>Materia</th>${cabecera}</tr></thead><tbody>${cuerpo}</tbody></table></div>
+    <p class="status" id="matStatus"></p>
+    <div class="form-actions mat-acciones">
+      <span class="mat-contador" id="matContador"></span>
+      <button type="button" class="secondary" data-cerrar>Cancelar</button>
+      <button type="button" id="matGuardar">Guardar materias</button>
+    </div>`, "ancho");
+
+  const cajas = () => [...box.querySelectorAll("input[type=checkbox][data-curso]")];
+  const contar = () => {
+    const n = cajas().filter((c) => c.checked).length;
+    box.querySelector("#matContador").textContent = `${n} materia${n === 1 ? "" : "s"} asignada${n === 1 ? "" : "s"}`;
+  };
+  const alternar = (lista) => {
+    const marcar = lista.some((c) => !c.checked);
+    lista.forEach((c) => (c.checked = marcar));
+    contar();
+  };
+  box.addEventListener("change", contar);
+  box.addEventListener("click", (e) => {
+    const col = e.target.closest("[data-col]");
+    if (col) alternar(cajas().filter((c) => c.dataset.curso === col.dataset.col));
+    const fila = e.target.closest(".mat-fila");
+    if (fila) alternar(cajas().filter((c) => c.dataset.clave === fila.dataset.clave));
+  });
+  contar();
+
+  box.querySelector("#matGuardar").addEventListener("click", async (e) => {
+    const estado = box.querySelector("#matStatus");
+    const asignaciones = cajas().filter((c) => c.checked).map((c) => ({ curso: c.dataset.curso, clave: c.dataset.clave }));
+    e.target.disabled = true;
+    setStatus(estado, "Guardando...");
+    try {
+      const response = await fetchAuth(`/api/admin/libretas/asignaciones/${id}`, {
+        method: "PUT",
+        body: JSON.stringify({ asignaciones })
+      });
+      if (!response) return;
+      const result = await response.json();
+      if (!response.ok) throw new Error(result.error || "No se pudieron guardar las materias");
+      cerrar();
+      alert(`Listo: ${nombre} tiene ${result.total} materia${result.total === 1 ? "" : "s"} asignada${result.total === 1 ? "" : "s"}.`);
+    } catch (error) {
+      e.target.disabled = false;
+      setStatus(estado, error.message, "error");
+    }
+  });
+}
+
+/* Alta masiva de usuarios */
+
+const NIVEL_ALIAS = { inicial: "Inicial", jardin: "Inicial", kinder: "Inicial", primario: "Primario", primaria: "Primario", secundario: "Secundario", secundaria: "Secundario" };
+const ROL_ALIAS = { docente: "docente", profe: "docente", profesor: "docente", profesora: "docente", maestra: "docente", maestro: "docente", directivo: "directivo", directiva: "directivo", directora: "directivo", director: "directivo" };
+
+function sinTildes(t) {
+  return String(t || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim().toLowerCase();
+}
+
+function parsearUsuarios(texto, opciones) {
+  return texto.split(/\r?\n/).map((l) => l.trim()).filter(Boolean).map((linea) => {
+    const sep = linea.includes("\t") ? "\t" : linea.includes(";") ? ";" : ",";
+    const p = linea.split(sep).map((x) => x.trim());
+    let nombre = p[0] || "";
+    let apellido = p[1] || "";
+    if (opciones.apellidoPrimero) [nombre, apellido] = [apellido, nombre];
+    const rol = p[2] ? ROL_ALIAS[sinTildes(p[2])] : opciones.rol;
+    const nivelTexto = p[3] ? NIVEL_ALIAS[sinTildes(p[3])] : opciones.nivel;
+    const nivel = rol === "docente" ? nivelTexto || "" : "";
+    let error = "";
+    if (!nombre || !apellido) error = "Falta nombre o apellido";
+    else if (!rol) error = "Rol no reconocido (usá docente o directivo)";
+    else if (rol === "docente" && !nivel) error = "Falta el nivel del docente";
+    return { nombre, apellido, rol: rol || "", nivel, error };
+  });
+}
+
+function csvDeResultados(resultados) {
+  const celda = (v) => `"${String(v ?? "").replace(/"/g, '""')}"`;
+  const filas = [["Nombre", "Apellido", "Rol", "Nivel", "Usuario", "Contraseña temporal", "Estado"]]
+    .concat(resultados.map((r) => [r.nombre, r.apellido, ROL_ETIQUETAS[r.rol] || r.rol, r.nivel, r.email || "", r.password || "", r.ok ? "Creado" : r.error]));
+  return "\ufeff" + filas.map((f) => f.map(celda).join(";")).join("\r\n");
+}
+
+function abrirAltaMasiva() {
+  const { box, cerrar } = abrirModalAdmin(`
+    <h2>Crear varios usuarios</h2>
+    <p class="muted">Pegá una lista (podés copiarla desde Excel): una persona por línea con <b>Nombre</b> y <b>Apellido</b>. Opcionalmente, rol y nivel en las columnas siguientes. A cada uno se le genera su usuario y una contraseña temporal que debe cambiar al ingresar.</p>
+    <div class="bulk-opciones">
+      <label>Rol por defecto
+        <select id="bulkRol"><option value="docente">Docente</option><option value="directivo">Directivo</option></select>
+      </label>
+      <label>Nivel por defecto (docentes)
+        <select id="bulkNivel"><option value="">— Elegir —</option><option value="Inicial">Inicial</option><option value="Primario">Primario</option><option value="Secundario">Secundario</option></select>
+      </label>
+      <label class="bulk-check"><input type="checkbox" id="bulkOrden"> Mi lista viene como Apellido, Nombre</label>
+    </div>
+    <textarea id="bulkTexto" class="bulk-texto" placeholder="María&#9;González&#10;Laura&#9;Pérez&#9;docente&#9;Primario&#10;Ana&#9;Suárez&#9;directivo"></textarea>
+    <div id="bulkPrevia"></div>
+    <p class="status" id="bulkStatus"></p>
+    <div class="form-actions mat-acciones">
+      <span class="mat-contador" id="bulkContador"></span>
+      <button type="button" class="secondary" data-cerrar>Cancelar</button>
+      <button type="button" id="bulkCrear" disabled>Crear usuarios</button>
+    </div>`, "ancho");
+
+  const q = (s) => box.querySelector(s);
+  let lista = [];
+
+  const repintar = () => {
+    lista = parsearUsuarios(q("#bulkTexto").value, { rol: q("#bulkRol").value, nivel: q("#bulkNivel").value, apellidoPrimero: q("#bulkOrden").checked });
+    const errores = lista.filter((l) => l.error).length;
+    q("#bulkPrevia").innerHTML = lista.length ? `<div class="mat-tabla-wrap bulk-previa"><table class="mat-tabla"><thead><tr><th>#</th><th>Nombre</th><th>Apellido</th><th>Rol</th><th>Nivel</th><th></th></tr></thead><tbody>${lista.map((l, i) => `
+      <tr class="${l.error ? "bulk-error" : ""}"><td>${i + 1}</td><td>${escaparHTML(l.nombre)}</td><td>${escaparHTML(l.apellido)}</td><td>${escaparHTML(ROL_ETIQUETAS[l.rol] || "—")}</td><td>${escaparHTML(l.nivel || "—")}</td><td>${l.error ? escaparHTML(l.error) : "✓"}</td></tr>`).join("")}</tbody></table></div>` : "";
+    q("#bulkContador").textContent = lista.length ? `${lista.length} persona${lista.length === 1 ? "" : "s"}${errores ? ` · ${errores} con errores` : ""}` : "";
+    q("#bulkCrear").disabled = !lista.length || errores > 0;
+  };
+  ["#bulkTexto", "#bulkRol", "#bulkNivel", "#bulkOrden"].forEach((s) => q(s).addEventListener("input", repintar));
+  q("#bulkTexto").focus();
+
+  q("#bulkCrear").addEventListener("click", async (e) => {
+    const estado = q("#bulkStatus");
+    e.target.disabled = true;
+    setStatus(estado, `Creando ${lista.length} usuarios...`);
+    try {
+      const response = await fetchAuth("/api/admin/create-users-bulk", {
+        method: "POST",
+        body: JSON.stringify({ usuarios: lista.map(({ nombre, apellido, rol, nivel }) => ({ nombre, apellido, rol, nivel })) })
+      });
+      if (!response) return;
+      const result = await response.json();
+      if (!response.ok) throw new Error(result.error || "No se pudieron crear los usuarios");
+      await Promise.all([cargarUsuarios(), cargarStats()]);
+      mostrarResultadosAlta(box, result.resultados, cerrar);
+    } catch (error) {
+      e.target.disabled = false;
+      setStatus(estado, error.message, "error");
+    }
+  });
+}
+
+function mostrarResultadosAlta(box, resultados, cerrar) {
+  const ok = resultados.filter((r) => r.ok);
+  const fallidos = resultados.filter((r) => !r.ok);
+  box.innerHTML = `
+    <button type="button" class="modal-close" data-cerrar aria-label="Cerrar">✕</button>
+    <h2>${ok.length} usuario${ok.length === 1 ? "" : "s"} creado${ok.length === 1 ? "" : "s"}${fallidos.length ? ` · ${fallidos.length} con error` : ""}</h2>
+    <p class="muted"><b>Guardá estas contraseñas ahora:</b> no se vuelven a mostrar. Cada persona debe cambiarla la primera vez que ingresa. Descargá la lista para repartirla.</p>
+    <div class="mat-tabla-wrap bulk-previa"><table class="mat-tabla"><thead><tr><th>Nombre</th><th>Rol</th><th>Nivel</th><th>Usuario</th><th>Contraseña temporal</th></tr></thead><tbody>
+      ${resultados.map((r) => r.ok
+        ? `<tr><td>${escaparHTML(r.apellido)}, ${escaparHTML(r.nombre)}</td><td>${escaparHTML(ROL_ETIQUETAS[r.rol] || r.rol)}</td><td>${escaparHTML(r.nivel || "—")}</td><td><code>${escaparHTML(r.email)}</code></td><td><code>${escaparHTML(r.password)}</code></td></tr>`
+        : `<tr class="bulk-error"><td>${escaparHTML(r.apellido)}, ${escaparHTML(r.nombre)}</td><td colspan="4">${escaparHTML(r.error)}</td></tr>`).join("")}
+    </tbody></table></div>
+    <div class="form-actions mat-acciones">
+      <button type="button" class="secondary" id="bulkCopiar">Copiar lista</button>
+      <button type="button" id="bulkDescargar">Descargar CSV</button>
+      <button type="button" class="secondary" data-cerrar>Cerrar</button>
+    </div>`;
+  box.querySelector("#bulkDescargar").addEventListener("click", () => {
+    const blob = new Blob([csvDeResultados(resultados)], { type: "text/csv;charset=utf-8" });
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = "usuarios-nuevos.csv";
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+  });
+  box.querySelector("#bulkCopiar").addEventListener("click", async (e) => {
+    const texto = ok.map((r) => [r.apellido + ", " + r.nombre, r.email, r.password].join("\t")).join("\n");
+    try {
+      await navigator.clipboard.writeText(texto);
+      e.target.textContent = "¡Copiado!";
+    } catch (error) {
+      e.target.textContent = "No se pudo copiar";
+    }
+  });
+}
+
+document.getElementById("bulkUsersBtn").addEventListener("click", abrirAltaMasiva);
 
 createUserForm.rol.addEventListener("change", actualizarCampoNivel);
 

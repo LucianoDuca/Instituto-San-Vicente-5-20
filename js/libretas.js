@@ -16,6 +16,8 @@
     vista: "notas",
     categoria: "materias",
     catResumen: null,
+    asig: null,
+    sinMaterias: false,
     hoja: null,
     alumnos: [],
     notas: {},
@@ -97,8 +99,21 @@
 
   function nivelesPermitidos() {
     const p = ctx.perfil || {};
-    if (["admin", "directivo", "docente"].includes(p.rol)) return ["Inicial", "Primario", "Secundario"];
+    if (p.rol === "admin" || p.rol === "directivo") return ["Inicial", "Primario", "Secundario"];
+    if (p.rol === "docente" && ["Inicial", "Primario", "Secundario"].includes(p.nivel)) return [p.nivel];
     return [];
+  }
+
+  function esDocente() {
+    return (ctx.perfil || {}).rol === "docente";
+  }
+
+  // El docente solo ve los cursos y las materias que le asignó administración.
+  function cursosVisibles(nivel) {
+    const todos = core.nivelDe(nivel).cursos;
+    if (!esDocente() || !estado.asig) return todos;
+    const ids = new Set(estado.asig.filas.filter((f) => f.nivel === nivel).map((f) => f.curso));
+    return todos.filter((c) => ids.has(c.id));
   }
 
   function hayCambios() {
@@ -234,7 +249,10 @@
   }
 
   function planillas() {
-    return core.planillasDe(estado.nivel, estado.curso);
+    const cats = core.planillasDe(estado.nivel, estado.curso);
+    if (!esDocente() || !estado.asig) return cats;
+    const asignadas = new Set(estado.asig.filas.filter((f) => f.nivel === estado.nivel && f.curso === estado.curso).map((f) => f.clave));
+    return cats.map((c) => Object.assign({}, c, { hojas: c.hojas.filter((h) => asignadas.has(h.clave)) })).filter((c) => c.hojas.length);
   }
 
   function hojaActual() {
@@ -281,7 +299,7 @@
     } catch (error) {
       estado.alumnos = [];
       estado.notas = {};
-      estado.error = /lib_alumnos|lib_notas|schema cache/i.test(error.message)
+      estado.error = /lib_alumnos|lib_notas|lib_asignaciones|schema cache/i.test(error.message)
         ? "El módulo de libretas todavía no está habilitado en la base de datos. Avisá al administrador del sitio."
         : error.message;
     }
@@ -359,7 +377,7 @@
           : `<button disabled title="Próximamente">${cfg.label.replace("Nivel ", "")}</button>`;
       }).join("");
 
-    document.getElementById("lbCursos").innerHTML = cfgNivel.cursos.map((c) =>
+    document.getElementById("lbCursos").innerHTML = cursosVisibles(estado.nivel).map((c) =>
       `<button class="${c.id === estado.curso ? "active" : ""}" data-accion="curso" data-valor="${c.id}">${esc(c.label)}</button>`
     ).join("");
 
@@ -369,9 +387,9 @@
     for (let a = core.anioLectivoActual() + 1; a >= core.anioLectivoActual() - 3; a--) anios.push(a);
     document.getElementById("lbAnio").innerHTML = anios.map((a) => `<option value="${a}"${a === estado.anio ? " selected" : ""}>Año ${a}</option>`).join("");
 
-    document.getElementById("lbVistas").innerHTML = [
-      ["notas", "Cargar notas", ICONO.notas], ["alumnos", "Estudiantes", ICONO.alumnos], ["resumen", "Revisar curso", ICONO.resumen], ["libretas", "Libretas", ICONO.libretas]
-    ].map(([id, label, icono]) => `<button role="tab" class="lb-tab${estado.vista === id ? " active" : ""}" data-accion="vista" data-valor="${id}">${icono}<span>${label}</span></button>`).join("");
+    const vistas = [["notas", "Cargar notas", ICONO.notas], ["alumnos", "Estudiantes", ICONO.alumnos]];
+    if (!esDocente()) vistas.push(["resumen", "Revisar curso", ICONO.resumen], ["libretas", "Libretas", ICONO.libretas]);
+    document.getElementById("lbVistas").innerHTML = vistas.map(([id, label, icono]) => `<button role="tab" class="lb-tab${estado.vista === id ? " active" : ""}" data-accion="vista" data-valor="${id}">${icono}<span>${label}</span></button>`).join("");
   }
 
   // En el celular las filas de botones se deslizan de costado: dejar visible el elegido.
@@ -394,6 +412,15 @@
       estado.error = null;
       return;
     }
+    if (estado.sinMaterias) {
+      cont.innerHTML = `<div class="lb-card"><div class="lb-vacio">
+        <div class="lb-vacio-icono">${ICONO.notas}</div>
+        <h3>Todavía no tenés materias asignadas</h3>
+        <p>Pedile a administración que te asigne las materias y los cursos donde vas a cargar notas. Apenas lo hagan, van a aparecer acá.</p>
+      </div></div>`;
+      return;
+    }
+    if (esDocente() && (estado.vista === "resumen" || estado.vista === "libretas")) estado.vista = "notas";
     if (estado.vista === "alumnos") return renderAlumnos(cont);
     if (estado.vista === "resumen") return renderResumen(cont);
     if (estado.vista === "libretas") return renderLibretas(cont);
@@ -967,7 +994,7 @@
     if (accion === "tutorial") {
       abrirTutorial();
     } else if (accion === "nivel") {
-      if (valor !== estado.nivel) await cambiarContexto({ nivel: valor, curso: core.nivelDe(valor).cursos[0].id });
+      if (valor !== estado.nivel) await cambiarContexto({ nivel: valor, curso: cursosVisibles(valor)[0].id });
     } else if (accion === "curso") {
       if (valor !== estado.curso) await cambiarContexto({ curso: valor });
     } else if (accion === "vista") {
@@ -1006,16 +1033,12 @@
         estado.alumnoLibreta = destino.id;
         renderContenido();
       }
-    } else if (accion === "agregar-alumnos") {
-      await agregarAlumnos();
+    } else if (accion === "nuevo-alumno") {
+      abrirModalAlumno(null);
+    } else if (accion === "agregar-varios") {
+      abrirModalVarios();
     } else if (accion === "editar-alumno") {
-      estado.editandoAlumno = valor;
-      renderContenido();
-    } else if (accion === "cancelar-alumno") {
-      estado.editandoAlumno = null;
-      renderContenido();
-    } else if (accion === "guardar-alumno") {
-      await guardarAlumno(valor);
+      abrirModalAlumno(valor);
     } else if (accion === "eliminar-alumno") {
       await eliminarAlumno(valor);
     } else if (accion === "ver-libreta") {
@@ -1196,93 +1219,156 @@
   }
 
   function renderAlumnos(cont) {
-    // El servidor solo deja eliminar a admin y directivos: a los docentes no se les muestra el botón.
-    const puedeEliminar = ["admin", "directivo"].includes((ctx.perfil || {}).rol);
-    const filas = estado.alumnos.map((a, i) => {
-      if (estado.editandoAlumno === a.id) {
-        const cursos = core.nivelDe(estado.nivel).cursos;
-        return `<tr>
-          <td class="lb-col-num">${i + 1}</td>
-          <td data-label="Apellido"><input id="edAp" value="${esc(a.apellido)}"></td>
-          <td data-label="Nombre"><input id="edNo" value="${esc(a.nombre)}"></td>
-          <td data-label="DNI"><input id="edDni" inputmode="numeric" value="${esc(a.dni)}"></td>
-          <td data-label="Curso"><select id="edCurso">${cursos.map((c) => `<option value="${c.id}"${c.id === a.curso ? " selected" : ""}>${esc(c.label)}</option>`).join("")}</select></td>
-          <td class="lb-col-acc"><button class="lb-btn chico verde" data-accion="guardar-alumno" data-valor="${a.id}">Guardar</button>
-          <button class="lb-btn chico sec" data-accion="cancelar-alumno">Cancelar</button></td></tr>`;
-      }
-      return `<tr>
+    const filas = estado.alumnos.map((a, i) => `<tr>
         <td class="lb-col-num">${i + 1}</td><td class="lb-col-movil"><b>${esc(a.apellido)}</b>, ${esc(a.nombre)}<small>${a.dni ? "DNI " + esc(a.dni) : "Sin DNI"}</small></td><td class="lb-col-pc"><b>${esc(a.apellido)}</b></td><td class="lb-col-pc">${esc(a.nombre)}</td><td class="lb-col-pc">${esc(a.dni)}</td><td class="lb-col-pc">${esc((core.cursoDe(estado.nivel, a.curso) || {}).label)}</td>
         <td class="lb-col-acc"><button class="lb-btn chico sec" data-accion="editar-alumno" data-valor="${a.id}">Editar</button>
-        ${puedeEliminar ? `<button class="lb-btn chico rojo" data-accion="eliminar-alumno" data-valor="${a.id}">Eliminar</button>` : ""}</td></tr>`;
-    }).join("");
+        <button class="lb-btn chico rojo" data-accion="eliminar-alumno" data-valor="${a.id}">Eliminar</button></td></tr>`).join("");
 
     cont.innerHTML = `
-      <div class="lb-two">
+      <div class="lb-uno">
         <div class="lb-card">
-          <h2>Estudiantes de ${esc(core.cursoDe(estado.nivel, estado.curso).label)} · ${estado.anio} <span class="list-counter">(${estado.alumnos.length})</span></h2>
+          <div class="lb-sheet-head">
+            <h2 class="lb-h2">Estudiantes de ${esc(core.cursoDe(estado.nivel, estado.curso).label)} · ${estado.anio} <span class="list-counter">(${estado.alumnos.length})</span></h2>
+            <div class="lb-head-btns">
+              <button class="lb-btn verde" data-accion="nuevo-alumno">${ICONO.mas}<span>Nuevo estudiante</span></button>
+              <button class="lb-btn sec" data-accion="agregar-varios"><span>Pegar una lista</span></button>
+            </div>
+          </div>
           ${estado.alumnos.length
             ? `<table class="lb-table lb-tabla-alumnos"><thead><tr><th>#</th><th>Apellido</th><th>Nombre</th><th>DNI</th><th>Curso</th><th></th></tr></thead><tbody>${filas}</tbody></table>`
-            : `<p class="lb-empty">Todavía no hay estudiantes en este curso.</p>`}
-        </div>
-        <div class="lb-card">
-          <h2>Agregar estudiantes</h2>
-          <p class="lb-help">Pegá la lista, un estudiante por línea: <b>APELLIDO, NOMBRE</b> (con coma). Si copiás desde Excel con columnas Apellido / Nombre / DNI también funciona.</p>
-          <div class="lb-form">
-            <textarea id="lbLista" placeholder="GARCIA, JUAN PABLO&#10;LOPEZ RUIZ, MARIA; 45123456"></textarea>
-            <div id="lbPrevia"></div>
-            <p class="lb-msg" id="lbMsgAlumnos"></p>
-            <button class="lb-btn verde" data-accion="agregar-alumnos">Agregar a este curso</button>
-          </div>
+            : `<p class="lb-empty">Todavía no hay estudiantes en este curso. Agregá el primero con <b>Nuevo estudiante</b>.</p>`}
         </div>
         ${puedeConfigurar() ? `<div class="lb-card lb-config" id="lbConfigCurso">${htmlConfigCurso()}</div>` : ""}
       </div>`;
+  }
 
-    const ta = document.getElementById("lbLista");
+  /* ---------- Ventanas flotantes ---------- */
+
+  function crearModal(html) {
+    const overlay = document.createElement("div");
+    overlay.className = "lb-modal";
+    overlay.innerHTML = `<div class="lb-modal-box lb-modal-form" role="dialog" aria-modal="true">${html}</div>`;
+    const cerrar = () => {
+      overlay.remove();
+      document.removeEventListener("keydown", tecla);
+    };
+    const tecla = (e) => { if (e.key === "Escape") cerrar(); };
+    overlay.addEventListener("mousedown", (e) => { if (e.target === overlay) cerrar(); });
+    overlay.addEventListener("click", (e) => { if (e.target.closest("[data-cerrar]")) cerrar(); });
+    document.addEventListener("keydown", tecla);
+    document.body.appendChild(overlay);
+    return { overlay, cerrar };
+  }
+
+  function abrirModalAlumno(id) {
+    const a = id ? estado.alumnos.find((x) => x.id === id) : null;
+    if (id && !a) return;
+    const cursoActual = core.cursoDe(estado.nivel, estado.curso);
+    const cursos = cursosVisibles(estado.nivel);
+    const { overlay, cerrar } = crearModal(`
+      <button type="button" class="lb-modal-x" data-cerrar aria-label="Cerrar">✕</button>
+      <h3>${a ? "Editar estudiante" : "Nuevo estudiante"}</h3>
+      <p class="lb-modal-sub">${a ? "Modificá los datos y guardá los cambios." : `Se agrega a ${esc(cursoActual.label)} · ${estado.anio}.`}</p>
+      <form class="lb-modal-campos" novalidate>
+        <label class="lb-campo"><span>Nombre</span><input type="text" name="nombre" maxlength="80" autocomplete="off" value="${a ? esc(a.nombre) : ""}" placeholder="Ej: Juan Pablo"></label>
+        <label class="lb-campo"><span>Apellido</span><input type="text" name="apellido" maxlength="80" autocomplete="off" value="${a ? esc(a.apellido) : ""}" placeholder="Ej: García"></label>
+        <label class="lb-campo"><span>DNI <em>(opcional)</em></span><input type="text" name="dni" inputmode="numeric" maxlength="12" autocomplete="off" value="${a ? esc(a.dni) : ""}" placeholder="Solo números"></label>
+        ${a && cursos.length > 1 ? `<label class="lb-campo"><span>Curso</span><select name="curso" class="lb-select-form">${cursos.map((c) => `<option value="${c.id}"${c.id === a.curso ? " selected" : ""}>${esc(c.label)}</option>`).join("")}</select></label>` : ""}
+        <p class="lb-msg" data-msg></p>
+        <div class="lb-modal-actions">
+          <button type="button" class="lb-btn sec" data-cerrar>Cancelar</button>
+          ${a ? "" : `<button type="button" class="lb-btn sec" data-otro>Guardar y agregar otro</button>`}
+          <button type="submit" class="lb-btn verde">${a ? "Guardar cambios" : "Guardar"}</button>
+        </div>
+      </form>`);
+
+    const form = overlay.querySelector("form");
+    const msg = overlay.querySelector("[data-msg]");
+    form.elements.nombre.focus();
+
+    async function enviar(otro) {
+      const nombre = form.elements.nombre.value.trim();
+      const apellido = form.elements.apellido.value.trim();
+      const dni = form.elements.dni.value.replace(/[.\s]/g, "");
+      if (!nombre) { mostrarMensaje(msg, "Escribí el nombre", "err"); form.elements.nombre.focus(); return; }
+      if (!apellido) { mostrarMensaje(msg, "Escribí el apellido", "err"); form.elements.apellido.focus(); return; }
+      if (dni && !/^\d+$/.test(dni)) { mostrarMensaje(msg, "El DNI solo puede tener números", "err"); form.elements.dni.focus(); return; }
+      const botones = overlay.querySelectorAll("button");
+      botones.forEach((x) => (x.disabled = true));
+      mostrarMensaje(msg, "Guardando...", "");
+      try {
+        if (a) {
+          const cambios = { apellido, nombre, dni };
+          if (form.elements.curso) cambios.curso = form.elements.curso.value;
+          await api("/api/libretas/alumnos/" + a.id, { method: "PATCH", body: JSON.stringify(cambios) });
+          toast("Estudiante actualizado", "ok");
+        } else {
+          await api("/api/libretas/alumnos", {
+            method: "POST",
+            body: JSON.stringify({ anio: estado.anio, nivel: estado.nivel, curso: estado.curso, alumnos: [{ apellido, nombre, dni }] })
+          });
+          toast(`${apellido}, ${nombre} agregado`, "ok");
+        }
+        cerrar();
+        await cargarCurso();
+        if (otro) abrirModalAlumno(null);
+      } catch (error) {
+        botones.forEach((x) => (x.disabled = false));
+        mostrarMensaje(msg, error.message, "err");
+      }
+    }
+
+    form.addEventListener("submit", (e) => { e.preventDefault(); enviar(false); });
+    const otro = overlay.querySelector("[data-otro]");
+    if (otro) otro.addEventListener("click", () => enviar(true));
+  }
+
+  function abrirModalVarios() {
+    const cursoActual = core.cursoDe(estado.nivel, estado.curso);
+    const { overlay, cerrar } = crearModal(`
+      <button type="button" class="lb-modal-x" data-cerrar aria-label="Cerrar">✕</button>
+      <h3>Pegar una lista de estudiantes</h3>
+      <p class="lb-modal-sub">Pegá un estudiante por línea: <b>APELLIDO, NOMBRE</b> (con coma). Si copiás desde Excel con columnas Apellido / Nombre / DNI también funciona. Se agregan a ${esc(cursoActual.label)}.</p>
+      <div class="lb-modal-campos">
+        <textarea class="lb-lista-area" placeholder="GARCIA, JUAN PABLO&#10;LOPEZ RUIZ, MARIA; 45123456"></textarea>
+        <div data-previa></div>
+        <p class="lb-msg" data-msg></p>
+        <div class="lb-modal-actions">
+          <button type="button" class="lb-btn sec" data-cerrar>Cancelar</button>
+          <button type="button" class="lb-btn verde" data-agregar>Agregar al curso</button>
+        </div>
+      </div>`);
+    const ta = overlay.querySelector("textarea");
+    const msg = overlay.querySelector("[data-msg]");
+    ta.focus();
     ta.addEventListener("input", () => {
       const lista = parsearLista(ta.value);
-      document.getElementById("lbPrevia").innerHTML = lista.length
+      overlay.querySelector("[data-previa]").innerHTML = lista.length
         ? `<table class="lb-preview-tbl"><thead><tr><th>Apellido</th><th>Nombre</th><th>DNI</th></tr></thead><tbody>${lista.slice(0, 60).map((l) =>
             `<tr><td>${esc(l.apellido)}</td><td>${l.nombre ? esc(l.nombre) : '<span style="color:#c1121f">falta</span>'}</td><td>${esc(l.dni)}</td></tr>`).join("")}</tbody></table>`
         : "";
     });
-  }
-
-  async function agregarAlumnos() {
-    const msg = document.getElementById("lbMsgAlumnos");
-    const lista = parsearLista(document.getElementById("lbLista").value);
-    if (!lista.length) return mostrarMensaje(msg, "Pegá al menos un estudiante", "err");
-    if (lista.some((l) => !l.apellido || !l.nombre)) {
-      return mostrarMensaje(msg, "Cada línea necesita apellido y nombre (usá una coma para separarlos)", "err");
-    }
-    try {
+    overlay.querySelector("[data-agregar]").addEventListener("click", async (e) => {
+      const lista = parsearLista(ta.value);
+      if (!lista.length) return mostrarMensaje(msg, "Pegá al menos un estudiante", "err");
+      if (lista.some((l) => !l.apellido || !l.nombre)) {
+        return mostrarMensaje(msg, "Cada línea necesita apellido y nombre (usá una coma para separarlos)", "err");
+      }
+      e.target.disabled = true;
       mostrarMensaje(msg, "Agregando...", "");
-      await api("/api/libretas/alumnos", {
-        method: "POST",
-        body: JSON.stringify({ anio: estado.anio, nivel: estado.nivel, curso: estado.curso, alumnos: lista })
-      });
-      toast(`${lista.length} estudiante${lista.length === 1 ? "" : "s"} agregado${lista.length === 1 ? "" : "s"}`, "ok");
-      await cargarCurso();
-    } catch (error) {
-      mostrarMensaje(msg, error.message, "err");
-    }
-  }
-
-  async function guardarAlumno(id) {
-    try {
-      await api("/api/libretas/alumnos/" + id, {
-        method: "PATCH",
-        body: JSON.stringify({
-          apellido: document.getElementById("edAp").value,
-          nombre: document.getElementById("edNo").value,
-          dni: document.getElementById("edDni").value,
-          curso: document.getElementById("edCurso").value
-        })
-      });
-      estado.editandoAlumno = null;
-      await cargarCurso();
-    } catch (error) {
-      toast(error.message, "err");
-    }
+      try {
+        await api("/api/libretas/alumnos", {
+          method: "POST",
+          body: JSON.stringify({ anio: estado.anio, nivel: estado.nivel, curso: estado.curso, alumnos: lista })
+        });
+        toast(`${lista.length} estudiante${lista.length === 1 ? "" : "s"} agregado${lista.length === 1 ? "" : "s"}`, "ok");
+        cerrar();
+        await cargarCurso();
+      } catch (error) {
+        e.target.disabled = false;
+        mostrarMensaje(msg, error.message, "err");
+      }
+    });
   }
 
   async function eliminarAlumno(id) {
@@ -1598,7 +1684,7 @@
 
   /* ---------- API pública ---------- */
 
-  function mount(container, opciones) {
+  async function mount(container, opciones) {
     if (root) return;
     root = container;
     ctx = opciones;
@@ -1608,6 +1694,27 @@
       estado.curso = core.nivelDe(estado.nivel).cursos.length ? core.nivelDe(estado.nivel).cursos[0].id : "";
     }
     montarBase();
+    if (esDocente()) {
+      estado.cargando = true;
+      render();
+      try {
+        const r = await api("/api/libretas/mis-asignaciones");
+        estado.asig = { total: Boolean(r.total), filas: r.asignaciones || [] };
+      } catch (error) {
+        estado.asig = { total: false, filas: [] };
+        estado.error = /lib_asignaciones|schema cache/i.test(error.message)
+          ? "El módulo de libretas todavía no está habilitado en la base de datos. Avisá al administrador del sitio."
+          : error.message;
+      }
+      const cursos = cursosVisibles(estado.nivel);
+      if (!cursos.length) {
+        estado.sinMaterias = !estado.error;
+        estado.cargando = false;
+        render();
+        return;
+      }
+      estado.curso = cursos[0].id;
+    }
     cargarCurso();
   }
 

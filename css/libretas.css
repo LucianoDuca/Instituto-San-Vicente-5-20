@@ -508,3 +508,21 @@ table.lb-grid{border-collapse:separate;border-spacing:0;width:100%;font-size:.86
 .lb-res td.lb-res-prog{background:#f1f6fa!important;font-size:.8rem}
 .lb-res td .lb-btn{white-space:nowrap}
 .lb-res thead th[rowspan]{vertical-align:middle}
+
+/* Estudiantes: ventanas flotantes */
+.lb-uno{display:grid;gap:18px;min-width:0}
+.lb-h2{margin:0!important;font-size:1.25rem}
+.lb-head-btns{display:flex;gap:8px;flex-wrap:wrap}
+.lb-modal-box.lb-modal-form{max-width:460px;position:relative;padding:28px}
+.lb-modal-form h3{font-size:1.25rem}
+.lb-modal-form .lb-modal-sub{margin:0 0 18px;color:#5a7085;line-height:1.5;font-size:.9rem}
+.lb-modal-x{position:absolute;top:14px;right:14px;width:34px;height:34px;border-radius:50%;border:0;background:#eef3f8;color:#44596e;font-size:1rem;cursor:pointer}
+.lb-modal-x:hover{background:#dde7f0}
+.lb-modal-campos{display:grid;gap:14px}
+.lb-modal-form .lb-campo input[type=text],.lb-lista-area,.lb-select-form{border:1px solid #d5e1ec;border-radius:12px;padding:12px 14px;font:inherit;background:#f8fbfd;outline:none;width:100%;box-sizing:border-box}
+.lb-modal-form .lb-campo input[type=text]:focus,.lb-lista-area:focus,.lb-select-form:focus{border-color:#0b4a78;box-shadow:0 0 0 4px rgba(11,74,120,.12)}
+.lb-modal-form .lb-campo em{font-weight:400;color:#8296a8;font-style:normal}
+.lb-lista-area{min-height:170px;resize:vertical}
+.lb-modal-box.lb-modal-form:has(.lb-lista-area){max-width:620px}
+.lb-modal-form .lb-modal-actions{flex-wrap:wrap}
+@media(max-width:560px){.lb-modal-form .lb-modal-actions .lb-btn{flex:1 1 100%}.lb-head-btns{width:100%}.lb-head-btns .lb-btn{flex:1}}

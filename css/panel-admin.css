@@ -206,3 +206,35 @@ body{margin:0;font-family:Segoe UI,Arial,sans-serif;background:#eef3f7;color:#12
 .sv-seed-btn:disabled{opacity:.6;cursor:default}
 .sv-seed-note{font-size:.72rem;color:#4a6480;flex:1 1 220px;min-width:180px}
 @media(max-width:640px){.sv-slots-grid{grid-template-columns:repeat(auto-fill,minmax(140px,1fr))}.sv-acc-trigger{padding:14px 16px}.sv-acc-body{padding:14px 16px 18px}}
+/* Materias por docente y alta masiva */
+.modal-box.ancho{max-width:1000px}
+.modal-box h2{margin:0 40px 6px 0;color:#0b3558}
+.modal-box .muted{margin:0 0 14px;line-height:1.5}
+.mat-tabla-wrap{overflow:auto;max-height:55vh;border:1px solid rgba(11,53,88,.12);border-radius:14px}
+table.mat-tabla{border-collapse:separate;border-spacing:0;width:100%;font-size:.88rem}
+.mat-tabla th,.mat-tabla td{padding:8px 10px;border-bottom:1px solid #edf2f6;text-align:center;white-space:nowrap}
+.mat-tabla thead th{position:sticky;top:0;background:#0b3558;color:#fff;z-index:2;font-weight:700}
+.mat-tabla thead th:first-child,.mat-tabla td.mat-nombre{position:sticky;left:0;text-align:left;z-index:1}
+.mat-tabla thead th:first-child{z-index:3}
+.mat-tabla td.mat-nombre{background:#fff;font-weight:600;color:#0b3558;box-shadow:2px 0 0 #edf2f6;min-width:210px}
+.mat-tabla tr.mat-grupo td{background:#eaf1f7;color:#0b3558;font-weight:800;text-align:left;font-size:.78rem;letter-spacing:.06em;text-transform:uppercase;position:static}
+.mat-tabla td.mat-na{color:#c5d0da}
+.mat-tabla input[type=checkbox]{width:19px;height:19px;cursor:pointer;accent-color:#0b4a78}
+.mat-tabla tbody tr:hover td:not(.mat-na){background:#f3f8fc}
+.mat-col,.mat-fila{border:0;background:transparent;font:inherit;font-weight:inherit;color:inherit;cursor:pointer;padding:0;text-align:inherit;text-decoration:underline dotted;text-underline-offset:3px}
+.mat-col:hover,.mat-fila:hover{text-decoration-style:solid}
+.mat-acciones{display:flex;align-items:center;gap:10px;margin-top:16px;flex-wrap:wrap}
+.mat-acciones .mat-contador{margin-right:auto;color:#44596e;font-weight:700;font-size:.88rem}
+.mat-acciones button{border:0;border-radius:14px;padding:12px 18px;font-weight:800;cursor:pointer;background:#0b4a78;color:#fff}
+.mat-acciones button:disabled{opacity:.5;cursor:not-allowed}
+.bulk-opciones{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:12px;align-items:end}
+.bulk-opciones label{display:grid;gap:5px;font-weight:700;font-size:.82rem;color:#3c556c}
+.bulk-opciones select{border:1px solid rgba(11,53,88,.16);border-radius:12px;padding:10px 12px;font:inherit;background:#f8fbfd}
+.bulk-opciones .bulk-check{display:flex;align-items:center;gap:8px;font-weight:600}
+.bulk-texto{width:100%;min-height:150px;border:1px solid rgba(11,53,88,.16);border-radius:14px;padding:12px 14px;font:inherit;background:#f8fbfd;outline:none;resize:vertical}
+.bulk-texto:focus{border-color:#0b4a78;box-shadow:0 0 0 4px rgba(11,74,120,.12)}
+.bulk-previa{margin-top:12px;max-height:38vh}
+.bulk-previa td{text-align:left}
+.bulk-error td{background:#fff1f1!important;color:#b81424}
+.mat-tabla code{background:#eef3f8;padding:2px 6px;border-radius:6px;user-select:all}
+@media(max-width:700px){.modal-box.ancho{padding:18px}.mat-tabla td.mat-nombre{min-width:150px}}

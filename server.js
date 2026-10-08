@@ -267,7 +267,7 @@ function nombreCompleto(profile) {
   return [profile.nombre, profile.apellido].filter(Boolean).join(" ").trim() || profile.email;
 }
 
-require("./server/libretas").registrarLibretas(app, { supabaseAdmin, usuarioLogueado, nombreCompleto });
+require("./server/libretas").registrarLibretas(app, { supabaseAdmin, usuarioLogueado, soloAdmin, nombreCompleto });
 
 /* CONTACTO — ANTISPAM */
 

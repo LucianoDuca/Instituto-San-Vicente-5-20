@@ -53,3 +53,18 @@ create table if not exists public.lib_cursos_config (
 );
 
 alter table public.lib_cursos_config enable row level security;
+
+-- Materias asignadas a cada docente (qué planillas ve y puede cargar).
+create table if not exists public.lib_asignaciones (
+  id uuid primary key default gen_random_uuid(),
+  user_id uuid not null references auth.users (id) on delete cascade,
+  nivel text not null check (nivel in ('Inicial', 'Primario', 'Secundario')),
+  curso text not null,
+  clave text not null,
+  created_at timestamptz not null default now(),
+  unique (user_id, nivel, curso, clave)
+);
+
+create index if not exists lib_asignaciones_user_idx on public.lib_asignaciones (user_id);
+
+alter table public.lib_asignaciones enable row level security;
