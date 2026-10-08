@@ -548,7 +548,7 @@ function parsearUsuarios(texto, opciones) {
 
 function csvDeResultados(resultados) {
   const celda = (v) => `"${String(v ?? "").replace(/"/g, '""')}"`;
-  const filas = [["Nombre", "Apellido", "Rol", "Nivel", "Usuario", "Contraseña temporal", "Estado"]]
+  const filas = [["Nombre", "Apellido", "Rol", "Nivel", "Usuario", "Contraseña", "Estado"]]
     .concat(resultados.map((r) => [r.nombre, r.apellido, ROL_ETIQUETAS[r.rol] || r.rol, r.nivel, r.email || "", r.password || "", r.ok ? "Creado" : r.error]));
   return "\ufeff" + filas.map((f) => f.map(celda).join(";")).join("\r\n");
 }
@@ -556,7 +556,7 @@ function csvDeResultados(resultados) {
 function abrirAltaMasiva() {
   const { box, cerrar } = abrirModalAdmin(`
     <h2>Crear varios usuarios</h2>
-    <p class="muted">Pegá una lista (podés copiarla desde Excel): una persona por línea con <b>Nombre</b> y <b>Apellido</b>. Opcionalmente, rol y nivel en las columnas siguientes. A cada uno se le genera su usuario y una contraseña temporal que debe cambiar al ingresar.</p>
+    <p class="muted">Pegá una lista (podés copiarla desde Excel): una persona por línea con <b>Nombre</b> y <b>Apellido</b>. Opcionalmente, rol y nivel en las columnas siguientes. A cada uno se le genera su usuario y una contraseña propia.</p>
     <div class="bulk-opciones">
       <label>Rol por defecto
         <select id="bulkRol"><option value="docente">Docente</option><option value="directivo">Directivo</option></select>
@@ -616,8 +616,8 @@ function mostrarResultadosAlta(box, resultados, cerrar) {
   box.innerHTML = `
     <button type="button" class="modal-close" data-cerrar aria-label="Cerrar">✕</button>
     <h2>${ok.length} usuario${ok.length === 1 ? "" : "s"} creado${ok.length === 1 ? "" : "s"}${fallidos.length ? ` · ${fallidos.length} con error` : ""}</h2>
-    <p class="muted"><b>Guardá estas contraseñas ahora:</b> no se vuelven a mostrar. Cada persona debe cambiarla la primera vez que ingresa. Descargá la lista para repartirla.</p>
-    <div class="mat-tabla-wrap bulk-previa"><table class="mat-tabla"><thead><tr><th>Nombre</th><th>Rol</th><th>Nivel</th><th>Usuario</th><th>Contraseña temporal</th></tr></thead><tbody>
+    <p class="muted"><b>Guardá estas contraseñas ahora:</b> no se vuelven a mostrar. Descargá la lista para repartirla a cada persona.</p>
+    <div class="mat-tabla-wrap bulk-previa"><table class="mat-tabla"><thead><tr><th>Nombre</th><th>Rol</th><th>Nivel</th><th>Usuario</th><th>Contraseña</th></tr></thead><tbody>
       ${resultados.map((r) => r.ok
         ? `<tr><td>${escaparHTML(r.apellido)}, ${escaparHTML(r.nombre)}</td><td>${escaparHTML(ROL_ETIQUETAS[r.rol] || r.rol)}</td><td>${escaparHTML(r.nivel || "—")}</td><td><code>${escaparHTML(r.email)}</code></td><td><code>${escaparHTML(r.password)}</code></td></tr>`
         : `<tr class="bulk-error"><td>${escaparHTML(r.apellido)}, ${escaparHTML(r.nombre)}</td><td colspan="4">${escaparHTML(r.error)}</td></tr>`).join("")}

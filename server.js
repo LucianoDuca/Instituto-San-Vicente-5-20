@@ -588,7 +588,7 @@ app.post("/api/admin/create-user", soloAdmin, async (req, res) => {
       nivel: limpiarTexto(req.body.nivel),
       cargo: limpiarTexto(req.body.cargo),
       observaciones: limpiarTexto(req.body.observaciones),
-      must_change_password: true
+      must_change_password: false
     };
 
     const { data, error } = await supabaseAdmin.auth.admin.createUser({
@@ -731,7 +731,7 @@ app.patch("/api/admin/users/:id/password", soloAdmin, async (req, res) => {
     await supabaseAdmin
       .from("profiles")
       .update({
-        must_change_password: true
+        must_change_password: false
       })
       .eq("id", id);
 
@@ -1236,54 +1236,6 @@ app.delete("/api/admin/announcements/:id", adminODirectivo, async (req, res) => 
     if (error) {
       return res.status(500).json({
         error: error.message
-      });
-    }
-
-    return res.json({
-      ok: true
-    });
-
-  } catch (error) {
-    return res.status(500).json({
-      error: error.message
-    });
-  }
-});
-
-/* CAMBIO OBLIGATORIO DE CONTRASEÑA */
-
-app.patch("/api/change-password", usuarioLogueado, async (req, res) => {
-  try {
-    const password = String(req.body.password || "").trim();
-
-    if (!password || password.length < 6) {
-      return res.status(400).json({
-        error: "La contraseña debe tener mínimo 6 caracteres"
-      });
-    }
-
-    const { error: authError } =
-      await supabaseAdmin.auth.admin.updateUserById(
-        req.user.id,
-        { password }
-      );
-
-    if (authError) {
-      return res.status(500).json({
-        error: authError.message
-      });
-    }
-
-    const { error: profileError } = await supabaseAdmin
-      .from("profiles")
-      .update({
-        must_change_password: false
-      })
-      .eq("id", req.user.id);
-
-    if (profileError) {
-      return res.status(500).json({
-        error: profileError.message
       });
     }
 

@@ -642,7 +642,7 @@ function registrarLibretas(app, { supabaseAdmin, usuarioLogueado, soloAdmin, nom
           area: "",
           cargo: "",
           observaciones: "",
-          must_change_password: true
+          must_change_password: false
         });
         if (errorPerfil) {
           await supabaseAdmin.auth.admin.deleteUser(data.user.id);

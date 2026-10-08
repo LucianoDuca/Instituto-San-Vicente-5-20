@@ -70,11 +70,6 @@ loginForm.addEventListener("submit", async function (event) {
 
     const profile = await obtenerPerfil();
 
-    if (profile.must_change_password) {
-      window.location.href = "change-password.html";
-      return;
-    }
-
     mostrarLoginEstado("Ingreso correcto. Redirigiendo...", "success");
 
     setTimeout(() => {
