@@ -76,7 +76,22 @@
             <button id="reloadUsersBtn">Actualizar</button>
           </div>
         </div>
-        <div id="usersContainer" class="list-container"></div>
+        <div class="users-toolbar">
+          <input id="userSearch" class="search-input" type="search" placeholder="Buscar por nombre, apellido o usuario..." autocomplete="off" />
+          <select id="userRolFilter" aria-label="Filtrar por rol">
+            <option value="">Todos los roles</option>
+            <option value="admin">Administradores</option>
+            <option value="directivo">Directivos</option>
+            <option value="docente">Docentes</option>
+          </select>
+          <select id="userNivelFilter" aria-label="Filtrar por nivel">
+            <option value="">Todos los niveles</option>
+            <option value="Inicial">Inicial</option>
+            <option value="Primario">Primario</option>
+            <option value="Secundario">Secundario</option>
+          </select>
+        </div>
+        <div id="usersContainer" class="users-sheet"></div>
       </div>
 
       <div class="modal-overlay" id="createUserCard">

@@ -238,3 +238,33 @@ table.mat-tabla{border-collapse:separate;border-spacing:0;width:100%;font-size:.
 .bulk-error td{background:#fff1f1!important;color:#b81424}
 .mat-tabla code{background:#eef3f8;padding:2px 6px;border-radius:6px;user-select:all}
 @media(max-width:700px){.modal-box.ancho{padding:18px}.mat-tabla td.mat-nombre{min-width:150px}}
+
+/* Usuarios como planilla */
+.users-toolbar{display:grid;grid-template-columns:minmax(0,1fr) 190px 190px;gap:10px;margin-bottom:14px}
+.users-toolbar .search-input,.users-toolbar select{margin:0;border:1px solid rgba(11,53,88,.16);border-radius:14px;padding:12px 14px;font:inherit;background:#f8fbfd;outline:none;width:100%}
+.users-toolbar select{cursor:pointer}
+.users-sheet{overflow:auto;max-height:calc(100vh - 330px);min-height:200px;border:1px solid rgba(11,53,88,.12);border-radius:16px;background:#fff}
+table.users-table{border-collapse:separate;border-spacing:0;width:100%;font-size:.88rem}
+.users-table th,.users-table td{padding:9px 12px;border-bottom:1px solid #edf2f6;text-align:left;white-space:nowrap;vertical-align:middle}
+.users-table thead th{position:sticky;top:0;z-index:2;background:#0b3558;color:#fff;font-size:.78rem;letter-spacing:.03em}
+.users-table tbody tr:nth-child(even) td{background:#fafcfe}
+.users-table tbody tr:hover td{background:#eaf3fb}
+.users-table .u-num{width:44px;color:#8fa0b0;font-weight:700;text-align:center}
+.users-table th.u-num{color:#c9dcec}
+.users-table .u-ap{font-weight:800;color:#0b3558}
+.users-table .u-user{color:#44596e;max-width:240px;overflow:hidden;text-overflow:ellipsis}
+.users-table .u-fecha{color:#66798b}
+.u-orden{border:0;background:transparent;color:inherit;font:inherit;font-weight:700;cursor:pointer;padding:0;letter-spacing:inherit}
+.u-orden:hover,.u-orden.activo{text-decoration:underline;text-underline-offset:3px}
+.u-rol{display:inline-block;padding:4px 10px;border-radius:999px;font-size:.74rem;font-weight:800;background:#eaf0f5;color:#30485f}
+.u-rol-admin{background:rgba(193,18,31,.12);color:#c1121f}
+.u-rol-directivo{background:#fff3d6;color:#8a5a00}
+.u-rol-docente{background:#e1f1e6;color:#16703a}
+.u-sin{color:#a5b3c0}.u-todas{color:#66798b;font-size:.82rem}
+.u-chip{border:0;border-radius:999px;padding:5px 12px;font:inherit;font-size:.78rem;font-weight:800;cursor:pointer;background:#dcebf7;color:#0b4a78}
+.u-chip:hover{background:#c9e0f2}
+.u-chip.vacio{background:#fff3d6;color:#8a5a00}
+.users-table .u-acc{white-space:nowrap;text-align:right}
+.users-table .u-acc button{border:0;border-radius:10px;padding:7px 12px;font:inherit;font-size:.78rem;font-weight:800;cursor:pointer;margin-left:6px}
+.users-vacio{padding:26px;text-align:center}
+@media(max-width:760px){.users-toolbar{grid-template-columns:1fr 1fr}.users-toolbar .search-input{grid-column:1/-1}.users-sheet{max-height:none}}

@@ -196,78 +196,147 @@ function generarUsuarioDesdeNombre(nombre, apellido) {
   return [normalizar(nombre), normalizar(apellido)].filter(Boolean).join(".");
 }
 
+const usuarioEstado = { orden: "apellido", asc: true, q: "", rol: "", nivel: "" };
+let conteoAsignaciones = {};
+
+async function cargarConteoAsignaciones() {
+  try {
+    const response = await fetchAuth("/api/admin/libretas/asignaciones-resumen");
+    if (!response) return;
+    const result = await response.json();
+    conteoAsignaciones = response.ok ? result.conteo || {} : {};
+  } catch (error) {
+    conteoAsignaciones = {};
+  }
+}
+
 async function cargarUsuarios() {
   try {
     usersContainer.innerHTML = skeletonCards(3);
     usersCount.textContent = "";
 
-    const response = await fetchAuth("/api/admin/users");
+    const [response] = await Promise.all([fetchAuth("/api/admin/users"), cargarConteoAsignaciones()]);
     if (!response) return;
     const result = await response.json();
 
     if (!response.ok) throw new Error(result.error || "Error al cargar usuarios");
 
     usuariosAdmin = Array.isArray(result) ? result : [];
-
-    if (!usuariosAdmin.length) {
-      usersContainer.innerHTML = "<p class='muted'>No hay usuarios creados todavía.</p>";
-      return;
-    }
-
-    usersCount.textContent = `(${usuariosAdmin.length})`;
-    usersContainer.innerHTML = "";
-
-    const cantidadAdmins = usuariosAdmin.filter((u) => u.rol === "admin").length;
-
-    usuariosAdmin.forEach((user) => {
-      const esUnicoAdmin = user.rol === "admin" && cantidadAdmins <= 1;
-
-      const card = document.createElement("article");
-      card.className = "item-card";
-      card.innerHTML = `
-        <div class="user-avatar">
-          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 12c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm0 2c-3.33 0-10 1.67-10 5v3h20v-3c0-3.33-6.67-5-10-5z"/></svg>
-        </div>
-        <div class="user-info">
-          <h3>${escaparHTML(user.nombre) || "Sin nombre"} ${escaparHTML(user.apellido)}</h3>
-          <p>${escaparHTML(user.email) || "Sin email"}</p>
-          <div class="meta">
-            <span class="role">${escaparHTML(ROL_ETIQUETAS[user.rol] || user.rol) || "sin rol"}</span>
-            ${user.nivel ? `<span>${escaparHTML(user.nivel)}</span>` : ""}
-          </div>
-          <p class="item-date">Alta: ${formatFecha(user.created_at)}</p>
-        </div>
-        <div class="item-actions">
-          ${user.rol === "docente" ? `<button class="mat-btn" data-id="${escaparHTML(user.id)}">Materias</button>` : ""}
-          <button class="edit-btn" data-id="${escaparHTML(user.id)}">Editar</button>
-          ${esUnicoAdmin
-            ? `<button class="delete-btn" disabled title="Es el único administrador del sistema, no se puede eliminar.">Borrar</button>`
-            : `<button class="delete-btn" data-id="${escaparHTML(user.id)}">Borrar</button>`}
-        </div>
-      `;
-      usersContainer.appendChild(card);
-    });
-
-    document.querySelectorAll(".edit-btn").forEach((button) => {
-      button.addEventListener("click", () => {
-        editarUsuario(button.dataset.id);
-      });
-    });
-
-    document.querySelectorAll(".mat-btn").forEach((button) => {
-      button.addEventListener("click", () => abrirAsignaciones(button.dataset.id));
-    });
-
-    document.querySelectorAll(".delete-btn").forEach((button) => {
-      button.addEventListener("click", async () => {
-        await borrarUsuario(button.dataset.id);
-      });
-    });
-
+    pintarUsuarios();
   } catch (error) {
-    usersContainer.innerHTML = `<p class="status error">${error.message}</p>`;
+    usersContainer.innerHTML = `<p class="status error">${escaparHTML(error.message)}</p>`;
   }
 }
+
+const ROL_ORDEN = { admin: 0, directivo: 1, docente: 2 };
+
+function valorOrden(user, campo) {
+  if (campo === "rol") return ROL_ORDEN[user.rol] ?? 9;
+  if (campo === "alta") return user.created_at || "";
+  if (campo === "usuario") return String(user.email || "").toLowerCase();
+  return String(user[campo] || "").toLowerCase();
+}
+
+function usuariosFiltrados() {
+  const q = sinTildes(usuarioEstado.q);
+  const lista = usuariosAdmin.filter((u) => {
+    if (usuarioEstado.rol && u.rol !== usuarioEstado.rol) return false;
+    if (usuarioEstado.nivel && u.nivel !== usuarioEstado.nivel) return false;
+    if (!q) return true;
+    return sinTildes(`${u.apellido} ${u.nombre} ${u.nombre} ${u.apellido} ${u.email}`).includes(q);
+  });
+  const dir = usuarioEstado.asc ? 1 : -1;
+  return lista.sort((a, b) => {
+    const x = valorOrden(a, usuarioEstado.orden);
+    const y = valorOrden(b, usuarioEstado.orden);
+    if (x < y) return -dir;
+    if (x > y) return dir;
+    return `${a.apellido} ${a.nombre}`.localeCompare(`${b.apellido} ${b.nombre}`, "es", { sensitivity: "base" });
+  });
+}
+
+function celdaMaterias(user) {
+  if (user.rol !== "docente") return `<span class="u-todas">Todas</span>`;
+  if (!user.nivel) return `<span class="u-sin">Sin nivel</span>`;
+  const n = conteoAsignaciones[user.id] || 0;
+  return n
+    ? `<button type="button" class="mat-btn u-chip" data-id="${escaparHTML(user.id)}" title="Ver o cambiar las materias">${n} materia${n === 1 ? "" : "s"}</button>`
+    : `<button type="button" class="mat-btn u-chip vacio" data-id="${escaparHTML(user.id)}" title="Asignar materias">Asignar</button>`;
+}
+
+function pintarUsuarios() {
+  const total = usuariosAdmin.length;
+  if (!total) {
+    usersCount.textContent = "";
+    usersContainer.innerHTML = "<p class='muted'>No hay usuarios creados todavía.</p>";
+    return;
+  }
+
+  const lista = usuariosFiltrados();
+  usersCount.textContent = lista.length === total ? `(${total})` : `(${lista.length} de ${total})`;
+
+  const cantidadAdmins = usuariosAdmin.filter((u) => u.rol === "admin").length;
+  const flecha = (campo) => (usuarioEstado.orden === campo ? (usuarioEstado.asc ? " ▲" : " ▼") : "");
+  const th = (campo, etiqueta, clase = "") =>
+    `<th class="${clase}"><button type="button" class="u-orden${usuarioEstado.orden === campo ? " activo" : ""}" data-orden="${campo}">${etiqueta}${flecha(campo)}</button></th>`;
+
+  const filas = lista.map((user, i) => {
+    const esUnicoAdmin = user.rol === "admin" && cantidadAdmins <= 1;
+    return `<tr>
+      <td class="u-num">${i + 1}</td>
+      <td class="u-ap">${escaparHTML(user.apellido) || "—"}</td>
+      <td>${escaparHTML(user.nombre) || "—"}</td>
+      <td class="u-user" title="${escaparHTML(user.email)}">${escaparHTML(user.email) || "—"}</td>
+      <td><span class="u-rol u-rol-${escaparHTML(user.rol)}">${escaparHTML(ROL_ETIQUETAS[user.rol] || user.rol) || "Sin rol"}</span></td>
+      <td>${user.nivel ? escaparHTML(user.nivel) : '<span class="u-sin">—</span>'}</td>
+      <td>${celdaMaterias(user)}</td>
+      <td class="u-fecha">${formatFecha(user.created_at)}</td>
+      <td class="u-acc">
+        <button type="button" class="edit-btn" data-id="${escaparHTML(user.id)}">Editar</button>
+        ${esUnicoAdmin
+          ? `<button type="button" class="delete-btn" disabled title="Es el único administrador del sistema, no se puede eliminar.">Borrar</button>`
+          : `<button type="button" class="delete-btn" data-id="${escaparHTML(user.id)}">Borrar</button>`}
+      </td>
+    </tr>`;
+  }).join("");
+
+  usersContainer.innerHTML = lista.length
+    ? `<table class="users-table">
+        <thead><tr><th class="u-num">#</th>${th("apellido", "Apellido")}${th("nombre", "Nombre")}${th("usuario", "Usuario")}${th("rol", "Rol")}${th("nivel", "Nivel")}<th>Materias</th>${th("alta", "Alta")}<th></th></tr></thead>
+        <tbody>${filas}</tbody>
+      </table>`
+    : "<p class='muted users-vacio'>Ningún usuario coincide con la búsqueda.</p>";
+}
+
+usersContainer.addEventListener("click", (event) => {
+  const orden = event.target.closest("[data-orden]");
+  if (orden) {
+    const campo = orden.dataset.orden;
+    usuarioEstado.asc = usuarioEstado.orden === campo ? !usuarioEstado.asc : true;
+    usuarioEstado.orden = campo;
+    pintarUsuarios();
+    return;
+  }
+  const editar = event.target.closest(".edit-btn");
+  if (editar) return editarUsuario(editar.dataset.id);
+  const borrar = event.target.closest(".delete-btn[data-id]");
+  if (borrar) return borrarUsuario(borrar.dataset.id);
+  const materias = event.target.closest(".mat-btn");
+  if (materias) abrirAsignaciones(materias.dataset.id);
+});
+
+document.getElementById("userSearch").addEventListener("input", (event) => {
+  usuarioEstado.q = event.target.value;
+  pintarUsuarios();
+});
+document.getElementById("userRolFilter").addEventListener("change", (event) => {
+  usuarioEstado.rol = event.target.value;
+  pintarUsuarios();
+});
+document.getElementById("userNivelFilter").addEventListener("change", (event) => {
+  usuarioEstado.nivel = event.target.value;
+  pintarUsuarios();
+});
 
 function actualizarCampoNivel() {
   const esDocente = createUserForm.rol.value === "docente";
@@ -511,6 +580,7 @@ async function abrirAsignaciones(id) {
       const result = await response.json();
       if (!response.ok) throw new Error(result.error || "No se pudieron guardar las materias");
       cerrar();
+      cargarUsuarios();
       alert(`Listo: ${nombre} tiene ${result.total} materia${result.total === 1 ? "" : "s"} asignada${result.total === 1 ? "" : "s"}.`);
     } catch (error) {
       e.target.disabled = false;

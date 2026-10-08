@@ -45,6 +45,17 @@ function ordenarAlumnos(lista) {
 }
 
 function registrarLibretas(app, { supabaseAdmin, usuarioLogueado, soloAdmin, nombreCompleto }) {
+  // Supabase devuelve como mucho 1000 filas por consulta: se lee por páginas para no perder datos.
+  async function leerTodo(armar) {
+    const filas = [];
+    for (let desde = 0; ; desde += 1000) {
+      const { data, error } = await armar().range(desde, desde + 999);
+      if (error) return { data: null, error };
+      filas.push(...data);
+      if (data.length < 1000) return { data: filas, error: null };
+    }
+  }
+
   /* ---------- Permisos: la dirección ve todo; cada docente solo lo que le asignaron ---------- */
 
   async function permisosDe(req) {
@@ -273,10 +284,11 @@ function registrarLibretas(app, { supabaseAdmin, usuarioLogueado, soloAdmin, nom
 
       const notas = {};
       if (alumnos.length) {
-        const { data: filas, error: notasError } = await supabaseAdmin
+        const { data: filas, error: notasError } = await leerTodo(() => supabaseAdmin
           .from("lib_notas")
           .select("alumno_id, clave, datos, updated_at, updated_by_name")
-          .in("alumno_id", alumnos.map((a) => a.id));
+          .in("alumno_id", alumnos.map((a) => a.id))
+          .order("id"));
 
         if (notasError) return res.status(500).json({ error: notasError.message });
 
@@ -511,6 +523,18 @@ function registrarLibretas(app, { supabaseAdmin, usuarioLogueado, soloAdmin, nom
       if (p.error) return res.status(500).json({ error: p.error });
       if (p.total) return res.json({ total: true, asignaciones: [] });
       return res.json({ total: false, asignaciones: p.filas });
+    } catch (error) {
+      return res.status(500).json({ error: error.message });
+    }
+  });
+
+  app.get("/api/admin/libretas/asignaciones-resumen", soloAdmin, async (req, res) => {
+    try {
+      const { data, error } = await leerTodo(() => supabaseAdmin.from("lib_asignaciones").select("user_id").order("id"));
+      if (error) return res.status(500).json({ error: error.message });
+      const conteo = {};
+      data.forEach((f) => (conteo[f.user_id] = (conteo[f.user_id] || 0) + 1));
+      return res.json({ conteo });
     } catch (error) {
       return res.status(500).json({ error: error.message });
     }
