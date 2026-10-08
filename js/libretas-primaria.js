@@ -96,22 +96,22 @@
 
   function colsConcepto(opciones) {
     return [
-      { key: "t1", label: "1º Trim.", grupo: T, tipo: "concepto", opciones },
-      { key: "t2", label: "2º Trim.", grupo: T, tipo: "concepto", opciones },
-      { key: "t3", label: "3º Trim.", grupo: T, tipo: "concepto", opciones },
+      { key: "t1", label: "1º Trim.", grupo: T, tipo: "concepto", opciones, resumen: true },
+      { key: "t2", label: "2º Trim.", grupo: T, tipo: "concepto", opciones, resumen: true },
+      { key: "t3", label: "3º Trim.", grupo: T, tipo: "concepto", opciones, resumen: true },
       { key: "dic", label: "Dic.", grupo: R, tipo: "concepto", opciones },
       { key: "feb", label: "Feb.", grupo: R, tipo: "concepto", opciones },
-      { key: "fin", label: "Nota final", grupo: F, tipo: "concepto", opciones }
+      { key: "fin", label: "Nota final", grupo: F, tipo: "concepto", opciones, resumen: true }
     ];
   }
 
   const COLS_NUM = [
-    { key: "t1", label: "1º Trim.", grupo: T, tipo: "nota", guion: true, aprobado: APROBADO },
-    { key: "t2", label: "2º Trim.", grupo: T, tipo: "nota", guion: true, aprobado: APROBADO },
-    { key: "t3", label: "3º Trim.", grupo: T, tipo: "nota", guion: true, aprobado: APROBADO },
+    { key: "t1", label: "1º Trim.", grupo: T, tipo: "nota", guion: true, aprobado: APROBADO, resumen: true },
+    { key: "t2", label: "2º Trim.", grupo: T, tipo: "nota", guion: true, aprobado: APROBADO, resumen: true },
+    { key: "t3", label: "3º Trim.", grupo: T, tipo: "nota", guion: true, aprobado: APROBADO, resumen: true },
     { key: "dic", label: "Dic.", grupo: R, tipo: "nota", aprobado: APROBADO },
     { key: "feb", label: "Feb.", grupo: R, tipo: "nota", aprobado: APROBADO },
-    { key: "fin", label: "Nota final", grupo: F, tipo: "nota", auto: "finAuto", decimales: 2, aprobado: APROBADO }
+    { key: "fin", label: "Nota final", grupo: F, tipo: "nota", auto: "finAuto", decimales: 2, aprobado: APROBADO, resumen: true }
   ];
 
   const COLUMNAS = {
@@ -122,9 +122,9 @@
       { key: "t1", label: "1º Trim.", grupo: T, tipo: "nota", aprobado: APROBADO },
       { key: "t2", label: "2º Trim.", grupo: T, tipo: "nota", aprobado: APROBADO },
       { key: "t3", label: "3º Trim.", grupo: T, tipo: "nota", aprobado: APROBADO },
-      { key: "c1", label: "1º Trim.", grupo: "Se muestra como", tipo: "derivado", decimales: null },
-      { key: "c2", label: "2º Trim.", grupo: "Se muestra como", tipo: "derivado", decimales: null },
-      { key: "c3", label: "3º Trim.", grupo: "Se muestra como", tipo: "derivado", decimales: null },
+      { key: "c1", label: "1º Trim.", grupo: "Se muestra como", tipo: "derivado", decimales: null, resumen: true },
+      { key: "c2", label: "2º Trim.", grupo: "Se muestra como", tipo: "derivado", decimales: null, resumen: true },
+      { key: "c3", label: "3º Trim.", grupo: "Se muestra como", tipo: "derivado", decimales: null, resumen: true },
       { key: "dic", label: "Dic.", grupo: R, tipo: "concepto", opciones: CONCEPTOS },
       { key: "feb", label: "Feb.", grupo: R, tipo: "concepto", opciones: CONCEPTOS },
       { key: "fin", label: "Nota final", grupo: F, tipo: "concepto", opciones: CONCEPTOS }

@@ -67,7 +67,7 @@ table.lb-grid{border-collapse:separate;border-spacing:0;width:100%;font-size:.86
 .lb-grid thead tr:nth-child(1) th{top:0}
 .lb-grid thead tr:nth-child(2) th{top:31px;background:#123d61}
 .lb-grid th.lb-alumno,.lb-grid td.lb-alumno{position:sticky;left:0;text-align:left;min-width:230px;background:#fff;z-index:1;font-weight:700;color:#0b3558;box-shadow:2px 0 0 #edf2f6}
-.lb-grid thead th.lb-alumno{z-index:3;background:#0b3558}
+.lb-grid thead th.lb-alumno{z-index:3;background:#0b3558;color:#fff}
 .lb-grid tbody tr:nth-child(even) td{background:#fafcfe}
 .lb-grid tbody tr:hover td,.lb-grid tbody tr:focus-within td{background:#eaf3fb}
 .lb-num{color:#8fa0b0;font-weight:700;margin-right:8px;font-size:.74rem;display:inline-block;min-width:16px}
@@ -499,3 +499,12 @@ table.lb-grid{border-collapse:separate;border-spacing:0;width:100%;font-size:.86
   .lb-rub td.val::before{content:attr(data-etapa);display:block;font-size:.7rem;font-weight:700;color:#66798b;margin-bottom:3px}
   .lb-rub .lb-in,.lb-rub .lb-in.lb-sel{width:100%;height:46px}
 }
+
+/* Revisar curso */
+.lb-res td{font-weight:700;color:#0b3558;min-width:44px}
+.lb-res td.lb-res-vacio{color:#b7c3ce;font-weight:400}
+.lb-res td.lb-res-baja{color:#b81424;font-weight:800}
+.lb-res td.lb-res-ok{color:#16803d}
+.lb-res td.lb-res-prog{background:#f1f6fa!important;font-size:.8rem}
+.lb-res td .lb-btn{white-space:nowrap}
+.lb-res thead th[rowspan]{vertical-align:middle}

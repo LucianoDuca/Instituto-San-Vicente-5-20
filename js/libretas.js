@@ -15,6 +15,7 @@
     curso: "1",
     vista: "notas",
     categoria: "materias",
+    catResumen: null,
     hoja: null,
     alumnos: [],
     notas: {},
@@ -107,6 +108,7 @@
   const ICONO = {
     notas: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>',
     alumnos: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.9"/><path d="M16 3.1a4 4 0 0 1 0 7.8"/></svg>',
+    resumen: '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 10h18M9 4v16M15 4v16"/></svg>',
     libretas: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z"/><path d="M14 2v6h6"/><path d="M8 13h8M8 17h5"/></svg>',
     check: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>',
     descargar: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M7 10l5 5 5-5"/><path d="M12 15V3"/></svg>',
@@ -368,7 +370,7 @@
     document.getElementById("lbAnio").innerHTML = anios.map((a) => `<option value="${a}"${a === estado.anio ? " selected" : ""}>Año ${a}</option>`).join("");
 
     document.getElementById("lbVistas").innerHTML = [
-      ["notas", "Cargar notas", ICONO.notas], ["alumnos", "Estudiantes", ICONO.alumnos], ["libretas", "Libretas", ICONO.libretas]
+      ["notas", "Cargar notas", ICONO.notas], ["alumnos", "Estudiantes", ICONO.alumnos], ["resumen", "Revisar curso", ICONO.resumen], ["libretas", "Libretas", ICONO.libretas]
     ].map(([id, label, icono]) => `<button role="tab" class="lb-tab${estado.vista === id ? " active" : ""}" data-accion="vista" data-valor="${id}">${icono}<span>${label}</span></button>`).join("");
   }
 
@@ -393,6 +395,7 @@
       return;
     }
     if (estado.vista === "alumnos") return renderAlumnos(cont);
+    if (estado.vista === "resumen") return renderResumen(cont);
     if (estado.vista === "libretas") return renderLibretas(cont);
     return renderNotas(cont);
   }
@@ -1018,6 +1021,14 @@
     } else if (accion === "ver-libreta") {
       estado.alumnoLibreta = valor;
       renderContenido();
+    } else if (accion === "cat-resumen") {
+      estado.catResumen = valor;
+      renderContenido();
+    } else if (accion === "libreta-desde-resumen") {
+      estado.alumnoLibreta = valor;
+      estado.vista = "libretas";
+      render();
+      window.scrollTo({ top: 0, behavior: "smooth" });
     } else if (accion === "pdf-alumno") {
       await exportarPdf([estado.alumnoLibreta], btn);
     } else if (accion === "pdf-curso") {
@@ -1292,6 +1303,97 @@
       toast(error.message, "err");
     }
   }
+
+  /* ---------- Vista: revisar curso (todos los estudiantes con todas las notas) ---------- */
+
+  function valorResumen(col, datos, calc) {
+    if (col.tipo === "derivado") return valorDerivado(col, calc);
+    const crudo = datos[col.key];
+    if (crudo !== undefined && crudo !== null && String(crudo) !== "") return String(crudo);
+    return col.auto ? formatoAuto(col, calc[col.auto]) : "";
+  }
+
+  function celdaResumen(col, datos, calc) {
+    const v = valorResumen(col, datos, calc);
+    if (v === "") return `<td class="lb-res-vacio">·</td>`;
+    let baja = false;
+    if (col.tipo === "concepto") baja = v === "NR" || v === "IP";
+    else {
+      const n = parseFloat(String(v).replace(",", "."));
+      baja = !Number.isNaN(n) && n < minimoAprobado(col);
+    }
+    return `<td class="${baja ? "lb-res-baja" : ""}">${esc(v)}</td>`;
+  }
+
+  function planillasConDatos(alumnoId) {
+    const mapa = estado.notas[alumnoId] || {};
+    const hojas = planillas().flatMap((c) => c.hojas);
+    const con = hojas.filter((h) => mapa[h.clave] && Object.keys(mapa[h.clave]).length).length;
+    return { con, total: hojas.length };
+  }
+
+  function renderResumen(cont) {
+    if (!estado.alumnos.length) {
+      cont.innerHTML = sinAlumnos();
+      return;
+    }
+    const cats = planillas();
+    if (!cats.some((c) => c.id === estado.catResumen)) estado.catResumen = cats[0].id;
+    const cat = cats.find((c) => c.id === estado.catResumen);
+
+    const bloques = cat.hojas.map((h) => {
+      const marcadas = core.columnasDe(h.tipo).filter((c) => c.resumen);
+      return { hoja: h, cols: marcadas, simple: !marcadas.length };
+    });
+
+    const cab1 = bloques.map((b) => `<th colspan="${b.simple ? 1 : b.cols.length}">${esc(b.hoja.label)}</th>`).join("");
+    const cab2 = bloques.map((b) => b.simple
+      ? `<th>Carga</th>`
+      : b.cols.map((c) => `<th>${esc(c.label)}</th>`).join("")).join("");
+
+    const filas = estado.alumnos.map((a, i) => {
+      const mapa = estado.notas[a.id] || {};
+      const celdas = bloques.map((b) => {
+        const datos = mapa[b.hoja.clave] || {};
+        if (b.simple) {
+          const cols = core.columnasDe(b.hoja.tipo).filter((c) => c.tipo !== "derivado");
+          const lleno = cols.filter((c) => datos[c.key] !== undefined && String(datos[c.key]) !== "").length;
+          if (!lleno) return `<td class="lb-res-vacio">·</td>`;
+          return `<td class="${lleno === cols.length ? "lb-res-ok" : ""}">${lleno === cols.length ? "✓" : `${lleno}/${cols.length}`}</td>`;
+        }
+        const calc = core.calcularClave(b.hoja.clave, datos, mapa, estado.nivel, estado.curso);
+        return b.cols.map((c) => celdaResumen(c, datos, calc)).join("");
+      }).join("");
+      const p = planillasConDatos(a.id);
+      return `<tr><td class="lb-alumno"><span class="lb-num">${i + 1}</span>${esc(a.apellido)}, ${esc(a.nombre)}</td>${celdas}
+        <td class="lb-res-prog" title="Planillas con datos">${p.con}/${p.total}</td>
+        <td><button class="lb-btn chico sec" data-accion="libreta-desde-resumen" data-valor="${a.id}">Ver libreta</button></td></tr>`;
+    }).join("");
+
+    const chips = cats.map((c) =>
+      `<button class="lb-seg-btn${c.id === estado.catResumen ? " active" : ""}" data-accion="cat-resumen" data-valor="${c.id}">${esc(c.label)}</button>`
+    ).join("");
+
+    cont.innerHTML = `
+      <div class="lb-card">
+        <div class="lb-sheet-head">
+          <div>
+            <h3>Revisar el curso completo</h3>
+            <p class="lb-progress-txt">Todos los estudiantes con las notas que cargó cada docente. Revisá que esté todo bien y después generá las libretas.</p>
+          </div>
+          <button class="lb-btn verde" data-accion="pdf-curso">${ICONO.descargar}<span>Generar libretas del curso (PDF)</span></button>
+        </div>
+        <div class="lb-cats">${chips}</div>
+        <p class="lb-hint">${ICONO.info}<span>Los puntos <b>·</b> indican que falta cargar. Las notas en rojo están desaprobadas. Para corregir una nota, volvé a <b>Cargar notas</b>.</span></p>
+        <div class="lb-grid-wrap"><table class="lb-grid lb-res">
+          <thead><tr><th class="lb-alumno" rowspan="2">Estudiante</th>${cab1}<th rowspan="2">Planillas</th><th rowspan="2"></th></tr><tr>${cab2}</tr></thead>
+          <tbody>${filas}</tbody>
+        </table></div>
+      </div>`;
+    const filaCats = cont.querySelector(".lb-cats");
+    if (filaCats) centrarActivo(filaCats);
+  }
+
 
   /* ---------- Vista: libretas ---------- */
 

@@ -95,33 +95,33 @@
       { key: "p1", label: "PROCON", grupo: G1, tipo: "nota" },
       { key: "e11", label: "EV1", grupo: G1, tipo: "nota", sub: "a11" },
       { key: "e12", label: "EV2", grupo: G1, tipo: "nota", sub: "a12" },
-      { key: "pm1", label: "Promedio", grupo: G1, tipo: "derivado", decimales: 1 },
+      { key: "pm1", label: "Promedio", grupo: G1, tipo: "derivado", decimales: 1, resumen: true },
       { key: "p2", label: "PROCON", grupo: G2, tipo: "nota" },
       { key: "e21", label: "EV1", grupo: G2, tipo: "nota", sub: "a21" },
       { key: "e22", label: "EV2", grupo: G2, tipo: "nota", sub: "a22" },
-      { key: "pm2", label: "Promedio", grupo: G2, tipo: "derivado", decimales: 2 },
+      { key: "pm2", label: "Promedio", grupo: G2, tipo: "derivado", decimales: 2, resumen: true },
       { key: "dic", label: "Dic.", grupo: "Mesas de exámenes", tipo: "nota" },
       { key: "feb", label: "Feb.", grupo: "Mesas de exámenes", tipo: "nota" },
-      { key: "fin", label: "Nota final", grupo: "Final", tipo: "nota", auto: "finAuto", decimales: 2 }
+      { key: "fin", label: "Nota final", grupo: "Final", tipo: "nota", auto: "finAuto", decimales: 2, resumen: true }
     ],
     "ing-habilidad": [
       { key: "p1", label: "PROCON", grupo: G1, tipo: "nota" },
-      { key: "n1", label: "Nota", grupo: G1, tipo: "nota" },
+      { key: "n1", label: "Nota", grupo: G1, tipo: "nota", resumen: true },
       { key: "p2", label: "PROCON", grupo: G2, tipo: "nota" },
-      { key: "n2", label: "Nota", grupo: G2, tipo: "nota" }
+      { key: "n2", label: "Nota", grupo: G2, tipo: "nota", resumen: true }
     ],
     "ing-general": [
-      { key: "avg1", label: "Average", grupo: G1, tipo: "derivado", decimales: 2 },
+      { key: "avg1", label: "Average", grupo: G1, tipo: "derivado", decimales: 2, resumen: true },
       { key: "com1", label: "Comentario", grupo: G1, tipo: "texto" },
-      { key: "avg2", label: "Average", grupo: G2, tipo: "derivado", decimales: 2 },
+      { key: "avg2", label: "Average", grupo: G2, tipo: "derivado", decimales: 2, resumen: true },
       { key: "com2", label: "Comentario", grupo: G2, tipo: "texto" },
       { key: "dic", label: "Dic.", grupo: "Mesas de exámenes", tipo: "nota" },
       { key: "feb", label: "Feb.", grupo: "Mesas de exámenes", tipo: "nota" },
-      { key: "fin", label: "Nota final", grupo: "Final", tipo: "nota", auto: "finAuto", decimales: 2 }
+      { key: "fin", label: "Nota final", grupo: "Final", tipo: "nota", auto: "finAuto", decimales: 2, resumen: true }
     ],
     electivo: [
-      { key: "p1", label: "Nota", grupo: G1, tipo: "nota" },
-      { key: "p2", label: "Nota", grupo: G2, tipo: "nota" }
+      { key: "p1", label: "Nota", grupo: G1, tipo: "nota", resumen: true },
+      { key: "p2", label: "Nota", grupo: G2, tipo: "nota", resumen: true }
     ],
     asistencia: [
       { key: "ij1", label: "Inasist. justif.", grupo: G1, tipo: "entero" },
