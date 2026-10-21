@@ -425,10 +425,10 @@ const translations = {
     // ======= HIGH SCHOOL – NUEVO DISEÑO =======
     "highschool.info.label": "NIVEL",
     "highschool.info.intro": "Formamos jóvenes capaces de vivir los valores del respeto, usar responsablemente su libertad, pensar rigurosamente y ser protagonistas de su futuro.",
-    "highschool.info.stage": "<span class='dli'><img src='assets/img/icons/graduation.svg' alt=''></span><strong>Etapa:</strong> Nivel Secundario (1° a 5° año)",
+    "highschool.info.stage": "<span class='dli'><img src='assets/img/icons/graduation.svg' alt=''></span><strong>Etapa:</strong> Nivel Secundario (1° a 6° año)",
     "highschool.info.schedule": "<span class='dli'><img src='assets/img/icons/clock.svg' alt=''></span><strong>Horario:</strong> Lunes a viernes de 7:45 a 15:30 hs",
     "highschool.info.tutoring": "<span class='dli'><img src='assets/img/icons/clipboard.svg' alt=''></span><strong>Tutoría:</strong> Espacio de acompañamiento hasta las 16:00 hs",
-    "highschool.info.modality": "<span class='dli'><img src='assets/img/icons/interculturalidad.svg' alt=''></span><strong>Modalidad:</strong> Formación académica integral, autonomía y proyecto personal",
+    "highschool.info.modality": "<span class='dli'><img src='assets/img/icons/interculturalidad.svg' alt=''></span><strong>Modalidad:</strong> Bachiller en Ciencias Sociales y Naturales",
     "highschool.info.button": "Solicitá tu entrevista",
 
     "highschool.proposal.label": "NUESTRA PROPUESTA",
@@ -881,10 +881,10 @@ const translations = {
     // ======= HIGH SCHOOL – NEW DESIGN =======
     "highschool.info.label": "LEVEL",
     "highschool.info.intro": "We educate young people capable of living the values of respect, using their freedom responsibly, thinking rigorously and becoming protagonists of their future.",
-    "highschool.info.stage": "<span class='dli'><img src='assets/img/icons/graduation.svg' alt=''></span><strong>Stage:</strong> High School Level (1st to 5th year)",
+    "highschool.info.stage": "<span class='dli'><img src='assets/img/icons/graduation.svg' alt=''></span><strong>Stage:</strong> High School Level (1st to 6th year)",
     "highschool.info.schedule": "<span class='dli'><img src='assets/img/icons/clock.svg' alt=''></span><strong>Schedule:</strong> Monday to Friday from 7:45 AM to 3:30 PM",
     "highschool.info.tutoring": "<span class='dli'><img src='assets/img/icons/clipboard.svg' alt=''></span><strong>Tutoring:</strong> Support space until 4:00 PM",
-    "highschool.info.modality": "<span class='dli'><img src='assets/img/icons/interculturalidad.svg' alt=''></span><strong>Modality:</strong> Comprehensive academic education, autonomy and personal project development",
+    "highschool.info.modality": "<span class='dli'><img src='assets/img/icons/interculturalidad.svg' alt=''></span><strong>Modality:</strong> Bachelor's in Social and Natural Sciences",
     "highschool.info.button": "Request your interview",
 
     "highschool.proposal.label": "OUR PROPOSAL",
